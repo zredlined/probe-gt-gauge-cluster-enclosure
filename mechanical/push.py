@@ -101,7 +101,7 @@ def push_mount(state, fsid, mv):
     feats = api("GET", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features")
     for f in feats["features"]:
         if f.get("featureType") == MOUNT_TYPE: api("DELETE", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features/featureid/{f['featureId']}")
-    params = [{"btType": "BTMParameterBoolean-144", "parameterId": p, "value": True} for p in ("buildClamps", "buildUpright", "buildStay", "buildStubs")]
+    params = [{"btType": "BTMParameterBoolean-144", "parameterId": p, "value": True} for p in ("buildBar", "buildArms")]
     api("POST", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features", {"feature": {"btType": "BTMFeature-134", "featureType": MOUNT_TYPE, "name": MOUNT_NAME, "namespace": f"e{fsid}::m{mv}", "parameters": params}})
     for _ in range(20):
         feats = api("GET", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features")
