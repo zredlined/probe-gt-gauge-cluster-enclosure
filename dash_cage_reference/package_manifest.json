@@ -1,0 +1,106 @@
+{
+  "README.md": {
+    "bytes": 1093,
+    "sha256": "b00c34ca15b70bdf23ced4200c7267c31aaaceb0a8a6ce3f5a8bdf51617830d8"
+  },
+  "ONSHAPE_AGENT_HANDOFF.md": {
+    "bytes": 12264,
+    "sha256": "40253a0a1d39652a34ddb81fcbad724e2fa572d0faee855930bc578d35331d42"
+  },
+  "cage_and_dash_reference_mm.stl": {
+    "bytes": 10884234,
+    "sha256": "2e23472ba48e9ab6c279e754961599c7a0332990b3308f5ebde3ac52f0538f0e"
+  },
+  "cage_primary_tubes_mm.stl": {
+    "bytes": 614484,
+    "sha256": "159421a9d7a16fb1a937cc83444c290a08feeca6d838587ec6b5074550416e4a"
+  },
+  "cage_dash_crossbar_mm.stl": {
+    "bytes": 19284,
+    "sha256": "a9b898a0e574b20533b2eaa4c0a04866be9391a3de2fd348f3c410f1840e5848"
+  },
+  "cage_driver_upright_mm.stl": {
+    "bytes": 595284,
+    "sha256": "45ac060f953fb295b7f84be447daec14367ac538f71e9e5bd29fff91c51b51eb"
+  },
+  "dash_surroundings_mm.stl": {
+    "bytes": 10269834,
+    "sha256": "ddf21b8170c2badbd733395071f7c52d65e889cc115057b0944e851108e0f864"
+  },
+  "dash_context_mm.stl": {
+    "bytes": 11000084,
+    "sha256": "303b1b97172bf3153263d58d4603011d61b609823cf1426d9758e5687f4bb0ca"
+  },
+  "master_switch_region_scan_mm.stl": {
+    "bytes": 406384,
+    "sha256": "e7c7f46ef5f7e3dd991571b4a7ece68ac9478c54fe1c3875e4b6ea7b0785a6fa"
+  },
+  "steering_supports_region_scan_mm.stl": {
+    "bytes": 1024684,
+    "sha256": "90b6ddc70ee1ad7a4654dadf4bc67a66eb232e2a2edc84af79547160481f818d"
+  },
+  "cage_and_dash_reference_color.ply": {
+    "bytes": 9512072,
+    "sha256": "e77b35557b7dd76420030fb218bc008b05d90caefcc10fba870b625d489a73a2"
+  },
+  "onshape_reference_geometry.json": {
+    "bytes": 3665,
+    "sha256": "3a57d1397f5efa7e8ab33567dc98638addd5687a689fd6b2aff2cffc825e94f0"
+  },
+  "cage_centerlines_mm.csv": {
+    "bytes": 5185,
+    "sha256": "cbcddb1f758e5d3e6ebaa84dd7a953f952658fefea183ed44eace5aabcf1d99e"
+  },
+  "native_scan_to_cad_mm.txt": {
+    "bytes": 404,
+    "sha256": "1c804e26f745e292cca9f050298ba6d1ad4c8a0987d074ff1f5ea08981e5cc24"
+  },
+  "cage_fit_report.json": {
+    "bytes": 2813,
+    "sha256": "8602751ce07828a85d323c601db09150e1c0dc29351cbf8b4b7d2f693a2c8878"
+  },
+  "mesh_quality_report.json": {
+    "bytes": 1223,
+    "sha256": "b2445afaeba92d230bf4cfe24f2fc143e2c1740227bf3f1ba1d9788bf9e29b14"
+  },
+  "export_validation.json": {
+    "bytes": 1419,
+    "sha256": "c1fc25a2c28c9e78fa8add68ebcf48d1d3ce22425e5fa3f561956fa265fbd2c5"
+  },
+  "scan_report.json": {
+    "bytes": 374,
+    "sha256": "833196b22341bf980e0d8597a800bd42f3bf38e805b61c2bcbbf2bf0acfafaee"
+  },
+  "car_reference_photo.png": {
+    "bytes": 7183490,
+    "sha256": "486b63b90db5bfbee2c5a906d53e02ce1b1b51d0f5cc499cdb84cbec3b90d889"
+  },
+  "driver_view_reference.png": {
+    "bytes": 2498357,
+    "sha256": "e8692b849ee7266dfc513636bab1fd8e0c21eb8f29faa9f7de8b2cb65334021b"
+  },
+  "driver_oblique_reference.png": {
+    "bytes": 2535891,
+    "sha256": "c90a778a8c2747cb0e548768e38294fb1365d5af8d856127f64943c1eede8e62"
+  },
+  "top_view_reference.png": {
+    "bytes": 2556318,
+    "sha256": "65a5b9c9ac961a2091d7d9bd482979b0c6dfbf04a570b6c6c2f7acc22987e12b"
+  },
+  "cage_only_reference.png": {
+    "bytes": 2124757,
+    "sha256": "5ca16fbacb692c1b100f2228e82687d1a68a862e9346df8c9fd60b5959f66192"
+  },
+  "unplaced_cluster_reference/README_Onshape.md": {
+    "bytes": 7906,
+    "sha256": "8089e2a6e8843b911ff49cd2e852f3ea3abb2a9db8c1218a1d9e1d2e0d1a2328"
+  },
+  "unplaced_cluster_reference/cluster_onshape_reference_mm.stl": {
+    "bytes": 7500034,
+    "sha256": "148bc29a6ca62759408c2993190683d73044debe3ae338ebe4db18d0964808e6"
+  },
+  "unplaced_cluster_reference/mounting_hole_estimates_mm.csv": {
+    "bytes": 953,
+    "sha256": "723a4a8dfcc11bb05d74c190ddd0323e4ecf6a3a0e9b60624bc5be9db40131f6"
+  }
+}

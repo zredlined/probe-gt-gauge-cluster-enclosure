@@ -14,6 +14,10 @@ screwed: it sits in a cradle and the two shell halves clamp around it.
 | Spine bar | `mechanical/output/spine_bar.stl` | 1 | purple ASA | joins the halves along the roof ridge and brow |
 | Keel bar | `mechanical/output/keel_bar.stl` | 1 | purple ASA | L-shaped, joins the halves across the rear wall and bottom |
 | Test coupon | `mechanical/output/test_coupon.stl` | 1 | any | print first, see section 3 |
+| Bar clamp lower L / R | `mechanical/output/mount_bar_clamp_lower_l.stl`, `..._r.stl` | 2 | charcoal ASA | split clamp halves on the 1.75 in crossbar |
+| Bar clamp upper L / R | `mechanical/output/mount_bar_clamp_upper_l.stl`, `..._r.stl` | 2 | charcoal ASA | upper halves with the raked blade strut and clevis |
+| Upright clamp inboard / outboard | `mechanical/output/mount_upright_clamp_inboard.stl`, `..._outboard.stl` | 2 | charcoal ASA | on the A-pillar bar, z 48..76 |
+| Pitch stay | `mechanical/output/mount_pitch_stay.stl` | 1 | purple ASA | slotted link, sets pitch |
 
 Coordinates in the STLs are the scan frame (X across, Y down in the car, Z toward the driver). Rotate in the slicer as
 described below.
@@ -25,8 +29,10 @@ described below.
 | M2.5 x 4 heat-set inserts, 3.5 mm OD | 14 | 6 under the spine bar (thick roof ribs), 8 under the keel bar |
 | M2.5 x 8 socket or button head screws | 18 | 14 into inserts, 4 through the brow with nuts |
 | M2.5 nuts + small washers | 4 | the two screw pairs on the brow (2 mm skin, no rib for an insert) |
-| M6 hex nuts, 10 mm across flats | 4 | captive pockets inside the rear wall, x +-60, y 26 and 48 |
-| M6 bolts + washers, 16 to 20 mm (set by your bracket) | 4 | roll-cage bracket to the rear wall |
+| M8 x 50 bolts + nyloc nuts + nylon washers | 2 | pivot pins through the strut clevises and enclosure knuckles |
+| M6 x 60 bolts + nuts | 4 | the two crossbar clamps (2 each) |
+| M6 x 60 bolts + nuts | 2 | the upright clamp |
+| M6 x 25 bolts + nuts + washers | 2 | pitch stay: one into the upright-clamp ear, one through the enclosure boss (nut inside the shell) |
 | Adhesive foam tape, 3 mm EPDM | ~300 mm | rear faces of the top lip and chin, the six stop pads |
 
 Nothing else. The cluster is located by ledges under its two bottom lug plates, fins outside the plates, tilted stop
@@ -64,12 +70,24 @@ for the bars and coupon.
 
 To remove the cluster later: keel bar off, spine bar off, halves apart. Nothing else moves.
 
-## 5. Regenerating
+## 5. Mounting to the cage
+
+1. Print a clamp-fit sample first (one lower clamp half) and check it on the painted 44.45 mm bar; adjust `CLAMP_BORE` in
+   `mechanical/mount.py` if it binds or rattles.
+2. Fit the two crossbar clamps at x 107 and 417 mm from the driver-upright junction (either side of the column stubs),
+   blades up and raked toward the driver, M6 x 60 loosely.
+3. Fit the upright clamp on the A-pillar bar just above the crossbar junction (48 to 76 mm up), ear toward the cluster.
+4. Lower the assembled enclosure so its two knuckles enter the clevises; push the M8 pins through with nylon washers.
+5. Bolt the pitch stay between the upright-clamp ear and the enclosure boss. Sit in the car, set the pitch so the gauges
+   read cleanly through the upper half of the wheel, tighten the stay, then the clamps.
+
+## 6. Regenerating
 
 Everything is generated from `mechanical/generate.py` (constants at the top). `python mechanical/generate.py` rebuilds the
 STLs and checks the scan mesh for interference; `python mechanical/render.py` remakes the renders; `python mechanical/push.py`
-uploads the FeatureScript to Onshape and rebuilds the assembly there (about 13 Onshape API requests, so push only when
+uploads both FeatureScript features to Onshape and rebuilds both assemblies there (about 13 Onshape API requests, so push only when
 you want to look).
 
+![In the car](../mechanical/output/renders/sys_01_driver_oblique.png)
 ![Rear](../mechanical/output/renders/04_rear.png)
 ![Exploded](../mechanical/output/renders/10_exploded.png)

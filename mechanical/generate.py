@@ -53,7 +53,11 @@ INSERT_M25_D, INSERT_M25_DEPTH = 3.4, 6.5     # coupon-verified bore for the use
 PILOT_M25 = 2.4                               # coupon-verified self-tap pilot
 CLR_M25, CBORE_M25_D, CBORE_M25_H = 2.7, 5.0, 1.5
 CLR_M6, NUT_M6_AF, NUT_M6_H = 6.4, 10.0, 5.2
-MOUNT_X = [-60.0, 60.0]; MOUNT_Y = [26.0, 48.0]; MOUNT_PAD = 16.0; MOUNT_PAD_H = 6.0   # roll-cage bracket interface (4 x M6)
+# mount interface (v0.4): two pivot knuckles on the bottom wall under the lug blocks (M8 pin along X = pitch axis) and a
+# stay boss on the left side wall (M6 along X). Car-frame placement and the mount parts live in mount.py.
+KNUCKLE_X = [-155.0, 155.0]; KNUCKLE_W, KNUCKLE_D, KNUCKLE_H = 24.0, 30.0, 22.0   # X width, Z depth, protrusion below the bottom wall
+KNUCKLE_Z = 0.0; PIN_D = 8.4; KNUCKLE_R = 10.0
+STAY_BOSS = dict(y=40.0, z=-25.0, d=16.0, h=8.0, hole=6.4)   # on the scan +X wall = driver's LEFT (A-pillar bar side)
 STOP_GAP = 1.0                                # rear stop pads stand off the scanned faces by this
 LUG_PAD_D = 8.0; FIN_T = 2.5; FIN_CLR = 0.8; LEDGE_CLR = 0.6
 EAR_PAD_D, EAR_SHIFT, EAR_PAD_L, EAR_WEB_W = 7.0, 2.0, 5.0, 7.0   # ear pad sits outward of the hole: the housing wall hugs the inner side
@@ -240,15 +244,16 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
             web = g.chamfer_bottom_try(web, 4.0)
             tb = g.intersect(g.unite([pad, web]), [g.prism(Region(offset(GAP + WALL - 0.3)), Z_REAR_OUT, Z_FRONT)])   # web ends 0.3 inside the wall
             shell = g.unite([shell, tb])
-        # roll-cage bracket interface: 4 x M6 with nut pockets on interior pads
-        mp = [g.box(mx - MOUNT_PAD / 2, my - MOUNT_PAD / 2, Z_REAR_IN - 1.0, mx + MOUNT_PAD / 2, my + MOUNT_PAD / 2, Z_REAR_IN + MOUNT_PAD_H) for mx in MOUNT_X for my in MOUNT_Y]
-        shell = g.unite([shell] + mp)
-        mc = []
-        for mx in MOUNT_X:
-            for my in MOUNT_Y:
-                mc.append(g.cyl((mx, my, Z_REAR_OUT - 1), (mx, my, Z_REAR_IN + MOUNT_PAD_H + 1), CLR_M6))
-                mc.append(g.hexprism(mx, my, Z_REAR_IN + MOUNT_PAD_H - NUT_M6_H, Z_REAR_IN + MOUNT_PAD_H + 1, NUT_M6_AF))
-        shell = g.cut(shell, mc)
+        # mount interface: pivot knuckles under the lug blocks + stay boss on the left side wall
+        yb = y_bot_out
+        for kx in KNUCKLE_X:
+            kn = g.unite([g.box(kx - KNUCKLE_W / 2, yb - 1.0, KNUCKLE_Z - KNUCKLE_D / 2, kx + KNUCKLE_W / 2, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z + KNUCKLE_D / 2),
+                          g.cyl((kx - KNUCKLE_W / 2, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), (kx + KNUCKLE_W / 2, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), 2 * KNUCKLE_R)])
+            shell = g.unite([shell, kn])
+            shell = g.cut(shell, [g.cyl((kx - KNUCKLE_W / 2 - 1, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), (kx + KNUCKLE_W / 2 + 1, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), PIN_D)])
+        sb = STAY_BOSS; xr = offset(GAP + WALL).bounds[2]   # scan +X outer wall (driver's left, toward the A-pillar bar)
+        shell = g.unite([shell, g.cyl((xr - 1.0, sb["y"], sb["z"]), (xr + sb["h"], sb["y"], sb["z"]), sb["d"])])
+        shell = g.cut(shell, [g.cyl((xr - WALL - 1.0, sb["y"], sb["z"]), (xr + sb["h"] + 1.0, sb["y"], sb["z"]), sb["hole"])])
         # insert bores for the spine (from the skin surface into the thick ribs) and visor through-holes
         bores = []
         for x in SPINE_RIB_X:

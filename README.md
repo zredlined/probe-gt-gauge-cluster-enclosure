@@ -32,7 +32,7 @@ Scan frame, millimetres: **X** across the cluster, **Y increases downward in the
 (bezel front at about +50, harness connectors at the rear down to -56). Everything (STL, DXF, hole CSV, FeatureScript)
 shares this frame so it lines up in Onshape without transforms.
 
-## Design (v0.3, 2026-09-25)
+## Design (enclosure v0.4 + mount v0.1, 2026-09-26)
 
 - **Shell L / Shell R**, split at X = 0 (a 405 mm part does not fit the P1S bed). The halves close around the cluster;
   the cluster is never drilled or screwed. Cavity is the scan silhouette hull (corners rounded to R12) offset 4 mm.
@@ -55,11 +55,28 @@ shares this frame so it lines up in Onshape without transforms.
 
 Print: halves rear-face down (the front lips are the only overhangs, small support strips), ASA, charcoal; bars purple.
 
+## Cage mount (mechanical/mount.py, car frame)
+
+Car frame from `dash_cage_reference` (mm): X along the dash crossbar driver -> passenger, Y forward to the cowl, Z up,
+origin at the crossbar centreline by the driver upright. Scan -> car placement is `T = pitch(25 deg) . [x -> X_C - x,
+y_down -> -z, z_toward_driver -> -y]` with X_C = 262, pin line 40 mm behind the bar axis, bottom wall 30 mm above the bar
+top. All are constants; `placement_checks.json` reports road-sightline margin (eye is a guess), gauge visibility over the
+wheel rim, and clearances to scan, cage, column stubs and switch.
+
+Parts: two split **crossbar clamps** at x 107 and 417 (free bar either side of the column stubs) whose upper halves carry
+a raked **blade strut** ending in a clevis for the enclosure knuckle (M8 pin); a split **upright clamp** on the A-pillar bar
+at z 48..76 (below the master switch) with an ear; a slotted **pitch stay** (purple) from that ear to the enclosure boss.
+The two steering-column support stubs are fitted from the scan and included as reference tubes.
+
 ## Onshape
 
 Document `probe-gt-gauge-cluster-enclosure`: did `937c54b34f0ccb974f37f949`, wid `275b479cd4996a16dce317f4`,
 Part Studio 1 `c10029ec19783bb5bae02ce9`, Feature Studio "Cluster enclosure FeatureScript" `4b35d3a06a0b574150eddd3c`.
-Custom feature "Probe cluster enclosure" with toggles for the four part groups. push.py also rebuilds "Enclosure
+Custom feature "Probe cluster enclosure" with toggles for the four part groups. Mount Part Studio "Mount (car frame)"
+`b65a54a9ba95bae5db018db8` holds custom feature "Cluster cage mount" (same Feature Studio). Assemblies (rebuilt by push.py
+on every push, ids in onshape_ids.json): "Enclosure assembly" (dash + cluster scan, scan frame) and "Full system (car frame)"
+(mount, cage tubes, dash scan, enclosure and cluster placed by T). Imported meshes: cluster scan `177864c843a60c8c5b179426`,
+cage tubes `e9334234956a07d2e6ed195e`, dash surroundings `c059b218bc9efffc19272856`. push.py also rebuilds "Enclosure
 assembly" (id in onshape_ids.json) after every successful push because regenerated parts get new IDs; the scan mesh
 Part Studio `177864c843a60c8c5b179426` is inserted as PARTS and SURFACES. The feature carries step tracking: if an
 op fails it creates a body named `FAILED step N: ...` instead of an opaque error (push.py prints part names).
@@ -76,6 +93,9 @@ costs no API allocation.
 | ![](mechanical/output/renders/04_rear.png) | ![](mechanical/output/renders/05_side_right.png) | ![](mechanical/output/renders/10_exploded.png) |
 
 ## Open items
+
+- Confirm eye position and windshield base in the car; the brow tip sits ~17 mm into the guessed road sightline.
+- Only the crossbar, driver upright and two column stubs are modelled as tubes; the rest of the cage is scan mesh or absent.
 
 - Roll-cage bracket (needs the cage model).
 - Physical check of the lug plate ledge/fin fit and rim lip clearance with the coupon and a lug-corner test print.
