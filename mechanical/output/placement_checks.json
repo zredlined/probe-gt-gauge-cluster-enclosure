@@ -1,44 +1,44 @@
 {
- "road_sightline_margin_mm": -16.849624296313692,
+ "road_sightline_margin_mm": -5.94751470956237,
  "road_sightline_worst_point": [
-  249.5,
-  -72.1,
-  253.3
+  269.5,
+  -171.4,
+  370.6
  ],
- "face_fraction_visible_over_rim_top": 0.1761050666909455,
+ "face_fraction_visible_over_rim_top": 1.0,
  "face_fraction_above_hub_ray": 1.0,
- "clearance_enclosure_to_scan_mm": 21.233915952357847,
- "clearance_enclosure_to_cage_mm": 24.505915162877386,
- "wheel_disc_axial_clearance_mm": -350.81642384552316,
- "clearance_enclosure_to_stub_L_mm": 37.93384233925608,
- "clearance_enclosure_to_stub_R_mm": 43.18209090243996,
- "column_radial_clearance_mm": 34.27483704654634,
- "switch_box_clearance_mm": 0.0,
+ "clearance_enclosure_to_scan_mm": 10.238328953729434,
+ "clearance_enclosure_to_cage_mm": 31.480732948165286,
+ "wheel_disc_axial_clearance_mm": -261.880567247806,
+ "clearance_enclosure_to_stub_L_mm": 95.28800382468111,
+ "clearance_enclosure_to_stub_R_mm": 99.32075777544071,
+ "column_radial_clearance_mm": 111.42504256565527,
+ "switch_box_clearance_mm": 17.698318481445312,
  "enclosure_bbox_car": [
   [
-   49.7,
-   -243.6,
-   28.9
+   69.7,
+   -207.4,
+   100.2
   ],
   [
-   475.1,
-   10.2,
-   253.3
+   495.1,
+   -4.9,
+   370.7
   ]
  ],
  "params": {
-  "X_C": 262.0,
-  "LIFT": 30.0,
-  "PITCH": 25.0,
-  "PIN_Z": 40.2,
+  "X_C": 282.0,
+  "LIFT": 100.0,
+  "PITCH": 20.0,
+  "PIN_Z": 110.2,
   "EYE": [
    266.0,
-   -850.0,
-   480.0
+   -800.0,
+   580.0
   ],
   "WINDSHIELD_BASE": [
-   300.0,
-   120.0
+   280.0,
+   210.0
   ]
  }
 }

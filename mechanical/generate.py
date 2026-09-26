@@ -56,7 +56,7 @@ CLR_M6, NUT_M6_AF, NUT_M6_H = 6.4, 10.0, 5.2
 # mount interface (v0.4): two pivot knuckles on the bottom wall under the lug blocks (M8 pin along X = pitch axis) and a
 # stay boss on the left side wall (M6 along X). Car-frame placement and the mount parts live in mount.py.
 KNUCKLE_X = [-155.0, 155.0]; KNUCKLE_W, KNUCKLE_D, KNUCKLE_H = 24.0, 30.0, 22.0   # X width, Z depth, protrusion below the bottom wall
-KNUCKLE_Z = 0.0; PIN_D = 8.4; KNUCKLE_R = 10.0
+KNUCKLE_Z = -35.0; PIN_D = 8.4; KNUCKLE_R = 10.0   # under the middle of the lug blocks (scan z -58..-13)
 STAY_BOSS = dict(y=40.0, z=-25.0, d=16.0, h=8.0, hole=6.4)   # on the scan +X wall = driver's LEFT (A-pillar bar side)
 STOP_GAP = 1.0                                # rear stop pads stand off the scanned faces by this
 LUG_PAD_D = 8.0; FIN_T = 2.5; FIN_CLR = 0.8; LEDGE_CLR = 0.6

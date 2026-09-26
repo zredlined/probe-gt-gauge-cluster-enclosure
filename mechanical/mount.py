@@ -25,8 +25,8 @@ BAR_R = 44.45 / 2
 UPRIGHT = dict(x=-0.356, y=-1.061)                       # vertical axis, straight for z -166..94
 HUB = np.array([266.139, -317.480, 57.955]); HUB_AXIS = np.array([-0.006766, -0.911536, 0.411164])   # toward driver
 WHEEL_OD, WHEEL_DISH = 350.0, 60.0                        # MOMO guess: rim centre 60 mm toward the driver from the hub point
-EYE = np.array([266.0, -850.0, 480.0])                    # GUESS, adjustable
-WINDSHIELD_BASE = (300.0, 120.0)                          # (y, z) GUESS for the lowest road sightline over the cowl
+EYE = np.array([266.0, -800.0, 580.0])                    # GUESS (seated, looking straight out), adjustable
+WINDSHIELD_BASE = (280.0, 210.0)                          # (y, z) GUESS: dash-top edge ~ cluster height above the bar in the photo
 SWITCH_BOX = ((-73, -207, 79), (52, -33, 253))
 # steering-column support stubs fitted from steering_supports_region_scan (2026-09-26): horizontal-ish tubes from the bar toward
 # the driver, ending in the column bracket cups. OD assumed 44.45 like the cage (scan radius median ~26 incl. cups).
@@ -34,17 +34,17 @@ STUBS = {"L": ((197.2, -6.6, 7.6), (215.8, -157.9, -10.3)), "R": ((328.0, -8.5, 
 COL_GOLD = (0.69, 0.55, 0.23)
 
 # ------------------------------------------------------------------ placement parameters
-X_C = 262.0            # car x of scan x = 0; scan +X is the driver's LEFT, so car x = X_C - x_scan (centre -4 -> 266 = column)
-PIN_Y = -40.0          # knuckle pin line 40 mm behind the bar axis (struts rake toward the driver)
-LIFT = 30.0            # enclosure bottom wall above the bar TOP
-PITCH = 25.0           # degrees, top of the enclosure toward the driver
+X_C = 282.0            # car x of scan x = 0; scan +X is the driver's LEFT, so car x = X_C - x_scan. 20 mm toward the centre from the column to clear the A-pillar bar/switch at this lift
+PIN_Y = -100.0         # knuckle pin line 100 mm behind the bar axis (arms rake toward the driver)
+LIFT = 100.0           # enclosure bottom wall above the bar TOP: brow sits at the assumed windshield-base sightline
+PITCH = 20.0           # degrees the gauge face leans BACK (top away from the driver, face looking up at the eye), like the OEM binnacle
 PIN_Z = BAR_R + LIFT - (G.KNUCKLE_H - G.KNUCKLE_R)   # pin sits (KNUCKLE_H - KNUCKLE_R) below the bottom wall
 PIN_SCAN = np.array([0.0, G.offset(G.GAP + G.WALL).bounds[3] + G.KNUCKLE_H - G.KNUCKLE_R, G.KNUCKLE_Z])   # scan-frame pin (x free)
 
 # ------------------------------------------------------------------ mount dimensions
 CLAMP_W = 30.0; CLAMP_RO = 32.0; CLAMP_GAP = 1.0; CLAMP_BORE = BAR_R + 0.2
 FLANGE_Y = 36.0; FLANGE_T = 14.0; BOLT_CLR = 6.4
-BLADE_X, BLADE_T = 36.0, 12.0; CLEVIS_GAP = G.KNUCKLE_W + 0.6; CLEVIS_R = 17.0; PIN_HOLE = 8.4
+BLADE_X, BLADE_T = 40.0, 16.0; CLEVIS_GAP = G.KNUCKLE_W + 0.6; CLEVIS_R = 17.0; PIN_HOLE = 8.4
 UP_CLAMP_Z = (48.0, 76.0); UP_RO = 32.0; EAR_T = 8.0; EAR_X1 = 41.0
 STAY_T, STAY_W, STAY_SLOT = 8.0, 16.0, 24.0
 COL = dict(mount=(0.184, 0.192, 0.212), stay=(0.435, 0.247, 0.749))
@@ -57,7 +57,7 @@ def placement():
     """4x4 transform scan(mm) -> car(mm)."""
     R0 = np.array([[-1, 0, 0], [0, 0, -1], [0, -1, 0]], float)     # (x, y, z)_scan -> (-x, -z, -y): a proper rotation (det +1)
     pin0 = R0 @ PIN_SCAN + np.array([X_C, 0, 0])                    # where the pin lands before pitch/lift
-    Rp = rot_x(PITCH)
+    Rp = rot_x(-PITCH)     # negative rotation about +X moves the top toward +Y (forward): face up
     A = Rp @ R0
     t = np.array([X_C, PIN_Y, PIN_Z]) - Rp @ pin0 + np.array([0, 0, 0])
     # pin0 already includes X_C in x; A @ p_scan = Rp @ R0 @ p; we want A @ pin_scan + t == (pin_x, PIN_Y, PIN_Z)
@@ -150,6 +150,7 @@ def build_mount(g, T, want=("clamps", "upright", "stay", "stubs")):
     if "upright" in want or "stay" in want:
         ux, uy = UPRIGHT["x"], UPRIGHT["y"]; z0, z1 = UP_CLAMP_Z; sbc = stay_boss_car(T)
         ear_z = (z0 + z1) / 2
+        EAR_X1 = sbc[0] - STAY_T          # ear face sits one stay thickness inboard of the enclosure boss face
         if "upright" in want:
           body = g.unite([g.cyl((ux, uy, z0), (ux, uy, z1), 2 * UP_RO),
                         g.box(ux - FLANGE_T / 2 - 4, uy - FLANGE_Y - FLANGE_T / 2, z0, ux + FLANGE_T / 2 + 4, uy + FLANGE_Y + FLANGE_T / 2, z1),

@@ -74,12 +74,14 @@ To remove the cluster later: keel bar off, spine bar off, halves apart. Nothing 
 
 1. Print a clamp-fit sample first (one lower clamp half) and check it on the painted 44.45 mm bar; adjust `CLAMP_BORE` in
    `mechanical/mount.py` if it binds or rattles.
-2. Fit the two crossbar clamps at x 107 and 417 mm from the driver-upright junction (either side of the column stubs),
-   blades up and raked toward the driver, M6 x 60 loosely.
+2. Fit the two crossbar clamps at 127 and 437 mm from the driver-upright junction (either side of the column stubs),
+   arms up and raked toward the driver, M6 x 60 loosely.
 3. Fit the upright clamp on the A-pillar bar just above the crossbar junction (48 to 76 mm up), ear toward the cluster.
 4. Lower the assembled enclosure so its two knuckles enter the clevises; push the M8 pins through with nylon washers.
-5. Bolt the pitch stay between the upright-clamp ear and the enclosure boss. Sit in the car, set the pitch so the gauges
-   read cleanly through the upper half of the wheel, tighten the stay, then the clamps.
+5. Bolt the pitch stay between the upright-clamp ear and the enclosure boss. Sit in the car, set the pitch so the gauge
+   face looks straight at your eyes (the model assumes 20 deg leaning back), tighten the stay, then the clamps.
+6. Height check: the brow should sit at or just above the line from your eyes to the base of the windshield. If it is
+   not, change `LIFT` in `mechanical/mount.py` (currently 100 mm bottom-wall-to-bar-top) and reprint the four bar clamp halves.
 
 ## 6. Regenerating
 

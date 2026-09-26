@@ -120,11 +120,10 @@ def rebuild_full_assembly(state):
     asm = api("POST", f"/assemblies/d/{DID}/w/{WID}", {"name": "Full system (car frame)"})["id"]; state["full_asm"] = asm; STATE.write_text(json.dumps(state, indent=1))
     for eid, types in ((state["mount_ps"], ["PARTS"]), (state["cage_ps"], ["PARTS"]), (state["surroundings_ps"], ["PARTS"]), (state["surroundings_ps"], ["SURFACES"])):
         api("POST", f"/assemblies/d/{DID}/w/{WID}/e/{asm}/instances", {"documentId": DID, "elementId": eid, "isWholePartStudio": True, "includePartTypes": types})
-    before = {i["id"] for i in api("GET", f"/assemblies/d/{DID}/w/{WID}/e/{asm}")["rootAssembly"]["instances"]}
     for eid, types in ((PS, ["PARTS"]), (MESH_PS, ["PARTS"]), (MESH_PS, ["SURFACES"])):
         api("POST", f"/assemblies/d/{DID}/w/{WID}/e/{asm}/instances", {"documentId": DID, "elementId": eid, "isWholePartStudio": True, "includePartTypes": types})
-    inst = api("GET", f"/assemblies/d/{DID}/w/{WID}/e/{asm}")["rootAssembly"]["instances"]
-    moved = [i["id"] for i in inst if i["id"] not in before]
+    inst = api("GET", f"/assemblies/d/{DID}/w/{WID}/e/{asm}?includeNonSolids=true")["rootAssembly"]["instances"]
+    moved = [i["id"] for i in inst if i["elementId"] in (PS, MESH_PS)]   # every enclosure and cluster-scan body, solids and surfaces
     M = T.copy(); M[:3, 3] /= 1000.0   # Onshape transforms are in metres
     api("POST", f"/assemblies/d/{DID}/w/{WID}/e/{asm}/occurrencetransforms", {"occurrences": [{"path": [i]} for i in moved], "transform": [float(x) for x in M.flatten()], "isRelative": False})
     print(f"full-system assembly rebuilt: {asm} ({len(inst)} instances, {len(moved)} placed by T)")

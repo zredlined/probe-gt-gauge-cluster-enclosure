@@ -58,12 +58,12 @@ Print: halves rear-face down (the front lips are the only overhangs, small suppo
 ## Cage mount (mechanical/mount.py, car frame)
 
 Car frame from `dash_cage_reference` (mm): X along the dash crossbar driver -> passenger, Y forward to the cowl, Z up,
-origin at the crossbar centreline by the driver upright. Scan -> car placement is `T = pitch(25 deg) . [x -> X_C - x,
-y_down -> -z, z_toward_driver -> -y]` with X_C = 262, pin line 40 mm behind the bar axis, bottom wall 30 mm above the bar
-top. All are constants; `placement_checks.json` reports road-sightline margin (eye is a guess), gauge visibility over the
+origin at the crossbar centreline by the driver upright. Scan -> car placement is `T = pitch(-20 deg about X) . [x -> X_C - x,
+y_down -> -z, z_toward_driver -> -y]` with X_C = 282 (20 mm toward the centre from the column to clear the A-pillar bar),
+pin line 100 mm behind the bar axis, bottom wall 100 mm above the bar top, gauge face leaning back 20 deg like the OEM binnacle. All are constants; `placement_checks.json` reports road-sightline margin (eye is a guess), gauge visibility over the
 wheel rim, and clearances to scan, cage, column stubs and switch.
 
-Parts: two split **crossbar clamps** at x 107 and 417 (free bar either side of the column stubs) whose upper halves carry
+Parts: two split **crossbar clamps** at x 127 and 437 (free bar either side of the column stubs) whose upper halves carry
 a raked **blade strut** ending in a clevis for the enclosure knuckle (M8 pin); a split **upright clamp** on the A-pillar bar
 at z 48..76 (below the master switch) with an ear; a slotted **pitch stay** (purple) from that ear to the enclosure boss.
 The two steering-column support stubs are fitted from the scan and included as reference tubes.
@@ -94,7 +94,8 @@ costs no API allocation.
 
 ## Open items
 
-- Confirm eye position and windshield base in the car; the brow tip sits ~17 mm into the guessed road sightline.
+- Confirm eye position and windshield base in the car (assumed eye 580 mm above / 800 mm behind the bar axis, windshield
+  base 210 mm above the bar 280 mm forward); the brow sits 6 mm above that assumed sightline.
 - Only the crossbar, driver upright and two column stubs are modelled as tubes; the rest of the cage is scan mesh or absent.
 
 - Roll-cage bracket (needs the cage model).
