@@ -13,10 +13,10 @@
     "comparison": "prepared scan points to exported mesh; not absolute measurement accuracy",
     "sample_count": 438812,
     "distance_mm_percentiles": {
-      "50": 0.04472906142473221,
-      "90": 0.28484275639057166,
-      "95": 0.4832558006048186,
-      "99": 1.3378232407569899
+      "50": 0.0456621628254652,
+      "90": 0.2918561756610872,
+      "95": 0.5002088338136671,
+      "99": 1.3936277961731005
     }
   },
   "cage_dash_crossbar_mm.stl": {
@@ -31,5 +31,17 @@
     "self_intersecting": false,
     "triangles": 11904
   },
-  "topology_check_note": "STL vertices were welded at exactly duplicate positions before checking individual tube topology. Individual capped envelopes are watertight; their combined T-junction is overlapping separate members, not a boolean union. Context remains open scan geometry."
+  "driver_side_steering_support_mm.stl": {
+    "watertight": true,
+    "orientable": true,
+    "self_intersecting": false,
+    "triangles": 384
+  },
+  "center_side_steering_support_mm.stl": {
+    "watertight": true,
+    "orientable": true,
+    "self_intersecting": false,
+    "triangles": 384
+  },
+  "topology_check_note": "Duplicate STL vertices welded before individual topology checks. All four individual capped tube envelopes are watertight, orientable and non-self-intersecting. Combined members overlap at joints; the complete scanned context is open geometry."
 }

@@ -1,19 +1,39 @@
 {
   "README.md": {
-    "bytes": 1093,
-    "sha256": "b00c34ca15b70bdf23ced4200c7267c31aaaceb0a8a6ce3f5a8bdf51617830d8"
+    "bytes": 1335,
+    "sha256": "fe898ed61672294741f667cd86331fb0d21dd6c2a432e342f92682ae0988b7ab"
   },
   "ONSHAPE_AGENT_HANDOFF.md": {
-    "bytes": 12264,
-    "sha256": "40253a0a1d39652a34ddb81fcbad724e2fa572d0faee855930bc578d35331d42"
+    "bytes": 15360,
+    "sha256": "2e828531174baed088412da4e81e67eff05a2975fe45f671e94d05d420d99066"
+  },
+  "cage_steering_support_tubes_mm.stl": {
+    "bytes": 38484,
+    "sha256": "c6b3448f5e7b50a2fbfa3857211fcae1b466a31576851b0820d0f77142b02acd"
+  },
+  "driver_side_steering_support_mm.stl": {
+    "bytes": 19284,
+    "sha256": "7b9739dfdb30a440f03ff90e3e9d9da927378f2506a948c9d9440e0470d128d4"
+  },
+  "center_side_steering_support_mm.stl": {
+    "bytes": 19284,
+    "sha256": "6010c52722f9693429eb6f353bd198cffb28b3d21765b979b149ca01720822b8"
+  },
+  "steering_arm_fit_report.json": {
+    "bytes": 2852,
+    "sha256": "3485dca327b69e4dc3d664582a985c353e9bbf83c299a6c17872722eb90ec2f4"
+  },
+  "steering_support_detail_reference.png": {
+    "bytes": 3240018,
+    "sha256": "81322fa001c6362c740c98d297cbd154ef36ef46159155aef18d5a7e683b341c"
   },
   "cage_and_dash_reference_mm.stl": {
-    "bytes": 10884234,
-    "sha256": "2e23472ba48e9ab6c279e754961599c7a0332990b3308f5ebde3ac52f0538f0e"
+    "bytes": 10768634,
+    "sha256": "9d91f040f253b5bc7c6fdef55565e277e84e8f17601a06095407855e7d7d33d6"
   },
   "cage_primary_tubes_mm.stl": {
-    "bytes": 614484,
-    "sha256": "159421a9d7a16fb1a937cc83444c290a08feeca6d838587ec6b5074550416e4a"
+    "bytes": 652884,
+    "sha256": "bd28dfe0d1d59cd69ef545436646589df8c6edefecc24d8fcc2c69b5e091f9f7"
   },
   "cage_dash_crossbar_mm.stl": {
     "bytes": 19284,
@@ -24,8 +44,8 @@
     "sha256": "45ac060f953fb295b7f84be447daec14367ac538f71e9e5bd29fff91c51b51eb"
   },
   "dash_surroundings_mm.stl": {
-    "bytes": 10269834,
-    "sha256": "ddf21b8170c2badbd733395071f7c52d65e889cc115057b0944e851108e0f864"
+    "bytes": 10115834,
+    "sha256": "a031bef58b9a3dfddceb12b0f6bf51d51f423157e7fbcf14d98f75daec8c5ff5"
   },
   "dash_context_mm.stl": {
     "bytes": 11000084,
@@ -40,16 +60,16 @@
     "sha256": "90b6ddc70ee1ad7a4654dadf4bc67a66eb232e2a2edc84af79547160481f818d"
   },
   "cage_and_dash_reference_color.ply": {
-    "bytes": 9512072,
-    "sha256": "e77b35557b7dd76420030fb218bc008b05d90caefcc10fba870b625d489a73a2"
+    "bytes": 9419490,
+    "sha256": "bd5de54a8c6342c9a30dd724f5ddd179a4968907228fcd124acd04e944234dd1"
   },
   "onshape_reference_geometry.json": {
-    "bytes": 3665,
-    "sha256": "3a57d1397f5efa7e8ab33567dc98638addd5687a689fd6b2aff2cffc825e94f0"
+    "bytes": 6925,
+    "sha256": "bb8aab136a6ab741931cea527aa560299529406c5dd9f886c435fcbd61e41c9e"
   },
   "cage_centerlines_mm.csv": {
-    "bytes": 5185,
-    "sha256": "cbcddb1f758e5d3e6ebaa84dd7a953f952658fefea183ed44eace5aabcf1d99e"
+    "bytes": 5509,
+    "sha256": "e4bcdf45e7ad01d76016b748fe863cf269a8075ea9f19561d7af7c4ddbf29e29"
   },
   "native_scan_to_cad_mm.txt": {
     "bytes": 404,
@@ -60,12 +80,12 @@
     "sha256": "8602751ce07828a85d323c601db09150e1c0dc29351cbf8b4b7d2f693a2c8878"
   },
   "mesh_quality_report.json": {
-    "bytes": 1223,
-    "sha256": "b2445afaeba92d230bf4cfe24f2fc143e2c1740227bf3f1ba1d9788bf9e29b14"
+    "bytes": 1505,
+    "sha256": "3ff11a5247f91d6d76ec458237c8c216790cd7808db0cd744e737414daf99500"
   },
   "export_validation.json": {
-    "bytes": 1419,
-    "sha256": "c1fc25a2c28c9e78fa8add68ebcf48d1d3ce22425e5fa3f561956fa265fbd2c5"
+    "bytes": 2297,
+    "sha256": "31c79dfbf27d3f4b186a5c6911c85d14e296be66d89345d89e6e309d65faa27d"
   },
   "scan_report.json": {
     "bytes": 374,
@@ -76,20 +96,20 @@
     "sha256": "486b63b90db5bfbee2c5a906d53e02ce1b1b51d0f5cc499cdb84cbec3b90d889"
   },
   "driver_view_reference.png": {
-    "bytes": 2498357,
-    "sha256": "e8692b849ee7266dfc513636bab1fd8e0c21eb8f29faa9f7de8b2cb65334021b"
+    "bytes": 2498662,
+    "sha256": "db3f4db71ebb5a08008f810dc187d5cfbf9811818892611368876ead2b2256aa"
   },
   "driver_oblique_reference.png": {
-    "bytes": 2535891,
-    "sha256": "c90a778a8c2747cb0e548768e38294fb1365d5af8d856127f64943c1eede8e62"
+    "bytes": 2537409,
+    "sha256": "f66c2b5bbcc6f431c08b283f3ae9625a219dfe0646021a0ca31b1f2ca796e413"
   },
   "top_view_reference.png": {
-    "bytes": 2556318,
-    "sha256": "65a5b9c9ac961a2091d7d9bd482979b0c6dfbf04a570b6c6c2f7acc22987e12b"
+    "bytes": 2557912,
+    "sha256": "a873c740c70988aef6b6147d772a671278f997351dd13dedc85caf39c3e8b663"
   },
   "cage_only_reference.png": {
-    "bytes": 2124757,
-    "sha256": "5ca16fbacb692c1b100f2228e82687d1a68a862e9346df8c9fd60b5959f66192"
+    "bytes": 2132373,
+    "sha256": "2f9d79a79298ec983986284eaabd04cf19605afdc6b556d97ab34a639562f90b"
   },
   "unplaced_cluster_reference/README_Onshape.md": {
     "bytes": 7906,

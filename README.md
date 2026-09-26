@@ -57,16 +57,19 @@ Print: halves rear-face down (the front lips are the only overhangs, small suppo
 
 ## Cage mount (mechanical/mount.py, car frame)
 
-Car frame from `dash_cage_reference` (mm): X along the dash crossbar driver -> passenger, Y forward to the cowl, Z up,
-origin at the crossbar centreline by the driver upright. Scan -> car placement is `T = pitch(-20 deg about X) . [x -> X_C - x,
-y_down -> -z, z_toward_driver -> -y]` with X_C = 282 (20 mm toward the centre from the column to clear the A-pillar bar),
-pin line 100 mm behind the bar axis, bottom wall 100 mm above the bar top, gauge face leaning back 20 deg like the OEM binnacle. All are constants; `placement_checks.json` reports road-sightline margin (eye is a guess), gauge visibility over the
-wheel rim, and clearances to scan, cage, column stubs and switch.
+Car frame from `dash_cage_reference` rev 2 (mm): X along the dash crossbar driver -> passenger, Y forward to the cowl, Z up,
+origin at the crossbar centreline by the driver upright. Fitted tubes: crossbar, driver upright and the two 1.75 in
+steering-support arms (x ~203 and ~325, running toward the driver). Scan -> car placement is `car = (X_C - x, -z, -y)`
+then pitch about X, with the gauge face 16 mm behind the crossbar's driver-side surface (`FACE_Y` -38), the front-bottom
+edge 50 mm above the bar top (`EDGE_LIFT`), the face leaning back 20 deg (`PITCH`), centred on the steering column
+(`X_C` 262). `placement_checks.json` reports the sightline over the brow (eye and windshield base are guesses), gauge
+visibility over the wheel rim and clearances.
 
-Parts: two split **crossbar clamps** at x 127 and 437 (free bar either side of the column stubs) whose upper halves carry
-a raked **blade strut** ending in a clevis for the enclosure knuckle (M8 pin); a split **upright clamp** on the A-pillar bar
-at z 48..76 (below the master switch) with an ear; a slotted **pitch stay** (purple) from that ear to the enclosure boss.
-The two steering-column support stubs are fitted from the scan and included as reference tubes.
+Mount v0.3, four clamp points and no side-bar stay: two split **crossbar clamps** (x 107 and 417) whose upper halves carry
+clevises for the enclosure's two M8 pivot knuckles, directly above the bar; two split **arm clamps** (55 mm along each arm)
+whose upper halves carry short struts with slotted clevises for the enclosure's two M6 lock knuckles near the front-bottom
+edge. Pitch is set on the slots (+-5 deg) then locked. Load path: cluster -> cradle -> shell -> 4 knuckles -> 4 clevises ->
+4 clamps -> crossbar and both arms. Fitting steps in [docs/BUILD.md](docs/BUILD.md).
 
 ## Onshape
 
@@ -76,7 +79,7 @@ Custom feature "Probe cluster enclosure" with toggles for the four part groups. 
 `b65a54a9ba95bae5db018db8` holds custom feature "Cluster cage mount" (same Feature Studio). Assemblies (rebuilt by push.py
 on every push, ids in onshape_ids.json): "Enclosure assembly" (dash + cluster scan, scan frame) and "Full system (car frame)"
 (mount, cage tubes, dash scan, enclosure and cluster placed by T). Imported meshes: cluster scan `177864c843a60c8c5b179426`,
-cage tubes `e9334234956a07d2e6ed195e`, dash surroundings `c059b218bc9efffc19272856`. push.py also rebuilds "Enclosure
+cage tubes rev 2 `e57c95bb4c9958368ddddebb`, dash surroundings `c059b218bc9efffc19272856`. push.py also rebuilds "Enclosure
 assembly" (id in onshape_ids.json) after every successful push because regenerated parts get new IDs; the scan mesh
 Part Studio `177864c843a60c8c5b179426` is inserted as PARTS and SURFACES. The feature carries step tracking: if an
 op fails it creates a body named `FAILED step N: ...` instead of an opaque error (push.py prints part names).
@@ -94,9 +97,9 @@ costs no API allocation.
 
 ## Open items
 
-- Confirm eye position and windshield base in the car (assumed eye 580 mm above / 800 mm behind the bar axis, windshield
-  base 210 mm above the bar 280 mm forward); the brow sits 6 mm above that assumed sightline.
-- Only the crossbar, driver upright and two column stubs are modelled as tubes; the rest of the cage is scan mesh or absent.
+- Confirm the sightline in the car: with the assumed eye (580 above / 800 behind the bar axis) and windshield base (210
+  above, 280 forward) the brow sits 25 mm below the line, as requested (gauges 1-2 in over the bar).
+- Only the crossbar, driver upright and the two steering-support arms are fitted tubes; the rest of the cage is scan mesh or absent.
 
 - Roll-cage bracket (needs the cage model).
 - Physical check of the lug plate ledge/fin fit and rim lip clearance with the coupon and a lug-corner test print.

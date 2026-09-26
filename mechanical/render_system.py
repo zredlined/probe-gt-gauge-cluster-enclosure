@@ -8,7 +8,7 @@ def place(m): return m.transform(T, inplace=False)
 CH, PU, GOLD, GREY, BEIGE = "#2f3136", "#6f3fbf", "#b08d3a", "#9a9a96", "#b8b0a0"
 encl = [(place(pv.read(str(OUT / f"{p}.stl"))), CH if "shell" in p else PU, 1.0) for p in ("shell_l", "shell_r", "spine_bar", "keel_bar")]
 cluster = (place(pv.read(str(HERE.parent / "onshape_reference_package" / "cluster_onshape_reference_mm.stl"))), BEIGE, 1.0)
-mount = [(pv.read(str(f)), GOLD if "stub" in f.name else (PU if "stay" in f.name else CH), 1.0) for f in sorted(OUT.glob("mount_*.stl"))]
+mount = [(pv.read(str(f)), PU if "arm_clamp_upper" in f.name else CH, 1.0) for f in sorted(OUT.glob("mount_*.stl"))]
 cage = (pv.read(str(REF / "cage_primary_tubes_mm.stl")), GOLD, 1.0)
 sur = (pv.read(str(REF / "dash_surroundings_mm.stl")), GREY, 0.35)
 # wheel guess: 350 OD torus-ish ring perpendicular to the steering axis, 60 mm toward the driver from the hub point

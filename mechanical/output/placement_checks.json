@@ -1,36 +1,35 @@
 {
- "road_sightline_margin_mm": -5.94751470956237,
- "road_sightline_worst_point": [
-  269.5,
-  -171.4,
-  370.6
- ],
+ "brow_above_windshield_sightline_mm": -25.251874871996108,
  "face_fraction_visible_over_rim_top": 1.0,
- "face_fraction_above_hub_ray": 1.0,
- "clearance_enclosure_to_scan_mm": 10.238328953729434,
- "clearance_enclosure_to_cage_mm": 31.480732948165286,
- "wheel_disc_axial_clearance_mm": -261.880567247806,
- "clearance_enclosure_to_stub_L_mm": 95.28800382468111,
- "clearance_enclosure_to_stub_R_mm": 99.32075777544071,
- "column_radial_clearance_mm": 111.42504256565527,
- "switch_box_clearance_mm": 17.698318481445312,
+ "face_normal_to_eye_deg": 8.457301251848444,
+ "face_centre_car": [
+  265.4,
+  13.9,
+  138.9
+ ],
+ "clearance_enclosure_to_scan_mm": 14.937872294879202,
+ "clearance_enclosure_to_cage_mm": 13.171029972138369,
+ "column_radial_clearance_mm": 94.56974254088868,
+ "switch_box_clearance_mm": 9.071487426757812,
  "enclosure_bbox_car": [
   [
-   69.7,
-   -207.4,
-   100.2
+   57.7,
+   -67.2,
+   33.4
   ],
   [
-   495.1,
-   -4.9,
-   370.7
+   475.1,
+   135.2,
+   291.5
   ]
  ],
+ "lowest_point_above_bar_top_mm": 11.180711000319938,
  "params": {
-  "X_C": 282.0,
-  "LIFT": 100.0,
+  "X_C": 262.0,
+  "FACE_Y": -38.0,
+  "EDGE_LIFT": 50.0,
   "PITCH": 20.0,
-  "PIN_Z": 110.2,
+  "ARM_CLAMP_Y": -55.0,
   "EYE": [
    266.0,
    -800.0,
