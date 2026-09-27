@@ -545,6 +545,15 @@ def main():
         cq.exporters.export(cq.Workplane(obj=body), str(fn), tolerance=0.05, angularTolerance=0.1)
         bb = body.BoundingBox()
         print(f"  {label:<12} bbox x {bb.xmin:7.1f}..{bb.xmax:6.1f}  y {bb.ymin:6.1f}..{bb.ymax:5.1f}  z {bb.zmin:6.1f}..{bb.zmax:6.1f}  vol {body.Volume()/1000:7.1f} cm3  solids {len(body.Solids())}")
+    # fit-test coupons: sections of the real shells that test the scan-dependent features with the cluster in hand
+    # (front ring = lips, chin, silhouette; cradle corners = ledge, fin, block, stop pads; ear corners = ear pads + lip)
+    FIT = {"fit_ring_L": ("Shell L", (-400, -300, Z_FRONT - 20.0, 0.0, 300, Z_FRONT + 1)), "fit_ring_R": ("Shell R", (0.0, -300, Z_FRONT - 20.0, 400, 300, Z_FRONT + 1)),
+           "fit_cradle_L": ("Shell L", (-400, 55.0, Z_REAR_OUT - 1, -100.0, 300, 12.0)), "fit_cradle_R": ("Shell R", (85.0, 55.0, Z_REAR_OUT - 1, 400, 300, 12.0)),
+           "fit_ear_L": ("Shell L", (-400, -60.0, 12.0, -135.0, -5.0, Z_FRONT + 1)), "fit_ear_R": ("Shell R", (125.0, -60.0, 12.0, 400, -5.0, Z_FRONT + 1))}
+    for name, (src, bx) in FIT.items():
+        piece = parts[src].intersect(g.box(*bx))
+        cq.exporters.export(cq.Workplane(obj=piece), str(OUT / f"{name}.stl"), tolerance=0.05, angularTolerance=0.1)
+        bb = piece.BoundingBox(); print(f"  {name:<13} x {bb.xmin:7.1f}..{bb.xmax:6.1f}  y {bb.ymin:6.1f}..{bb.ymax:5.1f}  z {bb.zmin:6.1f}..{bb.zmax:6.1f}  {piece.Volume()/1000:5.1f} cm3")
     if not a.no_mesh:
         import trimesh, collections
         v = mesh.vertices

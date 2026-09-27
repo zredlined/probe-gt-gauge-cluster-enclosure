@@ -6,28 +6,41 @@ four knuckles moulded into its bottom wall.
 
 ![In the car](../mechanical/output/renders/sys_01_driver_oblique.png)
 
-## 0. Start here
+## 0. Start here: prove the cradle before printing anything big
 
-Print-ready files live in `mechanical/output/print/` (every part already lies with its bed face on z = 0; drop them straight
-into Bambu Studio, no re-orienting). The plate plan with footprints, heights and ASA grams is
-[`mechanical/output/print/print_plan.md`](../mechanical/output/print/print_plan.md). Order:
+The clamps are a known design from the race logger. The enclosure is new and its cradle depends on the scan at the
+millimetre level, so the first prints are six **fit-test sections** cut from the real shell geometry
+(`mechanical/output/print/print_fit_*.stl`, about 335 g in total, three or four plates of a few hours each). Test them on
+the actual cluster before either shell is printed.
 
-The M2.5 sizes (3.4 mm insert bore, 2.4 mm self-tap pilot) are carried over from the race-logger coupon printed in ASA on
-2026-09-12, so they need no re-test. New and unverified here: the 44.85 mm clamp bore, the 8.4 mm M8 pin hole and the M6 nut
-pocket. Order:
+| Section | What it is | What it proves | Pass |
+|---|---|---|---|
+| `fit_ring_L`, `fit_ring_R` | the front 20 mm of each shell half: top lip, chin, silhouette wall | the 4 mm cavity clears the bezel all round; the lips overlap the rim and the rim's peak clears the lip's rear face (0.8 mm designed) | both halves close around the bezel and meet at the seam; the cluster can't come forward; no rocking against the lips |
+| `fit_cradle_L`, `fit_cradle_R` | bottom rear corner of each half: ledge, fin, block with two stop pads, pivot knuckle | lug plate sits on the ledge, fin lies outside the plate, plate seats on the pads with ~1 mm | with the cluster upside down on the bench, each corner slips on with the plate resting on the ledge, fin outside it, pads just touching or within a business card |
+| `fit_ear_L`, `fit_ear_R` | upper corners with the ear stop pads and the lip above them | the ear rests on its pad and the pad clears the housing wall next to the ear | ear touches the pad, nothing else touches |
 
-1. `print_bar_clamp_lower_driver.stl` (34 g, ~1.5 h): the fit sample. Try it on the painted crossbar: light drag, no rock.
-   Adjust `CLAMP_BORE` in `mechanical/mount.py` if not, regenerate (`mount.py`, then `print_prep.py`). Its two flange
-   holes also check the 6.4 mm M6 clearance.
-2. `print_bar_clamp_upper_driver.stl` (65 g, ~3 h): checks the clevis gap (24.6 mm) against a printed knuckle later, and the
-   8.4 mm M8 pin hole now. Bolt it to the lower half on the bar.
-3. Plate D, the remaining six clamp halves. Arm-clamp uppers in purple if you have it.
-4. Plate C, spine bar + keel bar (purple). The coupon is optional (M6 nut pocket + fin slot only).
-5. Shell L, then Shell R (~430 g and 12 to 16 h each, alone on the plate, diagonal if the slicer asks). Before Shell R,
-   check a pivot knuckle on Shell L drops into the printed clevis with the M8 bolt through.
+Record what you find as five numbers: gap or interference at the top lip, at the chin, at each ledge, and at the ear pads.
+Those map directly onto constants in `mechanical/generate.py` (`LIP_TOP_Z0`, `CHIN_Z0`, `LEDGE_CLR`, `FIN_CLR`, `STOP_GAP`,
+`GAP`). Regenerate, reprint only the failing section, and only then commit to a shell.
 
-Slicer settings: ASA, 0.2 mm layers, 4 walls, 30 percent gyroid in the shells, 60 percent in the clamps, 100 percent in
-the bars. Enable supports only where section 3 says. Brim on the shells (tall thin walls, ASA warps). Enclosure door closed.
+If the ring halves show the scan is off by more than about 2 mm anywhere, stop and tell me: that changes the approach
+(bigger gaps and foam instead of a close cradle), not just a number.
+
+Then, in order:
+
+1. `print_bar_clamp_lower_driver.stl` (34 g): the 44.85 mm bore on the painted crossbar, light drag, no rock. The M2.5 sizes
+   (3.4 mm insert bore, 2.4 mm self-tap pilot) are the coupon-verified values from the race logger (2026-09-12) and are not
+   re-tested; the M6 nut pocket and M8 pin hole are checked on the clamp halves.
+2. `print_bar_clamp_upper_driver.stl` (65 g): 8.4 mm M8 pin hole; try the `fit_cradle` knuckle in its clevis.
+3. Plate D, the other six clamp halves. Arm-clamp uppers in purple if you have it.
+4. Plate C, spine bar + keel bar (purple).
+5. Shell L, then Shell R (~430 g and 12 to 16 h each, alone on the plate, diagonal if the slicer asks).
+
+Slicer settings: ASA, 0.2 mm layers, 4 walls, 30 percent gyroid in the shells and fit sections, 60 percent in the clamps,
+100 percent in the bars. Enable supports only where section 3 says. Brim on the shells and fit rings (tall thin walls, ASA
+warps). Enclosure door closed.
+
+![Fit sections](../mechanical/output/renders/fit_sections.png)
 
 ## 1. Printed parts
 
