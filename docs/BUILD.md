@@ -6,6 +6,22 @@ four knuckles moulded into its bottom wall.
 
 ![In the car](../mechanical/output/renders/sys_01_driver_oblique.png)
 
+## 0. Start here
+
+Print-ready files live in `mechanical/output/print/` (every part already lies with its bed face on z = 0; drop them straight
+into Bambu Studio, no re-orienting). The plate plan with footprints, heights and ASA grams is
+[`mechanical/output/print/print_plan.md`](../mechanical/output/print/print_plan.md). Order:
+
+1. `print_test_coupon.stl` (8 g, ~25 min): verifies the M2.5 insert bore, self-tap pilot and M6 nut pocket.
+2. `print_bar_clamp_lower_driver.stl` (34 g, ~1.5 h): try it on the painted crossbar. It should slide on with light drag
+   and no rock. Adjust `CLAMP_BORE` in `mechanical/mount.py` if not, regenerate (`mount.py`, then `print_prep.py`).
+3. Plate D, all eight clamp halves (~365 g, one overnight plate). Arm-clamp uppers in purple if you have it.
+4. Plate C, spine bar + keel bar (purple) + a spare coupon.
+5. Shell L, then Shell R (~430 g and 12 to 16 h each, alone on the plate, diagonal if the slicer asks).
+
+Slicer settings: ASA, 0.2 mm layers, 4 walls, 30 percent gyroid in the shells, 60 percent in the clamps, 100 percent in
+the bars. Enable supports only where section 3 says. Brim on the shells (tall thin walls, ASA warps). Enclosure door closed.
+
 ## 1. Printed parts
 
 ### Enclosure (scan frame STLs)
@@ -54,7 +70,7 @@ and coupon.
    (`CLAMP_BORE` in `mechanical/mount.py`). Adjust and reprint before the other seven halves.
 3. **Shells**: rear face down (the flat rear wall is the bed face, the brow points up). Supports only under the top lip,
    the chin, the small ear-pad webs and the four knuckles; everything else is vertical walls. Each half is a 12 to 16 hour print.
-4. **Spine bar**: ridge face down. **Keel bar**: rear face down.
+4. **Spine bar**: inner (concave) face down, small support under the curled brow end. **Keel bar**: rear leg flat, bottom leg standing.
 5. **Clamp halves**: split face down (the flat face that meets the other half is the bed face). The clevis and strut on
    the upper halves then grow upward with no supports.
 6. Heat-set the 14 inserts: 6 from the roof skin surface at x +-6 mm, z -40 / 0 / +40 (they land in the 8 mm ribs inside
