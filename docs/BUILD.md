@@ -12,12 +12,19 @@ Print-ready files live in `mechanical/output/print/` (every part already lies wi
 into Bambu Studio, no re-orienting). The plate plan with footprints, heights and ASA grams is
 [`mechanical/output/print/print_plan.md`](../mechanical/output/print/print_plan.md). Order:
 
-1. `print_test_coupon.stl` (8 g, ~25 min): verifies the M2.5 insert bore, self-tap pilot and M6 nut pocket.
-2. `print_bar_clamp_lower_driver.stl` (34 g, ~1.5 h): try it on the painted crossbar. It should slide on with light drag
-   and no rock. Adjust `CLAMP_BORE` in `mechanical/mount.py` if not, regenerate (`mount.py`, then `print_prep.py`).
-3. Plate D, all eight clamp halves (~365 g, one overnight plate). Arm-clamp uppers in purple if you have it.
-4. Plate C, spine bar + keel bar (purple) + a spare coupon.
-5. Shell L, then Shell R (~430 g and 12 to 16 h each, alone on the plate, diagonal if the slicer asks).
+The M2.5 sizes (3.4 mm insert bore, 2.4 mm self-tap pilot) are carried over from the race-logger coupon printed in ASA on
+2026-09-12, so they need no re-test. New and unverified here: the 44.85 mm clamp bore, the 8.4 mm M8 pin hole and the M6 nut
+pocket. Order:
+
+1. `print_bar_clamp_lower_driver.stl` (34 g, ~1.5 h): the fit sample. Try it on the painted crossbar: light drag, no rock.
+   Adjust `CLAMP_BORE` in `mechanical/mount.py` if not, regenerate (`mount.py`, then `print_prep.py`). Its two flange
+   holes also check the 6.4 mm M6 clearance.
+2. `print_bar_clamp_upper_driver.stl` (65 g, ~3 h): checks the clevis gap (24.6 mm) against a printed knuckle later, and the
+   8.4 mm M8 pin hole now. Bolt it to the lower half on the bar.
+3. Plate D, the remaining six clamp halves. Arm-clamp uppers in purple if you have it.
+4. Plate C, spine bar + keel bar (purple). The coupon is optional (M6 nut pocket + fin slot only).
+5. Shell L, then Shell R (~430 g and 12 to 16 h each, alone on the plate, diagonal if the slicer asks). Before Shell R,
+   check a pivot knuckle on Shell L drops into the printed clevis with the M8 bolt through.
 
 Slicer settings: ASA, 0.2 mm layers, 4 walls, 30 percent gyroid in the shells, 60 percent in the clamps, 100 percent in
 the bars. Enable supports only where section 3 says. Brim on the shells (tall thin walls, ASA warps). Enclosure door closed.
@@ -63,11 +70,10 @@ side (crossbar x 417, arm at x 325).
 Material: ASA. 0.2 mm layers, 4 walls; 30 percent gyroid infill for the shells, 60 percent for clamps, 100 percent for bars
 and coupon.
 
-1. **Coupon first.** It carries a 3.4 mm insert bore, a 2.4 mm self-tap pilot, an M6 clearance hole with a nut pocket and a
-   slot the width of a cradle fin. Seat an insert, run a screw into the pilot, drop an M6 nut in the pocket. If the insert
-   bore is loose or tight, change `INSERT_M25_D` in `mechanical/generate.py` and regenerate before printing the shells.
-2. **Clamp-fit sample.** Print one *Bar clamp lower* half and try it on the painted crossbar; the bore is 44.85 mm
+1. **Clamp-fit sample first.** Print one *Bar clamp lower* half and try it on the painted crossbar; the bore is 44.85 mm
    (`CLAMP_BORE` in `mechanical/mount.py`). Adjust and reprint before the other seven halves.
+2. **Coupon (optional).** The M2.5 insert bore and pilot are the coupon-verified values from the race logger (2026-09-12);
+   the coupon here only adds the M6 nut pocket and a cradle-fin slot.
 3. **Shells**: rear face down (the flat rear wall is the bed face, the brow points up). Supports only under the top lip,
    the chin, the small ear-pad webs and the four knuckles; everything else is vertical walls. Each half is a 12 to 16 hour print.
 4. **Spine bar**: inner (concave) face down, small support under the curled brow end. **Keel bar**: rear leg flat, bottom leg standing.
