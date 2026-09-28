@@ -480,7 +480,11 @@ class FS:
     def chamfer_bottom_try(self, body, w):
         self.w(f"try silent {{ chamferBottom(context, {self.uid('cb')}, {body}, {w:.3f}); }}"); return body
     def place(self, body, origin, e1, e2, e3):
-        self.w(f"opTransform(context, {self.uid('pl')}, {{ \"bodies\" : {body}, \"transform\" : toWorld(coordSystem(vector({origin[0]:.3f}, {origin[1]:.3f}, {origin[2]:.3f}) * millimeter, vector({e1[0]:.6f}, {e1[1]:.6f}, {e1[2]:.6f}), vector({e3[0]:.6f}, {e3[1]:.6f}, {e3[2]:.6f}))) }});"); return body
+        # coordSystem() demands exactly perpendicular axes: re-orthogonalise the rounded x axis against z inside FS
+        z, x = self.var("az"), self.var("ax")
+        self.w(f"const {z} = normalize(vector({e3[0]:.6f}, {e3[1]:.6f}, {e3[2]:.6f}));")
+        self.w(f"const {x} = normalize(vector({e1[0]:.6f}, {e1[1]:.6f}, {e1[2]:.6f}) - dot(vector({e1[0]:.6f}, {e1[1]:.6f}, {e1[2]:.6f}), {z}) * {z});")
+        self.w(f"opTransform(context, {self.uid('pl')}, {{ \"bodies\" : {body}, \"transform\" : toWorld(coordSystem(vector({origin[0]:.3f}, {origin[1]:.3f}, {origin[2]:.3f}) * millimeter, {x}, {z})) }});"); return body
     def name(self, body, label, rgb):
         self.w(f"nameBody(context, {body}, \"{label}\", color({rgb[0]:.3f}, {rgb[1]:.3f}, {rgb[2]:.3f}));"); return body
 
