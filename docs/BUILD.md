@@ -72,7 +72,7 @@ screws come up from outside the bottom wall into those inserts, in line with the
 
 There are no ear feet. The scan shows the two top ear tabs boxed in: housing top about 1.5 mm below the hole axis directly
 behind the tab, cavity roof about 7.6 mm above it with the tab tip touching it, bezel in front. No nut, insert or bolt head
-fits there. The v0.5 shell will capture each ear tip in a 7 mm slot in the roof rib with foam instead.
+fits there. The v0.5 shell captures each ear tip (measured 19.5 mm wide, 7 thick, standing 10 mm above the housing top) in a 21.5 x 11 mm roof slot with foam instead.
 
 ### Body (scan frame STLs, v0.5)
 
@@ -187,6 +187,7 @@ These numbers drive v0.5; they are also in the constants of `mechanical/generate
 - Ribbon plugs: face-right 51 x 9.6 mm, face-left 59.8 x 9.6 mm, thumb lock adds 4 mm outboard. The v0.5 ports grow to
   fit the 60 mm plug with the lock open.
 - Each lug plate has a rib along its outer edge 6 to 7 mm outboard of the outer hole, hence the feet's short outboard margin.
+- Ear tabs: 19.5 mm wide, 7 mm thick, tip 10 mm above the housing top, hole about 5 mm below the tip.
 
 ## 7. Fastener access (what the check says about working on the car)
 

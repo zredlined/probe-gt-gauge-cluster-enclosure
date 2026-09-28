@@ -485,13 +485,13 @@ export const probeClusterEnclosure = defineFeature(function(context is Context, 
         step = "416";
         const u262 = mkUnite(context, id + "un263", [u260, u249]);
         step = "418";
-        const b264 = mkBox(context, id + "bx265", -170.905, -42.889, 31.565, -164.905, -22.889, 41.565);
+        const b264 = mkBox(context, id + "bx265", -170.905, -43.639, 31.065, -164.905, -22.139, 42.065);
         step = "420";
         rotZ(context, id + "rz266", b264, -170.905, -32.889, -120.157);
         step = "422";
         mkCut(context, id + "ct267", u262, [b264]);
         step = "424";
-        const b268 = mkBox(context, id + "bx269", 159.768, -39.837, 27.417, 165.768, -19.837, 37.417);
+        const b268 = mkBox(context, id + "bx269", 159.768, -40.587, 26.917, 165.768, -19.087, 37.917);
         step = "426";
         rotZ(context, id + "rz270", b268, 159.768, -29.837, -54.556);
         step = "428";

@@ -40,7 +40,7 @@ BEAD_D, BEAD_L = 5.0, 6.0   # rounded bead at the brow tip (no sharp edge to bum
 Y_SKIN_END = 5.0     # double skin / visor exist only for Y <= this (arch + short cheeks)
 LIP_TOP_IN, LIP_TOP_Z0, LIP_TOP_YMAX = 4.0, 61.5, 30.0      # top lip: 4 mm over the silhouette, rear face ~1 mm in front of the lens
 CHIN_IN, CHIN_Z0, CHIN_YMIN = 9.0, 58.0, 62.0                # bottom "chin" over the bezel's lower rim (measured 10.2 proud of the old 47)
-EAR_SLOT_W, EAR_SLOT_T, EAR_SLOT_DEPTH = 20.0, 10.0, 4.5    # roof slot that captures each ear tip (tab 7 thick, width unknown -> 20)
+EAR_SLOT_W, EAR_SLOT_T, EAR_SLOT_DEPTH = 21.5, 11.0, 4.5    # roof slot for each ear tip: tab measured 19.5 wide x 7 thick, stands 10 above the housing top
 # ribbon-cable ports: the two vertical PCB slots (left x -179..-173, right x 161..168, y ~2..50, thumb lock outboard).
 # Each port opens the rear wall from 12 mm inboard of the slot out to the side wall, 12 mm above and below the slot.
 RIBBON_PORT_XIN = (-163.0, 149.0); RIBBON_PORT_Y = (-14.0, 68.0); PORT_R = 8.0   # plugs measured 51 / 59.8 x 9.6 + 4 mm lock

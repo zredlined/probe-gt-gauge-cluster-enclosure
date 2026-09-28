@@ -121,7 +121,7 @@ costs no API allocation.
   above, 280 forward) the brow sits 25 mm below the line, as requested (gauges 1-2 in over the bar).
 - Only the crossbar, driver upright and the two steering-support arms are fitted tubes; the rest of the cage is scan mesh or absent.
 
-- Bolt-test the two lug feet (BUILD.md section 0), then Shell L v0.5. Two ear-tab numbers are still unmeasured (tab
-  width, tip height above the housing top); the roof slots are 20 mm wide to cover it.
+- Bolt-test the two lug feet (BUILD.md section 0), then Shell L v0.5. Ear tabs measured 19.5 mm wide and 10 mm tall;
+  the roof slots are 21.5 x 11 mm.
 - Visor length/droop and skin end position are constants in generate.py; tune after the first look in the car.
 - Onshape has not seen v0.5 yet; the next push must pass the new `buildFeet` feature parameter.

@@ -8,9 +8,9 @@ Driver body 8.0 mm swept from each head along the fastener axis (scan frame). Ea
 | shell->foot M2.5 @ B3 | close (bench) | 150 mm free, needs 60 | 104 mm (dash_surroundings) | yes |
 | shell->foot M2.5 @ B5 | close (bench) | 150 mm free, needs 60 | 109 mm (dash_surroundings) | yes |
 | shell->foot M2.5 @ B6 | close (bench) | 150 mm free, needs 60 | 31 mm (mount bar_clamp_upper_driver) | yes |
-| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 34 mm (Shell L) | yes |
-| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 30 mm (Shell L) | yes |
-| cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 35 mm (Shell R) | yes |
+| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 33 mm (Shell L) | yes |
+| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 27 mm (Shell L) | yes |
+| cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 36 mm (Shell R) | yes |
 | cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 42 mm (Shell R) | yes |
 | spine M2.5 @ x-6 z-40 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | spine M2.5 @ x-6 z+0 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
