@@ -100,14 +100,17 @@ side (crossbar x 417, arm at x 325).
 
 | Item | Qty | Used for |
 |---|---|---|
-| M4 x 16 button or socket head, M4 nuts, M4 washers (9 mm OD) | 4 each | cluster lug plates to the two feet, through the OEM 5.3 mm holes |
-| M2.5 x 4 heat-set inserts, 3.5 mm OD | 4 + 14 | 4 in the feet (shell screws), 6 under the spine bar, 8 under the keel bar |
-| M2.5 x 8 socket or button head screws | 22 | 4 shell-to-feet, 14 into bar inserts, 4 through the brow with nuts |
+| M4 x 16 button or socket head, M4 nuts, M4 washers (9 mm OD max) | 4 each | cluster lug plates to the two feet (plate 4.8 + gap 0.8 + foot 4.4 + nut 3.2 = 13.2) |
+| M4 x 20 button or socket head, M4 nuts, M4 washers (9 mm OD max) | 2 each | cluster ear tabs to the two ear blocks (tab 7 + gap 0.8 + block 6 + nut 3.2 = 17) |
+| M2.5 x 4 heat-set inserts, 3.5 mm OD | 22 | 4 in the feet, 4 in the ear blocks, 6 under the spine bar, 8 under the keel bar |
+| M2.5 x 6 socket or button head | 4 | shell to feet, from below (1 mm of wall under the counterbore + 0.3 gap + 4.7 into a 6.5 mm bore; an M2.5 x 8 bottoms out) |
+| M2.5 x 14 socket or button head | 4 | shell to ear blocks, from above (skin 2 + air gap 6 + wall 2.5 - counterbore 1.5 = 9, then 4.7 into the block) |
+| M2.5 x 8 socket or button head | 18 | 6 spine bar, 8 keel bar, 4 through the brow with nuts |
 | M2.5 nuts + small washers | 4 | the two screw pairs on the brow (2 mm skin, no rib for an insert) |
-| M8 x 50 bolts, nyloc nuts, nylon washers | 2 | pivot pins through the bar-clamp clevises and the shell's pivot knuckles |
-| M6 x 40 bolts, nyloc nuts, washers | 2 | pitch locks through the arm-clamp slotted clevises and the shell's lock knuckles |
-| M6 x 60 bolts + nuts | 8 | the four split clamps (2 each) |
-| Adhesive foam tape, 3 mm EPDM | ~200 mm | ear slots and the front lip / chin of the v0.5 shell |
+| M8 x 70 bolts, nyloc nuts, 2 nylon washers each | 2 | pivot pins: two 16 mm clevis blades + 24 mm knuckle + 0.6 gap + washers + 8 mm nyloc = 68 |
+| M6 x 50 bolts, nyloc nuts, washers | 2 | pitch locks: two 12 mm blades + 16 mm knuckle + 0.6 + washers + 6 mm nyloc = 49 |
+| M6 x 40 bolts + nyloc nuts + washers | 8 | the four split clamps (2 each): two 14 mm flanges + nut + washer = 35 |
+| Adhesive foam tape, 3 mm EPDM | ~150 mm | rear faces of the front lip and chin |
 
 ## 3. Print
 

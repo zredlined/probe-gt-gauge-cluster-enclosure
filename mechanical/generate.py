@@ -40,7 +40,12 @@ BEAD_D, BEAD_L = 5.0, 6.0   # rounded bead at the brow tip (no sharp edge to bum
 Y_SKIN_END = 5.0     # double skin / visor exist only for Y <= this (arch + short cheeks)
 LIP_TOP_IN, LIP_TOP_Z0, LIP_TOP_YMAX = 4.0, 61.5, 30.0      # top lip: 4 mm over the silhouette, rear face ~1 mm in front of the lens
 CHIN_IN, CHIN_Z0, CHIN_YMIN = 9.0, 58.0, 62.0                # bottom "chin" over the bezel's lower rim (measured 10.2 proud of the old 47)
-EAR_SLOT_W, EAR_SLOT_T, EAR_SLOT_DEPTH = 21.5, 11.0, 4.5    # roof slot for each ear tip: tab measured 19.5 wide x 7 thick, stands 10 above the housing top
+# ear blocks (v0.5b): the ear tabs (19.5 wide, 7 thick, 10 tall, hole ~5 below the tip, lens notched around them) are bolted
+# M4 from the front into a nut captured in a small block behind each tab; the block carries two M2.5 inserts that the shell's
+# roof screws reach from outside through the double skin (printed tubes bridge the air gap).
+EAR_BLOCK_T, EAR_BLOCK_HALF_W, EAR_BLOCK_DOWN, EAR_BLOCK_UP = 10.0, 10.0, 4.0, 14.0
+EAR_NUT_POCKET = 4.0; EAR_INSERT_X = 7.5; EAR_TUBE_D = 7.0; ROOF_SCREW_CLR = 3.2
+FOOT_SLOT_HALF = 2.0                                   # fore-aft slot for the shell->foot screws (+-2 mm of adjustment)
 # ribbon-cable ports: the two vertical PCB slots (left x -179..-173, right x 161..168, y ~2..50, thumb lock outboard).
 # Each port opens the rear wall from 12 mm inboard of the slot out to the side wall, 12 mm above and below the slot.
 RIBBON_PORT_XIN = (-163.0, 149.0); RIBBON_PORT_Y = (-14.0, 68.0); PORT_R = 8.0   # plugs measured 51 / 59.8 x 9.6 + 4 mm lock
@@ -73,9 +78,8 @@ BOLT_M4_CLR, NUT_M4_AF, NUT_M4_H = 4.5, 7.3, 3.6       # M4 through the 5.3 mm O
 LUG_FOOT_MARGIN_IN, LUG_FOOT_MARGIN_OUT, LUG_FOOT_UP, LUG_FOOT_DOWN = 7.0, 4.5, 7.0, 7.0   # slab around the bolt pair; the plate has a rib on its
                                                        # outer edge ~6-7 mm outboard of the outer hole, hence the short outboard margin; B1/B4 unused
 LUG_PAD_Y0 = 86.0; LUG_PAD_Z = (-38.0, -14.0); LUG_PAD_SCREW_Z = -28.0; LUG_PAD_X_MARGIN = 8.5   # pad down to the shell bottom wall
-# NO ear feet: the scan shows the ear tabs boxed in (housing top ~1.5 mm below the hole axis directly behind the tab, cavity
-# roof ~7.6 mm above it and the tab tip touching it, bezel in front), so no nut, insert or bolt head fits behind an ear.
-# The ears will be captured by a slot in the v0.5 shell roof instead (tab tip in a 7.2 mm slot, foam).
+# (The scan suggested the ear tabs were boxed in; the user's calipers and the notch in the lens showed room behind and in
+# front of each tab, hence the ear blocks above.)
 FOOT_WALL_CLR = 0.3                                    # feet stop this short of the cavity wall (offset(GAP))
 COL_BODY = (0.184, 0.192, 0.212); COL_ACCENT = (0.435, 0.247, 0.749); COL_COUPON = (0.6, 0.62, 0.64)
 
@@ -206,13 +210,29 @@ def tab_plane_z(h, x, y, along_n):
     cx, cy, cz, n = HOLES[h]; n = unit(n)
     return cz + (along_n - n[0] * (x - cx) - n[1] * (y - cy)) / n[2]
 
-def build_feet(g):
+def ear_screw_points():
+    """The four roof screws that hold the ear blocks: (wall point q (x, y), outward wall normal u, world z), two per ear."""
+    out = []
+    for h in EARS:
+        cx, cy, cz, n = HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
+        o, e1, e2, e3 = tab_frame(h, (sgn_in, 0.0))
+        for dx in (-EAR_INSERT_X, EAR_INSERT_X):
+            pm = o + e1 * dx + e3 * (FOOT_STANDOFF + EAR_BLOCK_T / 2)
+            q = nearest_points(Point(pm[0], pm[1]), offset(GAP).exterior)[1]
+            out.append(((q.x, q.y), unit([q.x - pm[0], q.y - pm[1], 0.0]), float(pm[2])))
+    return out
+
+def build_feet(g, tilt=0.0, want=("lugs", "ears")):
     """Two lug feet: slab behind each bottom lug plate (M4 bolts through B2 B3 / B5 B6, nuts captured in hex pockets) with a pad
     down to the shell bottom wall carrying two M2.5 inserts for the shell screws (driven from outside, directly above the knuckle)."""
     parts = {}; y_pad = offset(GAP).bounds[3] - FOOT_WALL_CLR
-    for side, ids in LUGS.items():
+    cavity = g.prism(Region(offset(GAP - FOOT_WALL_CLR)), Z_REAR_IN, Z_FRONT)
+    tag = f" tilt{tilt:+.0f}" if tilt else ""
+    for side, ids in (LUGS.items() if "lugs" in want else []):
         a, b = (HOLES[i] for i in ids); mid = (np.array(a[:3]) + np.array(b[:3])) / 2
         o, e1, e2, e3 = tab_frame(ids[0], (1.0, 0.0)); o = mid
+        if tilt:   # variant: slab rotated about the bolt line so the pad stays flat if the real plate is tilted by -tilt
+            c, sn = math.cos(math.radians(tilt)), math.sin(math.radians(tilt)); e2, e3 = c * e2 + sn * e3, -sn * e2 + c * e3
         half = abs(np.dot(np.array(b[:3]) - np.array(a[:3]), e1)) / 2
         z0 = FOOT_STANDOFF; z1 = z0 + FOOT_T
         m_neg, m_pos = (LUG_FOOT_MARGIN_OUT, LUG_FOOT_MARGIN_IN) if side == "L" else (LUG_FOOT_MARGIN_IN, LUG_FOOT_MARGIN_OUT)   # local +x = world +x
@@ -227,7 +247,22 @@ def build_feet(g):
         pad = g.box(xs[0] - LUG_PAD_X_MARGIN, LUG_PAD_Y0, LUG_PAD_Z[0], xs[1] + LUG_PAD_X_MARGIN, y_pad, LUG_PAD_Z[1])
         foot = g.unite([slab, pad])
         foot = g.cut(foot, [g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, y_pad - INSERT_M25_DEPTH, LUG_PAD_SCREW_Z), INSERT_M25_D) for x in xs])
-        parts[f"Foot lug {side}"] = g.name(foot, f"Foot lug {side}", COL_BODY)
+        parts[f"Foot lug {side}{tag}"] = g.name(foot, f"Foot lug {side}{tag}", COL_BODY)
+    if "ears" in want:
+        pts = ear_screw_points()
+        for k, (side, h) in enumerate(zip(("L", "R"), EARS)):
+            cx, cy, cz, n = HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
+            o, e1, e2, e3 = tab_frame(h, (sgn_in, 0.0))            # +x inboard across the tab, +y up in the tab plane, +z rearward
+            z0 = FOOT_STANDOFF; z1 = z0 + EAR_BLOCK_T
+            blk = g.box(-EAR_BLOCK_HALF_W, -EAR_BLOCK_DOWN, z0, EAR_BLOCK_HALF_W, EAR_BLOCK_UP, z1)
+            blk = g.cut(blk, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), BOLT_M4_CLR), g.hexprism(0.0, 0.0, z1 - EAR_NUT_POCKET, z1 + 1.0, NUT_M4_AF)])
+            blk = g.place(blk, o, e1, e2, e3)
+            blk = g.intersect(blk, [cavity])                          # top follows the cavity roof
+            bores = []
+            for (qx, qy), u, zq in pts[2 * k: 2 * k + 2]:
+                bores.append(g.cyl((qx + u[0] * 2.0, qy + u[1] * 2.0, zq), (qx - u[0] * (FOOT_WALL_CLR + INSERT_M25_DEPTH), qy - u[1] * (FOOT_WALL_CLR + INSERT_M25_DEPTH), zq), INSERT_M25_D))
+            blk = g.cut(blk, bores)
+            parts[f"Ear block {side}"] = g.name(blk, f"Ear block {side}", COL_BODY)
     return parts
 
 def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
@@ -269,12 +304,15 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
         ribs += [g.box(-300, Y_SKIN_END - 3.0, Z_REAR_OUT, 300, Y_SKIN_END + 1, Z_FRONT)]          # end closers
         ribs = g.intersect(g.unite(ribs), [airgap])
         shell = g.unite([shell, lip_top, chin, skin, visor, vlip, ribs])
-        # ear slots: each ear tab's tip touches the cavity roof; a slot in the roof wall captures it (foam pad at assembly)
-        for h in EARS:
-            cx, cy, cz, n = HOLES[h]
-            q = nearest_points(Point(cx, cy), offset(GAP).exterior)[1]; u = unit([q.x - cx, q.y - cy, 0.0])
-            zc = tab_plane_z(h, q.x, q.y, 0.0)
-            shell = g.cut(shell, [g.rotbox(q.x - u[0] * 1.5, q.y - u[1] * 1.5, zc - EAR_SLOT_T / 2, zc + EAR_SLOT_T / 2, EAR_SLOT_DEPTH + 1.5, EAR_SLOT_W, math.degrees(math.atan2(u[1], u[0])))])
+        # ear-block screws: tubes across the air gap, clearance holes through wall + skin, counterbores on the skin
+        d_out = GAP + WALL + AIR + SKIN
+        tubes, ear_holes = [], []
+        for (qx, qy), u, zq in ear_screw_points():
+            tubes.append(g.cyl((qx + u[0] * (WALL - 0.3), qy + u[1] * (WALL - 0.3), zq), (qx + u[0] * (WALL + AIR + 0.3), qy + u[1] * (WALL + AIR + 0.3), zq), EAR_TUBE_D))
+            ear_holes.append(g.cyl((qx - u[0] * 4.0, qy - u[1] * 4.0, zq), (qx + u[0] * (d_out - GAP + 1.0), qy + u[1] * (d_out - GAP + 1.0), zq), ROOF_SCREW_CLR))
+            ear_holes.append(g.cyl((qx + u[0] * (d_out - GAP - CBORE_M25_H), qy + u[1] * (d_out - GAP - CBORE_M25_H), zq), (qx + u[0] * (d_out - GAP + 1.0), qy + u[1] * (d_out - GAP + 1.0), zq), CBORE_M25_D))
+        shell = g.unite([shell] + tubes)
+        shell = g.cut(shell, ear_holes)
         # mount interface: pivot knuckles under the feet, pitch-lock knuckles near the front-bottom edge
         yb = y_bot_out
         for kx in KNUCKLE_X:
@@ -305,11 +343,14 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
             for sx in (-KEEL_SCREW_X, KEEL_SCREW_X):
                 pads.append(g.cyl((sx, y_bot_in + 1, sz), (sx, y_bot_in - PAD_H, sz), 9.0))
                 bores.append(g.cyl((sx, y_bot_out + 1, sz), (sx, y_bot_out - INSERT_M25_DEPTH, sz), INSERT_M25_D))
-        # shell -> feet: M2.5 clearance holes with counterbores through the bottom wall, in line under the M4 bolts
+        # shell -> feet: fore-aft SLOTS (+-FOOT_SLOT_HALF) with slotted counterbores through the bottom wall, under the M4 bolts
+        def yslot(x, z, y0, y1, d, half):
+            return [g.box(x - d / 2, min(y0, y1), z - half, x + d / 2, max(y0, y1), z + half),
+                    g.cyl((x, y0, z - half), (x, y1, z - half), d), g.cyl((x, y0, z + half), (x, y1, z + half), d)]
         for h in list(LUGS["L"]) + list(LUGS["R"]):
             x = HOLES[h][0]
-            bores.append(g.cyl((x, y_bot_in - 1.0, LUG_PAD_SCREW_Z), (x, y_bot_out + 1.0, LUG_PAD_SCREW_Z), CLR_M25))
-            bores.append(g.cyl((x, y_bot_out + 1.0, LUG_PAD_SCREW_Z), (x, y_bot_out - CBORE_M25_H, LUG_PAD_SCREW_Z), CBORE_M25_D))
+            bores += yslot(x, LUG_PAD_SCREW_Z, y_bot_in - 1.0, y_bot_out + 1.0, CLR_M25, FOOT_SLOT_HALF)
+            bores += yslot(x, LUG_PAD_SCREW_Z, y_bot_out - CBORE_M25_H, y_bot_out + 1.0, CBORE_M25_D, FOOT_SLOT_HALF)
         shell = g.unite([shell] + pads)
         shell = g.cut(shell, bores)
         # split into halves at X = 0
@@ -594,6 +635,7 @@ def main():
     if a.fs_only: return
     import cadquery as cq
     g = CQ(); parts = build(g, info, plates, want=("shell", "spine", "keel", "coupon", "feet"))
+    for t in (-3.0, 3.0): parts.update(build_feet(g, tilt=t, want=("lugs",)))    # angle variants for the bench test
     for label, body in parts.items():
         fn = OUT / (label.lower().replace(" ", "_") + ".stl")
         cq.exporters.export(cq.Workplane(obj=body), str(fn), tolerance=0.05, angularTolerance=0.1)
@@ -611,7 +653,7 @@ def main():
     if not a.no_mesh:
         import trimesh, collections
         v = mesh.vertices
-        for label in ("Shell L", "Shell R", "Foot lug L", "Foot lug R"):
+        for label in ("Shell L", "Shell R", "Foot lug L", "Foot lug R", "Ear block L", "Ear block R"):
             body = parts[label]
             sm = trimesh.load(OUT / (label.lower().replace(" ", "_") + ".stl"))
             sel = v[(v[:, 0] <= 2) if label.endswith("L") else (v[:, 0] >= -2)]

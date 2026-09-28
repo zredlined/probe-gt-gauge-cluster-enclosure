@@ -1,17 +1,23 @@
 # Fastener access check
 
-Driver body 8.0 mm swept from each head along the fastener axis (scan frame). Each fastener is tested at the stage where it is driven against the parts present then; 'in car' is the free length with everything fitted (service access). Reach needed: 60 mm for a screwdriver, 30 mm for a socket or nut. 34 fasteners, 0 short of reach.
+Driver body 8.0 mm swept from each head along the fastener axis (scan frame). Each fastener is tested at the stage where it is driven against the parts present then; 'in car' is the free length with everything fitted (service access). Reach needed: 60 mm for a screwdriver, 30 mm for a socket or nut. 40 fasteners, 0 short of reach.
 
 | Fastener | Driven at | Free at that stage | In car | OK |
 |---|---|---|---|---|
 | shell->foot M2.5 @ B2 | close (bench) | 150 mm free, needs 60 | 30 mm (mount bar_clamp_upper_center) | yes |
 | shell->foot M2.5 @ B3 | close (bench) | 150 mm free, needs 60 | 104 mm (dash_surroundings) | yes |
 | shell->foot M2.5 @ B5 | close (bench) | 150 mm free, needs 60 | 109 mm (dash_surroundings) | yes |
-| shell->foot M2.5 @ B6 | close (bench) | 150 mm free, needs 60 | 31 mm (mount bar_clamp_upper_driver) | yes |
-| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 33 mm (Shell L) | yes |
-| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 27 mm (Shell L) | yes |
-| cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 36 mm (Shell R) | yes |
-| cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 42 mm (Shell R) | yes |
+| shell->foot M2.5 @ B6 | close (bench) | 150 mm free, needs 60 | 32 mm (mount bar_clamp_upper_driver) | yes |
+| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 32 mm (Shell L) | yes |
+| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 28 mm (Shell L) | yes |
+| cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 37 mm (Shell R) | yes |
+| cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 41 mm (Shell R) | yes |
+| cluster->ear block M4 @ T1 | feet (bench) | 150 mm free, needs 60 | 150 mm | yes |
+| cluster->ear block M4 @ T2 | feet (bench) | 150 mm free, needs 60 | 150 mm | yes |
+| shell->ear block M2.5 #1 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
+| shell->ear block M2.5 #2 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
+| shell->ear block M2.5 #3 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
+| shell->ear block M2.5 #4 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | spine M2.5 @ x-6 z-40 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | spine M2.5 @ x-6 z+0 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | spine M2.5 @ x-6 z+40 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |

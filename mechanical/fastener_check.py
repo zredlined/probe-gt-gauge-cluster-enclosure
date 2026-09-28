@@ -35,6 +35,7 @@ def add(stage, item): STAGE[item[0]] = stage; obstacles.append(item)
 obstacles = []
 add(0, load("cluster (scan)", HERE.parent / "onshape_reference_package" / "cluster_onshape_reference_mm.stl"))
 add(0, load("Foot lug L", OUT / "foot_lug_l.stl")); add(0, load("Foot lug R", OUT / "foot_lug_r.stl"))
+add(0, load("Ear block L", OUT / "ear_block_l.stl")); add(0, load("Ear block R", OUT / "ear_block_r.stl"))
 add(1, load("Shell L", OUT / "shell_l.stl")); add(1, load("Shell R", OUT / "shell_r.stl"))
 add(1, load("Spine bar", OUT / "spine_bar.stl")); add(1, load("Keel bar", OUT / "keel_bar.stl"))
 for f in sorted(OUT.glob("mount_*.stl")): add(2, load(f.stem.replace("mount_", "mount "), f, Tinv))
@@ -51,6 +52,14 @@ def fasteners():
     for h in ("B2", "B3", "B5", "B6"):
         cx, cy, cz, n = G.HOLES[h]; n = G.unit(n); p = np.array([cx, cy, cz]) + n * G.LUG_PLATE_T
         F.append((f"cluster->foot M4 @ {h}", tuple(p), tuple(n), set(), 0, "driver"))
+    # cluster -> ear blocks: M4 from the FRONT of each ear tab (through the notch in the lens)
+    for h in G.EARS:
+        cx, cy, cz, n = G.HOLES[h]; n = G.unit(n); p = np.array([cx, cy, cz]) + n * G.EAR_TAB_T
+        F.append((f"cluster->ear block M4 @ {h}", tuple(p), tuple(n), set(), 0, "driver"))
+    # shell -> ear blocks: M2.5 from above through skin, air gap tube and wall
+    d_out = G.GAP + G.WALL + G.AIR + G.SKIN
+    for i, ((qx, qy), u, zq) in enumerate(G.ear_screw_points()):
+        F.append((f"shell->ear block M2.5 #{i + 1}", (qx + u[0] * (d_out - G.GAP), qy + u[1] * (d_out - G.GAP), zq), tuple(u), {"Shell L", "Shell R"}, 1, "driver"))
     # spine bar: M2.5 from above through the bar into the roof ribs; brow screws with nuts underneath (driver from above)
     for x in G.SPINE_RIB_X:
         for z in G.SPINE_SCREW_Z:
