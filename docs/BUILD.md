@@ -5,10 +5,14 @@ foam, no fasteners) was the wrong call: the bosses were solid, the lug plates un
 
 - **Chassis: two printed lug feet.** The cluster bolts to them through its own OEM holes (four M4). They are the only
   parts that depend on the scan at the millimetre level, and they print in about an hour each. **These are the next print.**
-- **Body: the shell** becomes a cover that screws to the feet from the outside, through the bottom wall directly above the
-  cage knuckles. It is being redesigned (v0.5) with the numbers from the test print; the v0.4 shell files still in the repo
-  are superseded. Print nothing from them.
-- **Mount (v0.3)** is unchanged: four split clamps on the crossbar and the two steering-support arms, M8 pivots, M6 locks.
+- **Body: the shell (v0.5)** is a cover that screws to the feet from the outside, through the bottom wall directly above
+  the cage knuckles. No cradle features; front and lips 11.5 mm further forward for the clear lens, rear wall 3 mm further
+  back, roof slots for the two ear tips, wider ribbon ports, four counterbored screw holes over the feet.
+- **Mount (v0.3)** is unchanged in concept: four split clamps on the crossbar and the two steering-support arms, M8
+  pivots, M6 locks. Its STLs were regenerated because the shell front moved.
+- **Fastener access is now checked by the generator** (`mechanical/fastener_check.py`): every screw and bolt gets a driver
+  swept from its head at the assembly stage where it is driven, and must have its reach free. All 34 pass; see section 7 for
+  what that means in the car.
 
 ![Lug feet on the cluster](../mechanical/output/renders/14_feet_rear_iso.png)
 
@@ -43,8 +47,15 @@ Hardware for the test: 4 x M4 x 16 (button or socket head), 4 x M4 nuts, 4 x M4 
 Send the numbers for anything that fails. Knobs in `mechanical/generate.py`: `FOOT_STANDOFF`, `LUG_FOOT_MARGIN_OUT`,
 `LUG_PAD_Z`, `BOLT_M4_CLR`, `NUT_M4_AF`. A reprint is an hour.
 
-Then, in order: the v0.5 shell halves once they exist, one `print_bar_clamp_lower_driver.stl` for the tube fit, plate D
-(the other clamp halves), plate C (spine and keel bars).
+Then, in order:
+
+1. **Shell L v0.5** (`print_shell_L.stl`, 421 g, 198 mm tall, about 12 h). Rear wall on the bed, brow up, brim on, tree
+   supports only under the top lip, the chin and the two knuckles (the roof and side walls are vertical; the vent slots,
+   ribbon port, ear slots and air gap need none). Nothing on this half is scan-critical any more: the cluster-with-feet
+   should drop in with about 4 mm of daylight all round and the feet's pads should land on the bottom wall over the four
+   counterbored holes. Check that, screw two M2.5 through the wall into Foot L, and look at the lens against the lip.
+2. **Shell R v0.5** (402 g), then the spine and keel bars (plate C, purple).
+3. `print_bar_clamp_lower_driver.stl` (34 g) on the painted crossbar, then plate D.
 
 ## 1. Printed parts
 
@@ -63,9 +74,15 @@ There are no ear feet. The scan shows the two top ear tabs boxed in: housing top
 behind the tab, cavity roof about 7.6 mm above it with the tab tip touching it, bezel in front. No nut, insert or bolt head
 fits there. The v0.5 shell will capture each ear tip in a 7 mm slot in the roof rib with foam instead.
 
-### Body (scan frame STLs, v0.4, superseded)
+### Body (scan frame STLs, v0.5)
 
-Shell L/R, spine bar, keel bar and test coupon as before; kept until v0.5 replaces them.
+| Part | File | Qty | Colour | Notes |
+|---|---|---|---|---|
+| Shell L | `mechanical/output/shell_l.stl` | 1 | charcoal ASA | 213 x 229 x 198 mm; ear slot, ribbon port, two counterbored foot-screw holes |
+| Shell R | `mechanical/output/shell_r.stl` | 1 | charcoal ASA | not a mirror of L: the cluster is not symmetric |
+| Spine bar | `mechanical/output/spine_bar.stl` | 1 | purple ASA | joins the halves along the roof ridge and brow |
+| Keel bar | `mechanical/output/keel_bar.stl` | 1 | purple ASA | L-shaped, rear wall and the rear part of the bottom seam; stops at z 12 so the M6 lock nuts stay reachable |
+| Test coupon | `mechanical/output/test_coupon.stl` | 1 | any | optional |
 
 ### Mount (car frame STLs, `mechanical/output/mount_*.stl`, v0.3)
 
@@ -100,8 +117,8 @@ Material: ASA. 0.2 mm layers, 4 walls; 60 percent infill for feet and clamps, 30
 1. **Feet first** (section 0): pad face down, no supports.
 2. **Clamp-fit sample.** One *Bar clamp lower* half on the painted crossbar; the bore is 44.85 mm (`CLAMP_BORE` in
    `mechanical/mount.py`). Adjust and reprint before the other seven halves.
-3. **Shells (v0.5, pending)**: rear face down, brow up, brim on, supports only under the top lip, chin and the four
-   knuckles. About 12 hours each. Heat-set the spine and keel inserts as before (6 from the roof skin at x +-6, z -40 / 0 /
+3. **Shells**: rear face down, brow up, brim on, supports only under the top lip, chin and the four knuckles. About 12
+   hours each. Heat-set the spine and keel inserts as before (6 from the roof skin at x +-6, z -40 / 0 /
    +40; 4 in the rear wall pads at x +-12, y 58 and 84; 4 in the bottom wall pads at x +-12, z -30 and +20).
 4. **Spine bar**: inner (concave) face down, small support under the curled brow end. **Keel bar**: rear leg flat.
 5. **Clamp halves**: split face down; clevis and strut grow upward with no supports.
@@ -171,13 +188,30 @@ These numbers drive v0.5; they are also in the constants of `mechanical/generate
   fit the 60 mm plug with the lock open.
 - Each lug plate has a rib along its outer edge 6 to 7 mm outboard of the outer hole, hence the feet's short outboard margin.
 
-## 7. Regenerating
+## 7. Fastener access (what the check says about working on the car)
+
+`python mechanical/fastener_check.py` sweeps an 8 mm driver from every head along its axis, against the parts present at
+the stage where that fastener is driven (feet on the bench; closing the shell on the bench; pins on the car), and also
+reports the free length with everything fitted. All 34 fasteners have their reach (60 mm for a screwdriver, 30 mm for a
+socket). What it means in practice:
+
+- The four M4 cluster bolts and the four M2.5 shell-to-feet screws are **bench operations**. In the car the shell's chin
+  sits 27 to 41 mm in front of the M4 heads and the bar clamps sit 30 mm under two of the M2.5 heads. To take the cluster
+  out: two M8, two M6, lift the enclosure off, then everything is open.
+- Keel rear screws face the dash, 25 to 43 mm away; keel bottom screws have 34 mm to the crossbar. Both are fitted on the
+  bench and reachable in the car with a stubby driver.
+- M8 pivots: on the driver-side clamp put the **nut on the outboard side** (49 mm to the dash) and the head inboard.
+- M6 locks: **heads outboard, nuts inboard**. The keel bar's bottom leg was shortened to z 12 so the inboard nuts have
+  room; before that they had 19 mm.
+
+## 8. Regenerating
 
 Everything is generated from constants: `mechanical/generate.py` (feet and shell, scan frame) and `mechanical/mount.py`
 (placement and mount, car frame). `python mechanical/generate.py` rebuilds the STLs and checks every scan-facing part
 against the scan mesh (the feet report zero penetrations and 0.35 mm minimum distance); `python mechanical/mount.py`
 rebuilds the mount and reports sightline, visibility and clearance checks; `print_prep.py` writes the bed-oriented
-`output/print/*.stl` and `print_plan.md`; `render.py` / `render_system.py` remake the renders; `push.py` uploads both
+`output/print/*.stl` and `print_plan.md`; `fastener_check.py` sweeps a driver from every fastener head (section 7); `render.py` / `render_system.py` remake the
+renders; `push.py` uploads both
 FeatureScript features to Onshape and rebuilds both assemblies there (about 30 Onshape API requests, so push only when you
 want to look; the feature gained a `buildFeet` toggle that push.py must pass on the next push).
 

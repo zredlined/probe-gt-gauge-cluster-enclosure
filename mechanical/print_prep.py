@@ -45,7 +45,7 @@ def arm_split_normal(name):
 
 rows = []
 # enclosure (scan frame: rear wall is -Z, brow is +Z, bottom wall is +Y)
-rows.append(prep("shell_l.stl", "print_shell_L.stl", [0, 0, -1], "rear wall on the bed, brow up; supports under top lip, chin, ear webs, knuckles", "A (alone)"))
+rows.append(prep("shell_l.stl", "print_shell_L.stl", [0, 0, -1], "rear wall on the bed, brow up; supports under top lip, chin and the two knuckles", "A (alone)"))
 rows.append(prep("shell_r.stl", "print_shell_R.stl", [0, 0, -1], "same as Shell L", "B (alone)"))
 rows.append(prep("spine_bar.stl", "print_spine_bar.stl", [0, 1, 0], "inner (concave) face down; small support under the curled brow end", "C"))
 rows.append(prep("keel_bar.stl", "print_keel_bar.stl", [0, 0, -1], "rear leg flat on the bed, bottom leg standing", "C"))
@@ -72,6 +72,6 @@ for r in rows:
 tot = sum(r['g'] for r in rows if not math.isnan(r['g']))
 lines += ["", f"Total ASA about {tot} g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).", "",
           "Plates: FEET = the two lug feet (print first, ~1 h each), FIT = the six fit-test sections (superseded), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
-          "Print order: plate FEET (bolt the cluster to them) -> one bar-clamp lower (tube fit) -> plate D -> plate C -> shells (v0.5 cover, pending)."]
+          "Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D."]
 (P / "print_plan.md").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))

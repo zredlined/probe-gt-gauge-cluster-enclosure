@@ -1,29 +1,29 @@
 {
  "brow_above_windshield_sightline_mm": -25.251874871996108,
  "face_fraction_visible_over_rim_top": 1.0,
- "face_normal_to_eye_deg": 8.457301251848444,
+ "face_normal_to_eye_deg": 8.353899430086852,
  "face_centre_car": [
   265.4,
-  13.9,
-  138.9
+  24.7,
+  134.9
  ],
- "clearance_enclosure_to_scan_mm": 14.937872294879202,
- "clearance_enclosure_to_cage_mm": 13.171029972138369,
- "column_radial_clearance_mm": 94.56974254088868,
+ "clearance_enclosure_to_scan_mm": 1.5580559058593861,
+ "clearance_enclosure_to_cage_mm": 10.784556794296265,
+ "column_radial_clearance_mm": 95.33281709569442,
  "switch_box_clearance_mm": 9.071487426757812,
  "enclosure_bbox_car": [
   [
    57.7,
    -67.2,
-   33.4
+   28.4
   ],
   [
    475.1,
-   135.2,
+   148.9,
    291.5
   ]
  ],
- "lowest_point_above_bar_top_mm": 11.180711000319938,
+ "lowest_point_above_bar_top_mm": 6.221418922097733,
  "params": {
   "X_C": 262.0,
   "FACE_Y": -38.0,

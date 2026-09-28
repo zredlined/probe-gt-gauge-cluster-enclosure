@@ -18,9 +18,11 @@ now two layers:
   bolts to them through its own OEM holes with four M4; each foot has a pad with two M2.5 inserts that the shell screws
   into **from outside**, directly above the cage knuckles. These are the only parts that depend on the scan at the
   millimetre level. Print and test these first (BUILD.md section 0).
-- **Body: the shell** becomes a cover (v0.5, in progress) with generous clearance, the front and lips 10 mm further
-  forward (the scanner missed the clear lens), the rear wall 3 mm further back, slots in the roof rib for the two ear tabs,
-  and screw holes over the feet. The v0.4 shell described below is superseded.
+- **Body: the shell** is a cover (v0.5) with generous clearance, the front and lips 11.5 mm further forward (the scanner
+  missed the clear lens), the rear wall 3 mm further back, slots in the roof for the two ear tabs, and counterbored screw
+  holes over the feet. Nothing on it is scan-critical.
+- **Fastener access is checked** (`mechanical/fastener_check.py`): a driver is swept from every head at the stage where
+  it is driven; all 34 fasteners pass, and BUILD.md section 7 lists which are bench-only in the car.
 
 ![Lug feet on the cluster](mechanical/output/renders/14_feet_rear_iso.png)
 
@@ -29,6 +31,9 @@ now two layers:
 ```
 onshape_reference_package/   scan deliverables (STL, colour PLY, DXF silhouettes, hole CSV, README_Onshape.md)
 mechanical/generate.py       single source of truth: constants -> CadQuery (local STLs + mesh clearance check) and FeatureScript
+mechanical/mount.py          car-frame placement of the enclosure and the four-clamp cage mount
+mechanical/print_prep.py     bed-oriented print STLs + print plan -> mechanical/output/print
+mechanical/fastener_check.py driver-access sweep for every screw and bolt -> mechanical/output/fastener_check.md
 mechanical/render.py         pyvista renders of the STLs with the scan mesh inside -> mechanical/output/renders
 mechanical/push.py           uploads the FeatureScript to the Onshape Feature Studio and (re)inserts the custom feature (spends API allocation)
 mechanical/output/           generated: *.stl, probe_cluster_enclosure.fs, seat_data.json, onshape_ids.json, renders/
@@ -116,7 +121,7 @@ costs no API allocation.
   above, 280 forward) the brow sits 25 mm below the line, as requested (gauges 1-2 in over the bar).
 - Only the crossbar, driver upright and the two steering-support arms are fitted tubes; the rest of the cage is scan mesh or absent.
 
-- Print and bolt-test the two lug feet (BUILD.md section 0), then generate the v0.5 cover shell from the measured
-  numbers (BUILD.md section 6).
+- Bolt-test the two lug feet (BUILD.md section 0), then Shell L v0.5. Two ear-tab numbers are still unmeasured (tab
+  width, tip height above the housing top); the roof slots are 20 mm wide to cover it.
 - Visor length/droop and skin end position are constants in generate.py; tune after the first look in the car.
 - Onshape has not seen v0.5 yet; the next push must pass the new `buildFeet` feature parameter.

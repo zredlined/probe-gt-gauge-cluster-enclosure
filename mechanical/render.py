@@ -43,11 +43,9 @@ expl = [(parts["shell_l"].translate((-60, 0, 0), inplace=False), COL["shell_l"],
         (parts["spine_bar"].translate((0, -50, 0), inplace=False), COL["spine_bar"], 1.0), (parts["keel_bar"].translate((0, 50, 0), inplace=False), COL["keel_bar"], 1.0),
         (cluster, CLUSTER, 1.0)]
 shot(expl, R / "10_exploded.png", (0.5, -0.5, 1.0), zoom=0.9, dist=1100)
-# interior views from the front (cluster removed / ghosted): lug cradle and ear pad
-shot([(parts["shell_l"], COL["shell_l"], 1.0), (cluster, CLUSTER, 0.3)], R / "11_lug_cradle_L.png", (0.5, -0.6, 1.0), zoom=3.0, focus=(-142, 84, -10))
-shot([(parts["shell_l"], COL["shell_l"], 1.0)], R / "11b_lug_cradle_L_empty.png", (0.5, -0.6, 1.0), zoom=3.0, focus=(-142, 84, -10))
-shot([(parts["shell_l"], COL["shell_l"], 1.0), (cluster, CLUSTER, 0.3)], R / "12_ear_pad_T1.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-168, -27, 25))
-shot([(parts["shell_l"], COL["shell_l"], 1.0)], R / "12b_ear_pad_T1_empty.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-168, -27, 25))
+# interior views: ear slot in the roof, feet in the shell (from below, shell ghosted)
+shot([(parts["shell_l"], COL["shell_l"], 1.0), (cluster, CLUSTER, 0.3)], R / "11_ear_slot_T1.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-170, -30, 35))
+shot([(parts["shell_l"], COL["shell_l"], 0.35), (pv.read(str(OUT / "foot_lug_l.stl")), "#6f3fbf", 1.0), (cluster, CLUSTER, 1.0)], R / "12_foot_in_shell_L.png", (-0.6, 1.0, -0.5), up=(0, 0, -1), zoom=2.6, focus=(-142, 90, -10))
 shot([(parts["test_coupon"], COL["test_coupon"], 1.0)], R / "13_coupon.png", (0.5, -0.6, 1.0), zoom=1.0, focus=(265, 70, -50), dist=200)
 # v0.5 lug feet on the bare cluster (no shell): rear iso, from below, close-ups
 FEET = {f: pv.read(str(OUT / f"{f}.stl")) for f in ("foot_lug_l", "foot_lug_r")}
