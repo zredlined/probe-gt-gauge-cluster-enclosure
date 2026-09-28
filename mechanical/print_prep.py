@@ -50,7 +50,10 @@ rows.append(prep("shell_r.stl", "print_shell_R.stl", [0, 0, -1], "same as Shell 
 rows.append(prep("spine_bar.stl", "print_spine_bar.stl", [0, 1, 0], "inner (concave) face down; small support under the curled brow end", "C"))
 rows.append(prep("keel_bar.stl", "print_keel_bar.stl", [0, 0, -1], "rear leg flat on the bed, bottom leg standing", "C"))
 rows.append(prep("test_coupon.stl", "print_test_coupon.stl", [0, 0, -1], "as is", "C"))
-# fit-test sections of the shells (print BEFORE the shells)
+# v0.5 cradle feet (print FIRST: they are the only scan-critical parts now)
+rows.append(prep("foot_lug_l.stl", "print_foot_lug_L.stl", [0, 1, 0], "pad face (shell bottom wall side) on the bed; no supports", "FEET"))
+rows.append(prep("foot_lug_r.stl", "print_foot_lug_R.stl", [0, 1, 0], "same as lug L", "FEET"))
+# fit-test sections of the shells (superseded by the feet; kept for reference)
 for side in ("L", "R"):
     rows.append(prep(f"fit_ring_{side}.stl", f"print_fit_ring_{side}.stl", [0, 0, 1], "front face (lips) on the bed, no supports", "FIT"))
     rows.append(prep(f"fit_cradle_{side}.stl", f"print_fit_cradle_{side}.stl", [0, 0, -1], "rear wall on the bed like the shell; support under the knuckle if present", "FIT"))
@@ -68,7 +71,7 @@ for r in rows:
     lines.append(f"| {r['plate']} | {r['file'].replace('print_', '').replace('.stl', '')} | `output/print/{r['file']}` | {r['x']} x {r['y']} | {r['z']} | {r['g']} | {'yes' if r['fits'] else 'NO'} | {r['note']} |")
 tot = sum(r['g'] for r in rows if not math.isnan(r['g']))
 lines += ["", f"Total ASA about {tot} g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).", "",
-          "Plates: FIT = the six fit-test sections (print first), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
-          "Print order: plate FIT (test on the cluster) -> one bar-clamp lower (tube fit) -> plate D -> plate C -> shells."]
+          "Plates: FEET = the two lug feet (print first, ~1 h each), FIT = the six fit-test sections (superseded), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
+          "Print order: plate FEET (bolt the cluster to them) -> one bar-clamp lower (tube fit) -> plate D -> plate C -> shells (v0.5 cover, pending)."]
 (P / "print_plan.md").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))

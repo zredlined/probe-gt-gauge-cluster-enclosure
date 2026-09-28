@@ -62,6 +62,20 @@ LOCK_X = [59.0, -62.5]; LOCK_W, LOCK_D, LOCK_H, LOCK_R, LOCK_Z, LOCK_HOLE = 16.0
 STOP_GAP = 1.0                                # rear stop pads stand off the scanned faces by this
 LUG_PAD_D = 8.0; FIN_T = 2.5; FIN_CLR = 0.8; LEDGE_CLR = 0.6
 EAR_PAD_D, EAR_SHIFT, EAR_PAD_L, EAR_WEB_W = 7.0, 2.0, 5.0, 7.0   # ear pad sits outward of the hole: the housing wall hugs the inner side
+# v0.5 chassis: two small FEET bolt to the cluster through its own OEM holes (measured 2026-09-27: all eight 5.3 mm, B6 a
+# 5.3 x 8.8 slot; lug plates 4.8 thick, ear tabs 7.0; 38 mm free behind the lug plates, 50 behind the ears); the shell then
+# screws to the feet from OUTSIDE (M2.5 into inserts). Only the feet depend on the scan at the millimetre level.
+FOOT_T = 8.0; FOOT_STANDOFF = 0.8                      # slab thickness behind the tab; gap between tab rear face and slab
+LUG_PLATE_T, EAR_TAB_T = 4.8, 7.0                      # measured tab thicknesses (bolt length); the CSV hole centre lies on the
+                                                       # tab's REAR face (the holes were fitted on the rear scan), so feet seat at centre + STANDOFF
+BOLT_M4_CLR, NUT_M4_AF, NUT_M4_H = 4.5, 7.3, 3.6       # M4 through the 5.3 mm OEM holes, nut captured in a hex pocket
+LUG_FOOT_MARGIN_IN, LUG_FOOT_MARGIN_OUT, LUG_FOOT_UP, LUG_FOOT_DOWN = 7.0, 4.5, 7.0, 7.0   # slab around the bolt pair; the plate has a rib on its
+                                                       # outer edge ~6-7 mm outboard of the outer hole, hence the short outboard margin; B1/B4 unused
+LUG_PAD_Y0 = 86.0; LUG_PAD_Z = (-38.0, -14.0); LUG_PAD_SCREW_Z = -28.0; LUG_PAD_X_MARGIN = 8.5   # pad down to the shell bottom wall
+# NO ear feet: the scan shows the ear tabs boxed in (housing top ~1.5 mm below the hole axis directly behind the tab, cavity
+# roof ~7.6 mm above it and the tab tip touching it, bezel in front), so no nut, insert or bolt head fits behind an ear.
+# The ears will be captured by a slot in the v0.5 shell roof instead (tab tip in a 7.2 mm slot, foam).
+FOOT_WALL_CLR = 0.3                                    # feet stop this short of the cavity wall (offset(GAP))
 COL_BODY = (0.184, 0.192, 0.212); COL_ACCENT = (0.435, 0.247, 0.749); COL_COUPON = (0.6, 0.62, 0.64)
 
 HOLES = {r["id"]: (float(r["center_x_mm"]), float(r["center_y_mm"]), float(r["center_z_mm"]),
@@ -178,6 +192,42 @@ def brow_dy(t):
 
 def brow_stations(t0, t1, n):
     return [(Z_FRONT + t, brow_dy(t)) for t in np.linspace(t0, t1, n)]
+
+def tab_frame(h, across):
+    """Right-handed local frame at OEM hole h: e3 = into the foot (rearward, -normal), e1 = unit projection of `across`
+    (a world XY direction) onto the tab plane, e2 = e3 x e1. Origin = CSV hole centre (tab mid-plane)."""
+    cx, cy, cz, n = HOLES[h]; n = unit(n); e3 = -n
+    a = np.array([across[0], across[1], 0.0]); e1 = unit(a - np.dot(a, e3) * e3); e2 = np.cross(e3, e1)
+    return np.array([cx, cy, cz]), e1, e2, e3
+
+def tab_plane_z(h, x, y, along_n):
+    """World z of the plane parallel to tab h, `along_n` from its CSV centre plane along the normal, at world (x, y)."""
+    cx, cy, cz, n = HOLES[h]; n = unit(n)
+    return cz + (along_n - n[0] * (x - cx) - n[1] * (y - cy)) / n[2]
+
+def build_feet(g):
+    """Two lug feet: slab behind each bottom lug plate (M4 bolts through B2 B3 / B5 B6, nuts captured in hex pockets) with a pad
+    down to the shell bottom wall carrying two M2.5 inserts for the shell screws (driven from outside, directly above the knuckle)."""
+    parts = {}; y_pad = offset(GAP).bounds[3] - FOOT_WALL_CLR
+    for side, ids in LUGS.items():
+        a, b = (HOLES[i] for i in ids); mid = (np.array(a[:3]) + np.array(b[:3])) / 2
+        o, e1, e2, e3 = tab_frame(ids[0], (1.0, 0.0)); o = mid
+        half = abs(np.dot(np.array(b[:3]) - np.array(a[:3]), e1)) / 2
+        z0 = FOOT_STANDOFF; z1 = z0 + FOOT_T
+        m_neg, m_pos = (LUG_FOOT_MARGIN_OUT, LUG_FOOT_MARGIN_IN) if side == "L" else (LUG_FOOT_MARGIN_IN, LUG_FOOT_MARGIN_OUT)   # local +x = world +x
+        slab = g.box(-(half + m_neg), -LUG_FOOT_DOWN, z0, half + m_pos, LUG_FOOT_UP, z1)
+        cuts = []
+        for sx in (-half, half):
+            cuts.append(g.cyl((sx, 0.0, z0 - 2.0), (sx, 0.0, z1 + 2.0), BOLT_M4_CLR))
+            cuts.append(g.hexprism(sx, 0.0, z1 - NUT_M4_H, z1 + 1.0, NUT_M4_AF))
+        slab = g.cut(slab, cuts)
+        slab = g.place(slab, o, e1, e2, e3)
+        xs = sorted([a[0], b[0]])
+        pad = g.box(xs[0] - LUG_PAD_X_MARGIN, LUG_PAD_Y0, LUG_PAD_Z[0], xs[1] + LUG_PAD_X_MARGIN, y_pad, LUG_PAD_Z[1])
+        foot = g.unite([slab, pad])
+        foot = g.cut(foot, [g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, y_pad - INSERT_M25_DEPTH, LUG_PAD_SCREW_Z), INSERT_M25_D) for x in xs])
+        parts[f"Foot lug {side}"] = g.name(foot, f"Foot lug {side}", COL_BODY)
+    return parts
 
 def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
     R_in, R_out = Region(offset(GAP)), Region(offset(GAP + WALL))
@@ -311,6 +361,9 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
                 holes.append(g.cyl((sx, yb + BAR_T + 1, sz), (sx, yb + BAR_T - CBORE_M25_H, sz), CBORE_M25_D))
         parts["Keel bar"] = g.name(g.cut(keel, holes), "Keel bar", COL_ACCENT)
 
+    if "feet" in want:
+        parts.update(build_feet(g))
+
     if "coupon" in want:
         # fit coupon beside the shell: M2.5 insert bore, M2.5 self-tap pilot, M6 nut pocket + clearance, a fin slot
         x0, y0 = 240.0, 60.0; zt = Z_REAR_OUT + 8
@@ -369,6 +422,15 @@ class CQ:
     def chamfer_bottom_try(self, body, w):
         try: return self.cq.Workplane(obj=body).faces("<Z").chamfer(w).val()
         except Exception as e: print("  (chamfer skipped:", str(e)[:50], ")"); return body
+    def place(self, body, origin, e1, e2, e3):
+        cq = self.cq
+        # re-orthonormalise (the frame is built from unit vectors but float noise trips gp_Trsf), then use a gp_Trsf directly
+        from OCP.gp import gp_Trsf, gp_Ax3, gp_Pnt, gp_Dir
+        from OCP.BRepBuilderAPI import BRepBuilderAPI_Transform
+        e3 = unit(e3); e1 = unit(np.asarray(e1, float) - np.dot(e1, e3) * e3)
+        ax = gp_Ax3(gp_Pnt(*map(float, origin)), gp_Dir(*map(float, e3)), gp_Dir(*map(float, e1)))
+        tr = gp_Trsf(); tr.SetTransformation(ax, gp_Ax3())   # local (ax) -> world (verified numerically)
+        return cq.Solid(BRepBuilderAPI_Transform(body.wrapped, tr, True).Shape())
     def name(self, body, label, rgb): body.label = label; body.rgb = rgb; return body
 
 # ------------------------------------------------------------------ FeatureScript backend
@@ -432,6 +494,8 @@ class FS:
         return L, R
     def chamfer_bottom_try(self, body, w):
         self.w(f"try silent {{ chamferBottom(context, {self.uid('cb')}, {body}, {w:.3f}); }}"); return body
+    def place(self, body, origin, e1, e2, e3):
+        self.w(f"opTransform(context, {self.uid('pl')}, {{ \"bodies\" : {body}, \"transform\" : toWorld(coordSystem(vector({origin[0]:.3f}, {origin[1]:.3f}, {origin[2]:.3f}) * millimeter, vector({e1[0]:.6f}, {e1[1]:.6f}, {e1[2]:.6f}), vector({e3[0]:.6f}, {e3[1]:.6f}, {e3[2]:.6f}))) }});"); return body
     def name(self, body, label, rgb):
         self.w(f"nameBody(context, {body}, \"{label}\", color({rgb[0]:.3f}, {rgb[1]:.3f}, {rgb[2]:.3f}));"); return body
 
@@ -497,6 +561,7 @@ export const probeClusterEnclosure = defineFeature(function(context is Context, 
         annotation { "Name" : "Spine bar" } definition.buildSpine is boolean;
         annotation { "Name" : "Keel bar" } definition.buildKeel is boolean;
         annotation { "Name" : "Test coupon" } definition.buildCoupon is boolean;
+        annotation { "Name" : "Cradle feet" } definition.buildFeet is boolean;
     }
     {
         var step = "start";
@@ -510,12 +575,12 @@ FS_FOOTER = '''        }
             fCuboid(context, id + "errbox", { "corner1" : vector(300, -100, -55) * millimeter, "corner2" : vector(310, -90, -45) * millimeter });
             setProperty(context, { "entities" : qCreatedBy(id + "errbox", EntityType.BODY), "propertyType" : PropertyType.NAME, "value" : "FAILED step " ~ step ~ ": " ~ toString(e) });
         }
-    }, { buildShell : true, buildSpine : true, buildKeel : true, buildCoupon : true });
+    }, { buildShell : true, buildSpine : true, buildKeel : true, buildCoupon : true, buildFeet : true });
 '''
 
 def emit_fs(info, plates):
     fs = FS()
-    for flag, want in (("buildShell", ("shell",)), ("buildSpine", ("spine",)), ("buildKeel", ("keel",)), ("buildCoupon", ("coupon",))):
+    for flag, want in (("buildShell", ("shell",)), ("buildSpine", ("spine",)), ("buildKeel", ("keel",)), ("buildCoupon", ("coupon",)), ("buildFeet", ("feet",))):
         fs.w(f"if (definition.{flag})"); fs.w("{")
         build(fs, info, plates, want=want)
         fs.w("}")
@@ -539,7 +604,7 @@ def main():
     json.dump(dict(info={k: dict(seat=v['seat'], mesh_face=v['mesh_face']) for k, v in info.items()}, plates=plates), open(OUT / "seat_data.json", "w"), indent=1)
     if a.fs_only: return
     import cadquery as cq
-    g = CQ(); parts = build(g, info, plates)
+    g = CQ(); parts = build(g, info, plates, want=("shell", "spine", "keel", "coupon", "feet"))
     for label, body in parts.items():
         fn = OUT / (label.lower().replace(" ", "_") + ".stl")
         cq.exporters.export(cq.Workplane(obj=body), str(fn), tolerance=0.05, angularTolerance=0.1)
@@ -557,10 +622,10 @@ def main():
     if not a.no_mesh:
         import trimesh, collections
         v = mesh.vertices
-        for label in ("Shell L", "Shell R"):
+        for label in ("Shell L", "Shell R", "Foot lug L", "Foot lug R"):
             body = parts[label]
             sm = trimesh.load(OUT / (label.lower().replace(" ", "_") + ".stl"))
-            sel = v[(v[:, 0] <= 2) if label == "Shell L" else (v[:, 0] >= -2)]
+            sel = v[(v[:, 0] <= 2) if label.endswith("L") else (v[:, 0] >= -2)]
             _, dist, _ = trimesh.proximity.closest_point(sm, sel)
             near = sel[dist < 1.5]
             inside = np.array([p for p in near if body.isInside(cq.Vector(*p), 0.01)]) if len(near) else np.zeros((0, 3))

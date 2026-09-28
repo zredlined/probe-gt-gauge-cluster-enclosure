@@ -49,4 +49,14 @@ shot([(parts["shell_l"], COL["shell_l"], 1.0)], R / "11b_lug_cradle_L_empty.png"
 shot([(parts["shell_l"], COL["shell_l"], 1.0), (cluster, CLUSTER, 0.3)], R / "12_ear_pad_T1.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-168, -27, 25))
 shot([(parts["shell_l"], COL["shell_l"], 1.0)], R / "12b_ear_pad_T1_empty.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-168, -27, 25))
 shot([(parts["test_coupon"], COL["test_coupon"], 1.0)], R / "13_coupon.png", (0.5, -0.6, 1.0), zoom=1.0, focus=(265, 70, -50), dist=200)
+# v0.5 lug feet on the bare cluster (no shell): rear iso, from below, close-ups
+FEET = {f: pv.read(str(OUT / f"{f}.stl")) for f in ("foot_lug_l", "foot_lug_r")}
+FOOT_COL = "#6f3fbf"
+feet = [(m, FOOT_COL, 1.0) for m in FEET.values()]
+shot(feet + [(cluster, CLUSTER, 1.0)], R / "14_feet_rear_iso.png", (-0.6, -0.4, -1.0), zoom=1.15)
+shot(feet + [(cluster, CLUSTER, 1.0)], R / "15_feet_below.png", (0.2, 1.0, -0.5), up=(0, 0, -1), zoom=1.2)
+shot([(FEET["foot_lug_l"], FOOT_COL, 1.0), (cluster, CLUSTER, 0.35)], R / "16_foot_lug_L.png", (-0.7, 0.5, -0.8), zoom=3.2, focus=(-142, 86, -20))
+shot([(FEET["foot_lug_l"], FOOT_COL, 1.0)], R / "16b_foot_lug_L_alone.png", (0.6, -0.5, 1.0), zoom=3.2, focus=(-142, 86, -20))
+shot([(FEET["foot_lug_l"], FOOT_COL, 1.0)], R / "16c_foot_lug_L_rear.png", (-0.5, -0.4, -1.0), zoom=3.2, focus=(-142, 86, -20))
+for f in R.glob("17*foot_ear*"): f.unlink()
 print("rendered", len(list(R.glob("*.png"))), "images ->", R)

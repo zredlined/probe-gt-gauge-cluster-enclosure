@@ -60,6 +60,7 @@ export const probeClusterEnclosure = defineFeature(function(context is Context, 
         annotation { "Name" : "Spine bar" } definition.buildSpine is boolean;
         annotation { "Name" : "Keel bar" } definition.buildKeel is boolean;
         annotation { "Name" : "Test coupon" } definition.buildCoupon is boolean;
+        annotation { "Name" : "Cradle feet" } definition.buildFeet is boolean;
     }
     {
         var step = "start";
@@ -915,6 +916,61 @@ export const probeClusterEnclosure = defineFeature(function(context is Context, 
         step = "847";
         nameBody(context, b554, "Test coupon", color(0.600, 0.620, 0.640));
         }
+        if (definition.buildFeet)
+        {
+        step = "852";
+        const b567 = mkBox(context, id + "bx568", -14.429, -7.000, 0.800, 16.929, 7.000, 8.800);
+        step = "854";
+        const b569 = mkCyl(context, id + "cy570", vector(-9.929, 0.000, -1.200), vector(-9.929, 0.000, 10.800), 4.500);
+        step = "856";
+        const b571 = mkHex(context, id + "hx572", -9.929, 0.000, 5.200, 9.800, 7.300);
+        step = "858";
+        const b573 = mkCyl(context, id + "cy574", vector(9.929, 0.000, -1.200), vector(9.929, 0.000, 10.800), 4.500);
+        step = "860";
+        const b575 = mkHex(context, id + "hx576", 9.929, 0.000, 5.200, 9.800, 7.300);
+        step = "862";
+        mkCut(context, id + "ct577", b567, [b569, b571, b573, b575]);
+        step = "864";
+        opTransform(context, id + "pl578", { "bodies" : b567, "transform" : toWorld(coordSystem(vector(-142.814, 84.071, -7.851) * millimeter, vector(0.999324, -0.008094, -0.035852), vector(-0.036754, -0.220062, -0.974793))) });
+        step = "866";
+        const b579 = mkBox(context, id + "bx580", -161.235, 86.000, -38.000, -124.392, 95.854, -14.000);
+        step = "868";
+        const u581 = mkUnite(context, id + "un582", [b567, b579]);
+        step = "870";
+        const b583 = mkCyl(context, id + "cy584", vector(-152.735, 96.854, -28.000), vector(-152.735, 89.354, -28.000), 3.400);
+        step = "872";
+        const b585 = mkCyl(context, id + "cy586", vector(-132.892, 96.854, -28.000), vector(-132.892, 89.354, -28.000), 3.400);
+        step = "874";
+        mkCut(context, id + "ct587", u581, [b583, b585]);
+        step = "876";
+        nameBody(context, u581, "Foot lug L", color(0.184, 0.192, 0.212));
+        step = "878";
+        const b588 = mkBox(context, id + "bx589", -17.162, -7.000, 0.800, 14.662, 7.000, 8.800);
+        step = "880";
+        const b590 = mkCyl(context, id + "cy591", vector(-10.162, 0.000, -1.200), vector(-10.162, 0.000, 10.800), 4.500);
+        step = "882";
+        const b592 = mkHex(context, id + "hx593", -10.162, 0.000, 5.200, 9.800, 7.300);
+        step = "884";
+        const b594 = mkCyl(context, id + "cy595", vector(10.162, 0.000, -1.200), vector(10.162, 0.000, 10.800), 4.500);
+        step = "886";
+        const b596 = mkHex(context, id + "hx597", 10.162, 0.000, 5.200, 9.800, 7.300);
+        step = "888";
+        mkCut(context, id + "ct598", b588, [b590, b592, b594, b596]);
+        step = "890";
+        opTransform(context, id + "pl599", { "bodies" : b588, "transform" : toWorld(coordSystem(vector(127.764, 82.808, -10.391) * millimeter, vector(0.999971, -0.001800, -0.007399), vector(-0.007615, -0.236359, -0.971636))) });
+        step = "892";
+        const b600 = mkBox(context, id + "bx601", 109.102, 86.000, -38.000, 146.427, 95.854, -14.000);
+        step = "894";
+        const u602 = mkUnite(context, id + "un603", [b588, b600]);
+        step = "896";
+        const b604 = mkCyl(context, id + "cy605", vector(117.602, 96.854, -28.000), vector(117.602, 89.354, -28.000), 3.400);
+        step = "898";
+        const b606 = mkCyl(context, id + "cy607", vector(137.927, 96.854, -28.000), vector(137.927, 89.354, -28.000), 3.400);
+        step = "900";
+        mkCut(context, id + "ct608", u602, [b604, b606]);
+        step = "902";
+        nameBody(context, u602, "Foot lug R", color(0.184, 0.192, 0.212));
+        }
         }
         catch (e)
         {
@@ -922,4 +978,4 @@ export const probeClusterEnclosure = defineFeature(function(context is Context, 
             fCuboid(context, id + "errbox", { "corner1" : vector(300, -100, -55) * millimeter, "corner2" : vector(310, -90, -45) * millimeter });
             setProperty(context, { "entities" : qCreatedBy(id + "errbox", EntityType.BODY), "propertyType" : PropertyType.NAME, "value" : "FAILED step " ~ step ~ ": " ~ toString(e) });
         }
-    }, { buildShell : true, buildSpine : true, buildKeel : true, buildCoupon : true });
+    }, { buildShell : true, buildSpine : true, buildKeel : true, buildCoupon : true, buildFeet : true });

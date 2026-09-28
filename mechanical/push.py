@@ -49,7 +49,7 @@ def main():
     feats = api("GET", f"/partstudios/d/{DID}/w/{WID}/e/{PS}/features")
     existing = [f for f in feats["features"] if f.get("featureType") == FEATURE_TYPE]
     mv = api("GET", f"/documents/d/{DID}/w/{WID}/currentmicroversion")["microversion"]
-    params = [{"btType": "BTMParameterBoolean-144", "parameterId": p, "value": True} for p in ("buildShell", "buildSpine", "buildKeel", "buildCoupon")]
+    params = [{"btType": "BTMParameterBoolean-144", "parameterId": p, "value": True} for p in ("buildShell", "buildSpine", "buildKeel", "buildCoupon", "buildFeet")]
     if not existing:
         feat = {"btType": "BTMFeature-134", "featureType": FEATURE_TYPE, "name": FEATURE_NAME, "namespace": f"e{fsid}::m{mv}", "parameters": params}
         api("POST", f"/partstudios/d/{DID}/w/{WID}/e/{PS}/features", {"feature": feat}); print("inserted feature")

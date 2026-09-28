@@ -8,6 +8,22 @@ one purple accent, exposed aligned fasteners), mounted Ducati-Monster style off 
 
 Build guide (parts, hardware, print and assembly): [docs/BUILD.md](docs/BUILD.md).
 
+## Status: v0.5 chassis + body split (2026-09-27)
+
+The first Shell L test print (12 h) fitted the cluster but exposed the wrong idea: the cluster was held by shape and foam
+with no fasteners, the stop pads were solid bosses and the lug plates were unreachable inside the shell. The design is
+now two layers:
+
+- **Chassis: two lug feet** (`mechanical/output/print/print_foot_lug_*.stl`, 12 g, about an hour each). The cluster
+  bolts to them through its own OEM holes with four M4; each foot has a pad with two M2.5 inserts that the shell screws
+  into **from outside**, directly above the cage knuckles. These are the only parts that depend on the scan at the
+  millimetre level. Print and test these first (BUILD.md section 0).
+- **Body: the shell** becomes a cover (v0.5, in progress) with generous clearance, the front and lips 10 mm further
+  forward (the scanner missed the clear lens), the rear wall 3 mm further back, slots in the roof rib for the two ear tabs,
+  and screw holes over the feet. The v0.4 shell described below is superseded.
+
+![Lug feet on the cluster](mechanical/output/renders/14_feet_rear_iso.png)
+
 ## Layout
 
 ```
@@ -22,8 +38,9 @@ Run (scratch env with cadquery, trimesh, shapely, scipy, ezdxf, pyvista, request
 
 ```bash
 python mechanical/generate.py        # geometry + clearance report (~20 s)
+python mechanical/print_prep.py      # bed-oriented STLs + print plan
 python mechanical/render.py          # renders
-source ~/.zshrc && python mechanical/push.py   # ~7 Onshape API requests
+source ~/.zshrc && python mechanical/push.py   # ~30 Onshape API requests
 ```
 
 ## Coordinate frame
@@ -32,14 +49,12 @@ Scan frame, millimetres: **X** across the cluster, **Y increases downward in the
 (bezel front at about +50, harness connectors at the rear down to -56). Everything (STL, DXF, hole CSV, FeatureScript)
 shares this frame so it lines up in Onshape without transforms.
 
-## Design (enclosure v0.4 + mount v0.1, 2026-09-26)
+## Design (shell v0.4 + mount v0.3, 2026-09-26; shell retention superseded by the v0.5 feet)
 
-- **Shell L / Shell R**, split at X = 0 (a 405 mm part does not fit the P1S bed). The halves close around the cluster;
-  the cluster is never drilled or screwed. Cavity is the scan silhouette hull (corners rounded to R12) offset 4 mm.
-- **Cradle retention**: ledges under the two bottom lug plates carry the weight; a fin outside each plate fixes X and yaw;
-  tilted stop pads behind lug holes B2 B3 B5 B6 and ears T1 T2 stop rearward motion; a top lip (4 mm over the rim) and a
-  bottom chin (reaches the bezel's lower rim) stop forward motion. All pad heights come from the scan (1 mm standoff).
-  Add thin foam tape on the lip rear faces if the cluster rattles.
+- **Shell L / Shell R**, split at X = 0 (a 405 mm part does not fit the P1S bed). The halves close around the cluster.
+  Cavity is the scan silhouette hull (corners rounded to R12) offset 4 mm.
+- **Cradle retention (v0.4, dropped)**: ledges, fins, tilted stop pads and front lips held the cluster by shape. Replaced
+  by the two bolted lug feet; the v0.5 shell keeps only cosmetic lips and ear slots.
 - **Closed back with two ribbon ports** (v0.3): the rear wall (inner face z -58) covers the PCB and both centre connector
   housings. The ribbon cables plug into two vertical PCB slots (left x -179..-173, right x 161..168, y 2..50, thumb locks
   facing outboard); each rear corner has a port from 12 mm inboard of its slot out to the side wall, 12 mm above and below
@@ -101,6 +116,7 @@ costs no API allocation.
   above, 280 forward) the brow sits 25 mm below the line, as requested (gauges 1-2 in over the bar).
 - Only the crossbar, driver upright and the two steering-support arms are fitted tubes; the rest of the cage is scan mesh or absent.
 
-- Roll-cage bracket (needs the cage model).
-- Physical check of the lug plate ledge/fin fit and rim lip clearance with the coupon and a lug-corner test print.
+- Print and bolt-test the two lug feet (BUILD.md section 0), then generate the v0.5 cover shell from the measured
+  numbers (BUILD.md section 6).
 - Visor length/droop and skin end position are constants in generate.py; tune after the first look in the car.
+- Onshape has not seen v0.5 yet; the next push must pass the new `buildFeet` feature parameter.
