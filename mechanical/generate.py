@@ -534,6 +534,7 @@ class FS:
             v = self.var("u"); self.w(f"const {v} = mkUnite(context, {self.uid('un')}, [{acc}, {b}]);"); acc = v
         return acc
     def cut(self, target, tools):
+        if not tools: return target          # an empty tool list is a no-op (qUnion([]) would be CANNOT_RESOLVE_ENTITIES)
         self.w(f"mkCut(context, {self.uid('ct')}, {target}, [{', '.join(tools)}]);"); return target
     def intersect(self, target, tools):
         self.w(f"mkIntersect(context, {self.uid('it')}, {target}, [{', '.join(tools)}]);"); return target
