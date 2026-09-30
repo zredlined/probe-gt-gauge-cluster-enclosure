@@ -246,7 +246,6 @@ def build_feet(g, tilt=0.0, want=("lugs", "ears")):
     """Two lug feet: slab behind each bottom lug plate (M4 bolts through B2 B3 / B5 B6, nuts captured in hex pockets) with a pad
     down to the shell bottom wall carrying two M2.5 inserts for the shell screws (driven from outside, directly above the knuckle)."""
     parts = {}; y_pad = offset(GAP).bounds[3] - FOOT_WALL_CLR
-    cavity = g.prism(Region(offset(GAP - FOOT_WALL_CLR)), Z_REAR_IN, Z_FRONT)
     tag = f" tilt{tilt:+.0f}" if tilt else ""
     for side, ids in (LUGS.items() if "lugs" in want else []):
         a, b = (HOLES[i] for i in ids); mid = (np.array(a[:3]) + np.array(b[:3])) / 2
@@ -283,7 +282,8 @@ def build_feet(g, tilt=0.0, want=("lugs", "ears")):
             blk = g.cut(blk, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), BOLT_M4_CLR), g.hexprism(0.0, 0.0, z1 - EAR_NUT_POCKET, z1 + 1.0, NUT_M4_AF)])
             blk = g.cut(blk, side_dots(g, side, (-MARK_PITCH / 2, -EAR_BLOCK_DOWN + 2.0, z1), (1, 0, 0), (0, 0, 1)))   # dots on the rear face, below the nut pocket
             blk = g.place(blk, o, e1, e2, e3)
-            blk = g.intersect(blk, [cavity])                          # top follows the cavity roof
+            # a fresh cavity prism per block: boolean tools are consumed in FeatureScript, so one body cannot serve two intersects
+            blk = g.intersect(blk, [g.prism(Region(offset(GAP - FOOT_WALL_CLR)), Z_REAR_IN, Z_FRONT)])   # top follows the cavity roof
             bores = []
             for (qx, qy), u, zq in pts[2 * k: 2 * k + 2]:
                 bores.append(g.cyl((qx + u[0] * 2.0, qy + u[1] * 2.0, zq), (qx - u[0] * (FOOT_WALL_CLR + INSERT_M25_DEPTH), qy - u[1] * (FOOT_WALL_CLR + INSERT_M25_DEPTH), zq), INSERT_M25_D))
