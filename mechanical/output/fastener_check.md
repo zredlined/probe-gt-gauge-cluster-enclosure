@@ -8,10 +8,10 @@ Driver body 8.0 mm swept from each head along the fastener axis (scan frame). Ea
 | shell->foot M4 @ B3 | close (bench) | 150 mm free, needs 60 | 104 mm (dash_surroundings) | yes |
 | shell->foot M4 @ B5 | close (bench) | 150 mm free, needs 60 | 109 mm (dash_surroundings) | yes |
 | shell->foot M4 @ B6 | close (bench) | 150 mm free, needs 60 | 31 mm (mount bar_clamp_upper_driver) | yes |
-| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 33 mm (Shell L) | yes |
-| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 28 mm (Shell L) | yes |
+| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 32 mm (Shell L) | yes |
+| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 29 mm (Shell L) | yes |
 | cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 36 mm (Shell R) | yes |
-| cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 41 mm (Shell R) | yes |
+| cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 39 mm (Shell R) | yes |
 | cluster->ear boss M4 @ T1 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | cluster->ear boss M4 @ T2 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | spine M2.5 @ x-6 z-40 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
@@ -24,7 +24,7 @@ Driver body 8.0 mm swept from each head along the fastener axis (scan frame). Ea
 | spine M2.5 @ x+6 z+22 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | brow M2.5 @ x+6 s20 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | brow M2.5 @ x+6 s55 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
-| keel rear M2.5 @ x-12 y58 | close (bench) | 150 mm free, needs 60 | 42 mm (dash_surroundings) | yes |
+| keel rear M2.5 @ x-12 y58 | close (bench) | 150 mm free, needs 60 | 43 mm (dash_surroundings) | yes |
 | keel rear M2.5 @ x+12 y58 | close (bench) | 150 mm free, needs 60 | 42 mm (dash_surroundings) | yes |
 | keel rear M2.5 @ x-12 y84 | close (bench) | 150 mm free, needs 60 | 25 mm (dash_surroundings) | yes |
 | keel rear M2.5 @ x+12 y84 | close (bench) | 150 mm free, needs 60 | 38 mm (dash_surroundings) | yes |

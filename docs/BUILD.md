@@ -35,6 +35,12 @@ Shells: rear wall on the bed, brow up, brim on, tree supports **only under the t
 20 to 35 degrees and prints unsupported; the roof, sides, vents, ports and air gap need nothing. 0.2 mm, 4 walls,
 30 percent gyroid.
 
+**Check 0, ear-boss coupons (15 min each, before Shell L):** `print_ear_coupon_L.stl` and `_R.stl` are the ear boss with
+the roof above it, cut straight out of each shell. Slide an M4 nut into the channel from the open (inboard) face: it should
+push in with a fingertip, wedge snug at the end, and sit centred under the 5 mm hole. Then hold the coupon behind the ear tab
+and run an M4 x 20 through the tab into the nut. Channel is 7.2 mm wide at the end tapering to 7.6 at the mouth, 3.4 thick,
+end 4.15 mm past the bolt axis so the nut's corners clear. Knobs: `NUT_M4_SLOT_W`, `EAR_CHAN_MOUTH_W`, `NUT_M4_SLOT_T`.
+
 **Check A, feet (before the shells, when the M4s arrive):** nuts into the rear slots of the slab, feet behind the lug
 plates, four M4 x 16 with washers from the front. Stand the cluster on its feet on a flat table: both pads flat, no rock
 over 0.5 mm, nothing but the plates touching the feet, ribbon plugs still fit.

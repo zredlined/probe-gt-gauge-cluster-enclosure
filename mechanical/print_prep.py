@@ -56,11 +56,9 @@ rows.append(prep("foot_lug_r.stl", "print_foot_lug_R.stl", [0, 1, 0], "same as l
 for t in ("-3", "+3"):
     for side in ("L", "R"):
         rows.append(prep(f"foot_lug_{side.lower()}_tilt{t}.stl", f"print_foot_lug_{side}_tilt{t}.stl", [0, 1, 0], f"angle variant: slab {t} deg about the bolt line, pad flat", "FEET-VAR"))
-# fit-test sections of the shells (superseded by the feet; kept for reference)
-for side in ("L", "R"):
-    rows.append(prep(f"fit_ring_{side}.stl", f"print_fit_ring_{side}.stl", [0, 0, 1], "front face (lips) on the bed, no supports", "FIT"))
-    rows.append(prep(f"fit_cradle_{side}.stl", f"print_fit_cradle_{side}.stl", [0, 0, -1], "rear wall on the bed like the shell; support under the knuckle if present", "FIT"))
-    rows.append(prep(f"fit_ear_{side}.stl", f"print_fit_ear_{side}.stl", [0, 0, 1], "front face on the bed; small support under the ear-pad web", "FIT"))
+# ear-boss coupons: the boss plus the roof above it, cut from each shell; print on the flat rear cut face
+rows.append(prep("ear_coupon_L.stl", "print_ear_coupon_L.stl", [0, 0, -1], "rear cut face on the bed, nut channel horizontal; no supports", "COUPON"))
+rows.append(prep("ear_coupon_R.stl", "print_ear_coupon_R.stl", [0, 0, -1], "same", "COUPON"))
 # mount (car frame): bar clamps split horizontally at z = 0
 for side in ("driver", "center"):
     rows.append(prep(f"mount_bar_clamp_upper_{side}.stl", f"print_bar_clamp_upper_{side}.stl", [0, 0, -1], "split face down, clevis up, no supports", "D"))
@@ -74,7 +72,7 @@ for r in rows:
     lines.append(f"| {r['plate']} | {r['file'].replace('print_', '').replace('.stl', '')} | `output/print/{r['file']}` | {r['x']} x {r['y']} | {r['z']} | {r['g']} | {'yes' if r['fits'] else 'NO'} | {r['note']} |")
 tot = sum(r['g'] for r in rows if not math.isnan(r['g']))
 lines += ["", f"Total ASA about {tot} g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).", "",
-          "Plates: FEET = the two lug feet (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, FIT = the six fit-test sections (superseded), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
+          "Plates: FEET = the two lug feet (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, COUPON = ear-boss coupons (15 min each), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
           "Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D."]
 (P / "print_plan.md").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))

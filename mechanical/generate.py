@@ -49,7 +49,9 @@ Y_SKIN_END = 5.0     # double skin / visor exist only for Y <= this (arch + shor
 # loaded from the inboard side, which faces up when the half lies on its outer side); M4 x 20 from the front through the lens notch.
 EAR_BLOCK_T, EAR_BLOCK_HALF_W, EAR_BLOCK_DOWN, EAR_BLOCK_UP = 10.0, 10.0, 4.0, 14.0
 EAR_BOLT_CLR = 5.0                                     # a little slop: the boss is on the shell, the tab is positioned by the feet
-NUT_M4_SLOT_W, NUT_M4_SLOT_T, EAR_NUT_REAR_WALL = 7.1, 3.4, 1.0
+NUT_M4_AC = 8.1                                        # M4 nut across corners (7.0 AF): the channel end must clear it
+NUT_M4_SLOT_W, NUT_M4_SLOT_T, EAR_NUT_REAR_WALL = 7.2, 3.4, 1.0
+EAR_CHAN_MOUTH_W = 7.6                                 # channel widens toward its mouth: the nut slides in easily and wedges snug at the end
 # feet: the pad captures two M4 nuts in rear-entry slots (no inserts); M4 x 10 from below through fore-aft slots in the shell
 FOOT_SLOT_HALF = 2.0; CLR_M4_SHELL = 4.5
 # ribbon-cable ports: the two vertical PCB slots (left x -179..-173, right x 161..168, y ~2..50, thumb lock outboard).
@@ -282,8 +284,7 @@ def build_feet(g, tilt=0.0, want=("lugs",)):
         # two M4 nuts in rear-entry slots at mid pad height; M4 x 10 comes up from under the shell
         y_nut = (LUG_PAD_Y0 + y_pad) / 2; cuts = []
         for x in xs:
-            cuts.append(g.box(x - NUT_M4_SLOT_W / 2, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_Z[0] - 1.0, x + NUT_M4_SLOT_W / 2, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z))
-            cuts.append(g.cyl((x, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z), (x, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z), NUT_M4_SLOT_W))
+            cuts.append(g.box(x - NUT_M4_SLOT_W / 2, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_Z[0] - 1.0, x + NUT_M4_SLOT_W / 2, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z + NUT_M4_AC / 2 + 0.1))
             cuts.append(g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, LUG_PAD_Y0 - 1.0, LUG_PAD_SCREW_Z), BOLT_M4_CLR))
         foot = g.cut(foot, cuts)
         # ID marks: side dots on the pad's rear face (faces the rear wall), tilt bars on the pad's outboard end face
@@ -341,9 +342,11 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
             z0 = FOOT_STANDOFF; z1 = z0 + EAR_BLOCK_T
             boss = g.box(-EAR_BLOCK_HALF_W, -EAR_BLOCK_DOWN, z0, EAR_BLOCK_HALF_W, EAR_BLOCK_UP, z1)
             zc0 = z1 - EAR_NUT_REAR_WALL - NUT_M4_SLOT_T
-            chan = g.box(min(0.0, xin * (EAR_BLOCK_HALF_W + 1.0)), -NUT_M4_SLOT_W / 2, zc0, max(0.0, xin * (EAR_BLOCK_HALF_W + 1.0)), NUT_M4_SLOT_W / 2, zc0 + NUT_M4_SLOT_T)
-            boss = g.cut(boss, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), EAR_BOLT_CLR), chan,
-                                g.cyl((0.0, 0.0, zc0 - 1.0), (0.0, 0.0, zc0 + NUT_M4_SLOT_T + 1.0), NUT_M4_SLOT_W)])   # round the channel end
+            # nut channel: flat end NUT_M4_AC/2 beyond the bolt axis (a corner of the nut touches it when the nut is centred),
+            # flats guided by the channel walls, width tapering from EAR_CHAN_MOUTH_W at the mouth to NUT_M4_SLOT_W at the end
+            x_end, x_mouth = -xin * (NUT_M4_AC / 2 + 0.1), xin * (EAR_BLOCK_HALF_W + 1.0)
+            chan = g.prism(Region(Polygon([(x_end, -NUT_M4_SLOT_W / 2), (x_end, NUT_M4_SLOT_W / 2), (x_mouth, EAR_CHAN_MOUTH_W / 2), (x_mouth, -EAR_CHAN_MOUTH_W / 2)])), zc0, zc0 + NUT_M4_SLOT_T)
+            boss = g.cut(boss, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), EAR_BOLT_CLR), chan])
             boss = g.place(boss, o, e1, e2, e3)
             boss = g.intersect(boss, [g.prism(Region(offset(GAP + WALL - 0.3)), Z_REAR_IN, Z_FRONT)])   # reaches 2.2 mm into the wall
             shell = g.unite([shell, boss])
@@ -687,9 +690,10 @@ def main():
         print(f"  {label:<12} bbox x {bb.xmin:7.1f}..{bb.xmax:6.1f}  y {bb.ymin:6.1f}..{bb.ymax:5.1f}  z {bb.zmin:6.1f}..{bb.zmax:6.1f}  vol {body.Volume()/1000:7.1f} cm3  solids {len(body.Solids())}")
     # fit-test coupons: sections of the real shells that test the scan-dependent features with the cluster in hand
     # (front ring = lips, chin, silhouette; cradle corners = ledge, fin, block, stop pads; ear corners = ear pads + lip)
-    FIT = {"fit_ring_L": ("Shell L", (-400, -300, Z_FRONT - 20.0, 0.0, 300, Z_FRONT + 1)), "fit_ring_R": ("Shell R", (0.0, -300, Z_FRONT - 20.0, 400, 300, Z_FRONT + 1)),
-           "fit_cradle_L": ("Shell L", (-400, 55.0, Z_REAR_OUT - 1, -100.0, 300, 12.0)), "fit_cradle_R": ("Shell R", (85.0, 55.0, Z_REAR_OUT - 1, 400, 300, 12.0)),
-           "fit_ear_L": ("Shell L", (-400, -60.0, 12.0, -135.0, -5.0, Z_FRONT + 1)), "fit_ear_R": ("Shell R", (125.0, -60.0, 12.0, 400, -5.0, Z_FRONT + 1))}
+    FIT = {}
+    for side, h in zip(("L", "R"), EARS):      # ear-boss coupons: the boss with the roof above it, cut from the shell (test the nut channel and the tab fit)
+        cx, cy, cz, n = HOLES[h]
+        FIT[f"ear_coupon_{side}"] = (f"Shell {side}", (cx - 16.0, -300, cz - 18.0, cx + 16.0, cy + 6.0, cz + 6.0))
     for name, (src, bx) in FIT.items():
         piece = parts[src].intersect(g.box(*bx))
         cq.exporters.export(cq.Workplane(obj=piece), str(OUT / f"{name}.stl"), tolerance=0.05, angularTolerance=0.1)
