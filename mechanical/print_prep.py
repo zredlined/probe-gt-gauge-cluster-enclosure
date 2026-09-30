@@ -45,7 +45,7 @@ def arm_split_normal(name):
 
 rows = []
 # enclosure (scan frame: rear wall is -Z, brow is +Z, bottom wall is +Y)
-rows.append(prep("shell_l.stl", "print_shell_L.stl", [0, 0, -1], "rear wall on the bed, brow up; supports under top lip, chin and the two knuckles", "A (alone)"))
+rows.append(prep("shell_l.stl", "print_shell_L.stl", [0, 0, -1], "rear wall on the bed, brow up; supports only under the two knuckles (the nose leans in at 20-35 deg and prints unsupported)", "A (alone)"))
 rows.append(prep("shell_r.stl", "print_shell_R.stl", [0, 0, -1], "same as Shell L", "B (alone)"))
 rows.append(prep("spine_bar.stl", "print_spine_bar.stl", [0, 1, 0], "inner (concave) face down; small support under the curled brow end", "C"))
 rows.append(prep("keel_bar.stl", "print_keel_bar.stl", [0, 0, -1], "rear leg flat on the bed, bottom leg standing", "C"))
@@ -53,9 +53,6 @@ rows.append(prep("test_coupon.stl", "print_test_coupon.stl", [0, 0, -1], "as is"
 # v0.5 cradle feet (print FIRST: they are the only scan-critical parts now)
 rows.append(prep("foot_lug_l.stl", "print_foot_lug_L.stl", [0, 1, 0], "pad face (shell bottom wall side) on the bed; no supports", "FEET"))
 rows.append(prep("foot_lug_r.stl", "print_foot_lug_R.stl", [0, 1, 0], "same as lug L", "FEET"))
-import generate as G
-for side, h in zip(("L", "R"), G.EARS):
-    rows.append(prep(f"ear_block_{side.lower()}.stl", f"print_ear_block_{side}.stl", list(-G.unit(G.HOLES[h][3])), "nut-pocket face (rear) on the bed; no supports", "FEET"))
 for t in ("-3", "+3"):
     for side in ("L", "R"):
         rows.append(prep(f"foot_lug_{side.lower()}_tilt{t}.stl", f"print_foot_lug_{side}_tilt{t}.stl", [0, 1, 0], f"angle variant: slab {t} deg about the bolt line, pad flat", "FEET-VAR"))
@@ -77,7 +74,7 @@ for r in rows:
     lines.append(f"| {r['plate']} | {r['file'].replace('print_', '').replace('.stl', '')} | `output/print/{r['file']}` | {r['x']} x {r['y']} | {r['z']} | {r['g']} | {'yes' if r['fits'] else 'NO'} | {r['note']} |")
 tot = sum(r['g'] for r in rows if not math.isnan(r['g']))
 lines += ["", f"Total ASA about {tot} g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).", "",
-          "Plates: FEET = two lug feet + two ear blocks (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, FIT = the six fit-test sections (superseded), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
+          "Plates: FEET = the two lug feet (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, FIT = the six fit-test sections (superseded), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
           "Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D."]
 (P / "print_plan.md").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))

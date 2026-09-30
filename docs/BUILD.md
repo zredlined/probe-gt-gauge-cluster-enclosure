@@ -1,94 +1,81 @@
 # Build guide: Probe GT gauge cluster enclosure and cage mount
 
-**Status (2026-09-27, v0.5 in progress).** The first Shell L test print showed the "cradle" idea (cluster held by shape and
-foam, no fasteners) was the wrong call: the bosses were solid, the lug plates unreachable. The design is now split in two:
+**Status (2026-09-30, v0.6).** Two test prints and a bolt-up later, the design is:
 
-- **Chassis: two printed lug feet.** The cluster bolts to them through its own OEM holes (four M4). They are the only
-  parts that depend on the scan at the millimetre level, and they print in about an hour each. **These are the next print.**
-- **Body: the shell (v0.5)** is a cover that screws to the feet from the outside, through the bottom wall directly above
-  the cage knuckles. No cradle features; front and lips 11.5 mm further forward for the clear lens, rear wall 3 mm further
-  back, roof slots for the two ear tips, wider ribbon ports, four counterbored screw holes over the feet.
-- **Mount (v0.3)** is unchanged in concept: four split clamps on the crossbar and the two steering-support arms, M8
-  pivots, M6 locks. Its STLs were regenerated because the shell front moved.
-- **Fastener access is now checked by the generator** (`mechanical/fastener_check.py`): every screw and bolt gets a driver
-  swept from its head at the assembly stage where it is driven, and must have its reach free. All 34 pass; see section 7 for
-  what that means in the car.
+- **Chassis: two printed lug feet** bolted to the cluster through its own OEM lug holes (four M4). Each foot captures two
+  M4 nuts in rear-entry slots; four M4 come up from under the shell into them. Proven on the bench with the R side.
+- **Ears: two bosses moulded into the shell roof.** Each ear tab bolts from the front, through the notch in the lens, into
+  a standard M4 nut sitting in a side-entry channel in the boss. No inserts, no roof holes, nothing driven at an angle
+  inside the shell. The boss is the exact solid of the separate ear block that fitted in the v0.5 test.
+- **Body: the shell** is a cover with a **nose**: from 30 mm behind the face the wall lofts inward to the scanned outline of
+  the bezel's front rim plus 2.5 mm, so the shell hugs the black frame instead of hovering 17 to 29 mm outside it
+  (the v0.5 opening followed the widest outline at the back of the shroud). The brow springs from where the nose starts.
+- **Mount (v0.3)**: four split clamps on the crossbar and the two steering-support arms, M8 pivots, M6 locks. The lock
+  knuckles moved 22 mm rearward to stay on the straight part of the bottom wall; the mount STLs are regenerated.
+- **Fastener access is checked by the generator** (`mechanical/fastener_check.py`): all 36 fasteners have their reach at
+  the stage where they are driven. Section 7 says what that means in the car.
+- **Hardware is all M4** except the M2.5 for the two purple bars and the cage-clamp bolts.
 
-![Lug feet on the cluster](../mechanical/output/renders/14_feet_rear_iso.png)
+![Front](../mechanical/output/renders/03_front.png)
 
-## 0. Start here: print the two lug feet and bolt the cluster to them
+## 0. Print order and the two checks
 
-| Part | File | ASA | Time |
-|---|---|---|---|
-| Foot lug L | `mechanical/output/print/print_foot_lug_L.stl` | 12 g | ~1 h |
-| Foot lug R | `mechanical/output/print/print_foot_lug_R.stl` | 12 g | ~1 h |
+| Step | Part | File | ASA | Time |
+|---|---|---|---|---|
+| 1 | Foot lug L, Foot lug R | `mechanical/output/print/print_foot_lug_L.stl`, `..._R.stl` | 11 g each | ~1 h each |
+| 2 | Shell L | `print_shell_L.stl` | 392 g | ~11 h |
+| 3 | Shell R | `print_shell_R.stl` | 375 g | ~11 h |
+| 4 | Spine bar, Keel bar (purple) | `print_spine_bar.stl`, `print_keel_bar.stl` | 18 + 16 g | ~3 h |
+| 5 | Bar clamp lower driver (tube fit), then plate D | `print_bar_clamp_lower_*.stl` etc. | 34 g / ~330 g | 1 h / ~8 h |
 
-Slicer: pad face on the bed (already oriented), no supports, 0.2 mm, 4 walls, 60 percent infill. ASA or PETG both fine.
+Feet: pad face on the bed (already oriented), no supports, 60 percent infill. If the pad rocked in your bench test, the
+`print_foot_lug_*_tilt-3.stl` and `tilt+3.stl` variants rotate the slab 3 degrees about the bolt line either way.
 
-Hardware for the test: 4 x M4 x 16 (button or socket head), 4 x M4 nuts, 4 x M4 washers of 9 mm OD or less.
+Shells: rear wall on the bed, brow up, brim on, tree supports **only under the two knuckles**. The nose leans inward at
+20 to 35 degrees and prints unsupported; the roof, sides, vents, ports and air gap need nothing. 0.2 mm, 4 walls,
+30 percent gyroid.
 
-1. Press an M4 nut into each hex pocket on the rear face of the slab (the tilted face with two holes).
-2. Cluster face down on a towel. Hold Foot L behind the **face-right** lug plate (the plate with round holes only), slab
-   against the plate's rear face, pad hanging below the plate's bottom edge. Foot R goes behind the **face-left** plate
-   (the one with the slotted hole).
-3. Push the M4 bolts with washers from the **front** of the plate (gauge side) through the pair of holes 19.7 mm apart and
-   into the nuts. Snug, do not crush the old plastic.
-4. Stand the cluster on its two feet on a flat table, gauge face vertical. Check:
+**Check A, feet (before the shells, when the M4s arrive):** nuts into the rear slots of the slab, feet behind the lug
+plates, four M4 x 16 with washers from the front. Stand the cluster on its feet on a flat table: both pads flat, no rock
+over 0.5 mm, nothing but the plates touching the feet, ribbon plugs still fit.
 
-| Check | Pass |
-|---|---|
-| Bolts | pass freely through plate and foot (foot holes are 4.5 mm); nuts do not spin in their pockets |
-| Slab on plate | slab lies flat on the plate's rear face; any gap under 0.5 mm (0.8 mm designed standoff) |
-| Outer edge | slab's outboard edge clears the rib along the plate's outer edge |
-| Pad | nothing but the plate touches the foot; the housing above and behind the pad stays clear |
-| Coplanar | both pads flat on the table at once, cluster does not rock more than 0.5 mm |
-| Ribbon | both ribbon plugs still fit and their thumb locks still work with the feet on |
-
-Send the numbers for anything that fails. Knobs in `mechanical/generate.py`: `FOOT_STANDOFF`, `LUG_FOOT_MARGIN_OUT`,
-`LUG_PAD_Z`, `BOLT_M4_CLR`, `NUT_M4_AF`. A reprint is an hour.
-
-Then, in order:
-
-1. **Shell L v0.5** (`print_shell_L.stl`, 421 g, 198 mm tall, about 12 h). Rear wall on the bed, brow up, brim on, tree
-   supports only under the top lip, the chin and the two knuckles (the roof and side walls are vertical; the vent slots,
-   ribbon port, ear slots and air gap need none). Nothing on this half is scan-critical any more: the cluster-with-feet
-   should drop in with about 4 mm of daylight all round and the feet's pads should land on the bottom wall over the four
-   counterbored holes. Check that, screw two M2.5 through the wall into Foot L, and look at the lens against the lip.
-2. **Shell R v0.5** (402 g), then the spine and keel bars (plate C, purple).
-3. `print_bar_clamp_lower_driver.stl` (34 g) on the painted crossbar, then plate D.
+**Check B, Shell L alone (before Shell R):** lay Shell L on its outer side, lower the cluster-with-feet in from the split
+plane. The pad should land on the bottom wall with its two nut slots over the two slotted holes, the ear tab should sit
+flat against the ear boss with its hole lined up (5 mm hole in the boss), the bezel rim should have about 2.5 to 3 mm of
+daylight to the nose all round, the lens front should sit about 3 mm behind the nose rim. Drop an M4 nut into the boss
+channel from above (it faces up with the half on its side) and run an M4 x 20 through the ear from the front.
 
 ## 1. Printed parts
 
-### Chassis (scan frame STLs, v0.5)
+### Chassis (scan frame STLs)
 
 | Part | File | Qty | Colour | Notes |
 |---|---|---|---|---|
 | Foot lug L | `mechanical/output/foot_lug_l.stl` | 1 | charcoal ASA | behind the face-right lug plate (scan holes B2 B3); 37 x 31 x 21 mm |
 | Foot lug R | `mechanical/output/foot_lug_r.stl` | 1 | charcoal ASA | behind the face-left lug plate (scan holes B5 B6) |
+| Foot lug L / R tilt -3 / +3 | `mechanical/output/foot_lug_*_tilt*.stl` | as needed | any | angle variants for the bench check only |
 
-Each foot is an L: a slab parallel to the lug plate (0.8 mm off its rear face, two M4 clearance holes, hex nut pockets at
-the back) and a pad that reaches down to the shell's bottom wall with two M2.5 heat-set inserts in its underside. The shell
-screws come up from outside the bottom wall into those inserts, in line with the M4 bolts above them.
+Each foot is an L: a slab parallel to the lug plate (0.8 mm off its rear face, two 4.5 mm holes, hex nut pockets at the
+back) and a pad reaching down to the shell's bottom wall. The pad has two rear-entry slots for M4 nuts (7.1 x 3.4) at mid
+height and two vertical 4.5 mm holes in line with the M4 lug bolts above; the shell bolts come up from below into those nuts.
 
-| Ear block L / R | `mechanical/output/ear_block_l.stl`, `..._r.stl` | 1 each | charcoal ASA | 20 x 19 x 10 mm block behind each ear tab: M4 through the OEM hole from the front into a nut captured in the rear hex pocket; two M2.5 inserts in the top face for the roof screws |
-| Foot lug L / R tilt -3 / +3 | `mechanical/output/foot_lug_*_tilt*.stl` | as needed | any | angle variants: slab rotated about the bolt line, pad still flat; for the bench angle check only |
+**ID marks** (debossed 0.8 mm): **1 dot = L, 2 dots = R** on the pad's rear face. Tilt variants carry a bar on the pad's
+outboard end face: **"-" = tilt -3, "+" = tilt +3**, no bar = nominal. L is the **face-right** side (round-hole lug
+plate, scan holes B2 B3 T1); R is the **face-left** side (slotted lug hole, scan holes B5 B6 T2).
 
-**ID marks** (debossed, 0.8 mm deep): every bracket carries dots for its side, **1 dot = L, 2 dots = R**, on the rear face
-(feet: the pad face toward the rear wall; ear blocks: the nut-pocket face, below the pocket). Tilt variants also carry a
-bar on the pad's outboard end face: **"-" = tilt -3, "+" = tilt +3**, no bar = nominal.
-
-L and R follow the scan frame: **L is the face-right side** (round-hole lug plate, scan holes B2 B3 T1), **R is the
-face-left side** (slotted lug hole, scan holes B5 B6 T2).
-
-### Body (scan frame STLs, v0.5)
+### Body (scan frame STLs)
 
 | Part | File | Qty | Colour | Notes |
 |---|---|---|---|---|
-| Shell L | `mechanical/output/shell_l.stl` | 1 | charcoal ASA | 213 x 229 x 198 mm; ear slot, ribbon port, two counterbored foot-screw holes |
+| Shell L | `mechanical/output/shell_l.stl` | 1 | charcoal ASA | 213 x 229 x 164 mm; nose, ear boss, ribbon port, two slotted M4 holes in the bottom wall |
 | Shell R | `mechanical/output/shell_r.stl` | 1 | charcoal ASA | not a mirror of L: the cluster is not symmetric |
 | Spine bar | `mechanical/output/spine_bar.stl` | 1 | purple ASA | joins the halves along the roof ridge and brow |
-| Keel bar | `mechanical/output/keel_bar.stl` | 1 | purple ASA | L-shaped, rear wall and the rear part of the bottom seam; stops at z 12 so the M6 lock nuts stay reachable |
+| Keel bar | `mechanical/output/keel_bar.stl` | 1 | purple ASA | L-shaped, rear wall and the rear part of the bottom seam; stops at z 12 |
 | Test coupon | `mechanical/output/test_coupon.stl` | 1 | any | optional |
+
+Ear bosses: 20 x 18 x 10 mm blocks inside the roof behind each ear tab, 0.8 mm off the tab's rear face, 5 mm bolt hole,
+nut channel 7.1 x 3.4 open toward the split plane with a 1 mm wall at the back. Their position comes from the scan hole
+CSV, which the v0.5 ear block confirmed on the R side.
 
 ### Mount (car frame STLs, `mechanical/output/mount_*.stl`, v0.3)
 
@@ -104,19 +91,21 @@ side (crossbar x 417, arm at x 325).
 
 ## 2. Hardware
 
+Nuts are standard M4, 7.0 mm across flats, 3.2 thick. Washers 9 mm OD or smaller.
+
 | Item | Qty | Used for |
 |---|---|---|
-| M4 x 16 button or socket head, M4 nuts, M4 washers (9 mm OD max) | 4 each | cluster lug plates to the two feet (plate 4.8 + gap 0.8 + foot 4.4 + nut 3.2 = 13.2) |
-| M4 x 20 button or socket head, M4 nuts, M4 washers (9 mm OD max) | 2 each | cluster ear tabs to the two ear blocks (tab 7 + gap 0.8 + block 6 + nut 3.2 = 17) |
-| M2.5 x 4 heat-set inserts, 3.5 mm OD | 22 | 4 in the feet, 4 in the ear blocks, 6 under the spine bar, 8 under the keel bar |
-| M2.5 x 6 socket or button head | 4 | shell to feet, from below (1 mm of wall under the counterbore + 0.3 gap + 4.7 into a 6.5 mm bore; an M2.5 x 8 bottoms out) |
-| M2.5 x 14 socket or button head | 4 | shell to ear blocks, from above (skin 2 + air gap 6 + wall 2.5 - counterbore 1.5 = 9, then 4.7 into the block) |
+| M4 x 16 button or socket head + nut + washer | 4 | cluster lug plates to the feet (plate 4.8 + gap 0.8 + slab 4.4 + nut 3.2 = 13.2) |
+| M4 x 20 button or socket head + nut + washer | 2 | cluster ear tabs to the shell's ear bosses, from the front through the lens notch (tab 7 + gap 0.8 + boss 5.6 + nut 3.2 = 16.6) |
+| M4 x 10 button head + nut | 4 | shell to feet, from below (wall 2.5 + gap 0.3 + pad 3.5 to the nut + nut 3.2 = 9.5; x 12 also fine) |
+| M2.5 x 4 heat-set inserts, 3.5 mm OD | 14 | 6 under the spine bar, 8 under the keel bar (all straight, into flat faces) |
 | M2.5 x 8 socket or button head | 18 | 6 spine bar, 8 keel bar, 4 through the brow with nuts |
 | M2.5 nuts + small washers | 4 | the two screw pairs on the brow (2 mm skin, no rib for an insert) |
 | M8 x 70 bolts, nyloc nuts, 2 nylon washers each | 2 | pivot pins: two 16 mm clevis blades + 24 mm knuckle + 0.6 gap + washers + 8 mm nyloc = 68 |
 | M6 x 50 bolts, nyloc nuts, washers | 2 | pitch locks: two 12 mm blades + 16 mm knuckle + 0.6 + washers + 6 mm nyloc = 49 |
 | M6 x 40 bolts + nyloc nuts + washers | 8 | the four split clamps (2 each): two 14 mm flanges + nut + washer = 35 |
-| Adhesive foam tape, 3 mm EPDM | ~150 mm | rear faces of the front lip and chin |
+
+No M4 inserts anywhere. The only heat-set inserts are the 14 straight M2.5 for the bars.
 
 ## 3. Print
 
@@ -124,14 +113,13 @@ Material: ASA. 0.2 mm layers, 4 walls; 60 percent infill for feet and clamps, 30
 100 percent for bars and coupon.
 
 1. **Feet first** (section 0): pad face down, no supports.
-2. **Clamp-fit sample.** One *Bar clamp lower* half on the painted crossbar; the bore is 44.85 mm (`CLAMP_BORE` in
+2. **Shells**: rear face down, brow up, brim on, supports only under the two knuckles. About 11 hours each. Heat-set the
+   spine and keel inserts afterwards: 6 from the roof skin at x +-6, z -40 / -8 / +22; 4 in the rear wall pads at x +-12,
+   y 58 and 84; 4 in the bottom wall pads at x +-12, z -30 and 0.
+3. **Spine bar**: inner (concave) face down, small support under the curled brow end. **Keel bar**: rear leg flat.
+4. **Clamp-fit sample.** One *Bar clamp lower* half on the painted crossbar; the bore is 44.85 mm (`CLAMP_BORE` in
    `mechanical/mount.py`). Adjust and reprint before the other seven halves.
-3. **Shells**: rear face down, brow up, brim on, supports only under the top lip, chin and the four knuckles. About 12
-   hours each. Heat-set the spine and keel inserts as before (6 from the roof skin at x +-6, z -40 / 0 /
-   +40; 4 in the rear wall pads at x +-12, y 58 and 84; 4 in the bottom wall pads at x +-12, z -30 and +20).
-4. **Spine bar**: inner (concave) face down, small support under the curled brow end. **Keel bar**: rear leg flat.
 5. **Clamp halves**: split face down; clevis and strut grow upward with no supports.
-6. Heat-set the four M2.5 inserts into the underside of the two feet (6.5 mm deep bores).
 
 ## 4. How the mount connects to the enclosure
 
@@ -140,93 +128,93 @@ The shell's bottom wall carries four knuckles, all moulded into the shell halves
 - **Two pivot knuckles** (24 mm wide, 40 mm long, M8 bore across the car) directly under the two feet, at scan x +-155.
   They land directly above the crossbar. Each drops into the clevis on a *Bar clamp upper*; an M8 bolt through clevis and
   knuckle is the pitch axis.
-- **Two lock knuckles** (16 mm wide, M6 bore) near the front-bottom edge, at scan x +59 and -62.5, directly above the two
-  steering-support arms. Each drops into the slotted clevis on an *Arm clamp upper*; an M6 bolt through the slot and
-  knuckle locks the pitch. The 16 mm slot gives about +-5 degrees of trim around the modelled 20 degrees.
+- **Two lock knuckles** (16 mm wide, M6 bore) at scan x +59 and -62.5, z 18, directly above the two steering-support
+  arms. Each drops into the slotted clevis on an *Arm clamp upper*; an M6 bolt through the slot and knuckle locks the
+  pitch. The 16 mm slot gives about +-5 degrees of trim around the modelled 20 degrees.
 
-Load path: cluster -> M4 bolts -> feet -> M2.5 screws through the bottom wall -> knuckles (about 15 mm away) ->
-clevises -> clamps -> crossbar and both arms. Nothing hangs off the A-pillar bar and nothing is glued.
+Load path: cluster -> M4 lug bolts -> feet -> M4 bolts through the bottom wall -> knuckles (about 15 mm away) ->
+clevises -> clamps -> crossbar and both arms. The ear bolts tie the top of the cluster to the roof so the lug plates
+carry no pitching moment. Nothing hangs off the A-pillar bar and nothing is glued.
 
 ![Mount close-up](../mechanical/output/renders/sys_04_mount_closeup.png)
 
 ## 5. Assembly
 
-Chassis, on the bench (section 0 steps 1 to 3): nuts in the pockets, feet behind the lug plates, four M4 from the front.
-Heat-set the M2.5 inserts into the feet before this.
+Chassis, on the bench: two M4 nuts into the hex pockets on the back of each foot slab, two more into the rear slots of each
+pad. Feet behind the lug plates (L behind the face-right plate), four M4 x 16 with washers from the front.
 
-Body (v0.5, when it exists):
+Body:
 
-1. Foam in the ear slots and on the rear faces of the lip and chin.
-2. Lay Shell L on its outer side. Lower the cluster with its feet in from the split plane: each pad lands on the bottom
-   wall over its knuckle, the ear tips enter the roof slots, the bezel tucks behind lip and chin.
-3. Shell R over the cluster until the halves meet at the centre seam. Spine bar (six M2.5 into inserts, four brow screws
-   with nuts), keel bar (eight M2.5).
-4. Four M2.5 x 8 from underneath through the bottom wall into the feet. These are the only screws that hold the cluster to
-   the shell and they are all reachable with the shell closed.
-5. Plug the two ribbon cables into the PCB slots through the rear-corner ports; thumb locks face outboard.
+1. Lay Shell L on its outer side, split face up. Drop an M4 nut into the ear boss channel (it opens upward in this
+   position) and push it home against the back wall of the channel.
+2. Lower the cluster with its feet in from the split plane: the pad lands on the bottom wall over its two slotted holes,
+   the ear tab lies against the boss.
+3. Shell R over the cluster until the halves meet at the centre seam. Its boss passes behind the R ear tab. Nut into its
+   channel before closing, from the inboard side.
+4. Two M4 x 20 with washers from the **front**, through the notch in the lens and the ear hole, into the boss nuts.
+5. Four M4 x 10 from **underneath**, through the slotted holes in the bottom wall into the pad nuts. Slide the cluster
+   fore-aft on the slots until the lens sits about 3 mm behind the nose rim, then tighten.
+6. Spine bar (six M2.5 into inserts, four brow screws with nuts), keel bar (eight M2.5).
+7. Plug the two ribbon cables into the PCB slots through the rear-corner ports; thumb locks face outboard.
 
 Mount:
 
-6. Fit the two bar clamps loosely at 107 and 417 mm from the driver-upright junction along the crossbar, clevises up,
-   M6 x 60 through the fore-and-aft flanges.
-7. Fit the two arm clamps loosely on the steering-support arms, centred 55 mm from the crossbar axis toward the driver
-   (the clean straight tube is between 35 and 80 mm), struts up and leaning back toward the crossbar.
-8. Lower the closed enclosure so the two pivot knuckles drop into the bar-clamp clevises; M8 bolts with nylon washers,
-   nyloc nuts loose. Swing the lock knuckles into the arm-clamp clevises, M6 bolts through the slots.
-9. Sit in the car. Slide the clamps along their tubes until the knuckles sit centred in the clevises, set the pitch so the
-   gauge face looks straight at you, then tighten: M8 pivots, M6 locks, arm clamps, bar clamps.
-10. Check the ribbon plugs can still be pulled and reseated with everything tight.
+8. Fit the two bar clamps loosely at 107 and 417 mm from the driver-upright junction along the crossbar, clevises up,
+   M6 x 40 through the fore-and-aft flanges.
+9. Fit the two arm clamps loosely on the steering-support arms, struts up and leaning back toward the crossbar.
+10. Lower the closed enclosure so the two pivot knuckles drop into the bar-clamp clevises; M8 bolts with nylon washers,
+    nyloc nuts loose. Swing the lock knuckles into the arm-clamp clevises, M6 bolts through the slots, heads outboard.
+11. Sit in the car. Slide the clamps along their tubes until the knuckles sit centred in the clevises, set the pitch so the
+    gauge face looks straight at you, then tighten: M8 pivots, M6 locks, arm clamps, bar clamps.
+12. Check the ribbon plugs can still be pulled and reseated with everything tight.
 
-To remove the cluster later: two M8, two M6, lift the enclosure off; four M2.5 from underneath; keel bar, spine bar,
-halves apart; the cluster comes out with its feet still bolted on.
+To take the cluster out later: two M8, two M6, lift the enclosure off. Then two M4 from the front (ears), four M4 from
+below (feet), keel bar, spine bar, halves apart. The cluster comes out with its feet still on.
 
-## 6. What the Shell L test print measured (2026-09-27)
+## 6. What the test prints measured (2026-09-27 to 09-30)
 
-These numbers drive v0.5; they are also in the constants of `mechanical/generate.py`.
+These numbers drive the geometry; they are also constants in `mechanical/generate.py`.
 
 - OEM mounting holes: all eight are 5.3 mm; B6 (face-left lower outer) is a 5.3 x 8.8 slot. The scan had 5.3 to 6.8.
-- Lug hole pair spacing 19.7 mm (scan 20.2). Lug plates 4.8 mm thick, ear tabs 7.0 mm. Free space behind the lug plates
-  38 mm, behind the ears 50 mm, both to the plane the ribbon connectors sit on.
-- The CSV hole centres lie on the tabs' **rear** faces (the holes were fitted on the rear scan): the cluster seated with
-  the plates flat on stop pads designed 1 mm off those faces.
-- The rear of the cluster touched the rear grate designed 2.2 mm clear: the cluster is 2 to 3 mm deeper than the scan.
-  v0.5 moves the rear wall back 3 mm.
-- The clear lens stands about 10 mm proud of the scanned rim (the scanner did not see the transparent lens). v0.5 moves
-  the shell front and lips forward 10 mm, and the lips overlap only the black bezel frame.
-- Ribbon plugs: face-right 51 x 9.6 mm, face-left 59.8 x 9.6 mm, thumb lock adds 4 mm outboard. The v0.5 ports grow to
-  fit the 60 mm plug with the lock open.
+- Lug hole pair spacing 19.7 mm (scan 20.2). Lug plates 4.8 mm thick, ear tabs 7.0 mm, 19.5 wide, standing 10 mm above the
+  housing top with the hole about 5 mm below the tip. The lens is notched around each tab. Free space behind the lug
+  plates 38 mm, behind the ears 50 mm.
+- The CSV hole centres lie on the tabs' **rear** faces (the holes were fitted on the rear scan).
+- The cluster is 2 to 3 mm deeper than the scan (it touched a wall designed 2.2 mm clear); the rear wall moved back 3 mm.
+- The clear lens stands about 11 mm proud of the scanned rim (the scanner did not see it) and about 5 mm proud of the
+  black frame's front edge at its widest.
+- The bezel shroud tapers: scanned outline y -81.6 at the back, -70 at the front rim, sides in by 5 to 30 mm depending on
+  height. The v0.5 opening followed the back and left 17 to 29 mm of air; the v0.6 nose follows the rim.
+- Ribbon plugs: face-right 51 x 9.6 mm, face-left 59.8 x 9.6 mm, thumb lock adds 4 mm outboard.
 - Each lug plate has a rib along its outer edge 6 to 7 mm outboard of the outer hole, hence the feet's short outboard margin.
-- Ear tabs: 19.5 mm wide, 7 mm thick, tip 10 mm above the housing top, hole about 5 mm below the tip.
+- Heat-set inserts at odd angles are unreliable in FDM (they melt in and wander); the v0.6 design uses none.
 
 ## 7. Fastener access (what the check says about working on the car)
 
 `python mechanical/fastener_check.py` sweeps an 8 mm driver from every head along its axis, against the parts present at
-the stage where that fastener is driven (feet on the bench; closing the shell on the bench; pins on the car), and also
-reports the free length with everything fitted. All 34 fasteners have their reach (60 mm for a screwdriver, 30 mm for a
-socket). What it means in practice:
+the stage where that fastener is driven, and also reports the free length with everything fitted. All 36 fasteners have
+their reach (60 mm for a screwdriver, 30 mm for a socket).
 
-- The four M4 cluster bolts and the four M2.5 shell-to-feet screws are **bench operations**. In the car the shell's chin
-  sits 27 to 41 mm in front of the M4 heads and the bar clamps sit 30 mm under two of the M2.5 heads. To take the cluster
-  out: two M8, two M6, lift the enclosure off, then everything is open.
-- Keel rear screws face the dash, 25 to 43 mm away; keel bottom screws have 34 mm to the crossbar. Both are fitted on the
-  bench and reachable in the car with a stubby driver.
-- M8 pivots: on the driver-side clamp put the **nut on the outboard side** (49 mm to the dash) and the head inboard.
-- M6 locks: **heads outboard, nuts inboard**. The keel bar's bottom leg was shortened to z 12 so the inboard nuts have
-  room; before that they had 19 mm.
+- The two ear M4s are reachable **with the shell closed and the enclosure on the cage**: 150 mm free through the lens notch.
+- The four feet M4s from below have 31 mm in the car where the bar clamps sit under two of them, so they are done with the
+  enclosure off the cage (or with a stubby driver).
+- Keel rear screws face the dash, 25 to 43 mm away; keel bottom screws have 34 mm to the crossbar. Fitted on the bench.
+- M8 pivots: on the driver-side clamp put the **nut on the outboard side** (49 mm to the dash). M6 locks: **heads
+  outboard, nuts inboard**.
 
 ## 8. Regenerating
 
-Everything is generated from constants: `mechanical/generate.py` (feet and shell, scan frame) and `mechanical/mount.py`
+Everything is generated from constants: `mechanical/generate.py` (feet, shell, scan frame) and `mechanical/mount.py`
 (placement and mount, car frame). `python mechanical/generate.py` rebuilds the STLs and checks every scan-facing part
-against the scan mesh (the feet report zero penetrations and 0.35 mm minimum distance); `python mechanical/mount.py`
-rebuilds the mount and reports sightline, visibility and clearance checks; `print_prep.py` writes the bed-oriented
-`output/print/*.stl` and `print_plan.md`; `fastener_check.py` sweeps a driver from every fastener head (section 7); `render.py` / `render_system.py` remake the
-renders; `push.py` uploads both
+against the scan mesh; `python mechanical/mount.py` rebuilds the mount and reports sightline and clearance checks;
+`print_prep.py` writes the bed-oriented `output/print/*.stl` and `print_plan.md`; `fastener_check.py` sweeps a driver from
+every fastener head (section 7); `render.py` / `render_system.py` remake the renders; `push.py` uploads both
 FeatureScript features to Onshape and rebuilds both assemblies there (about 30 Onshape API requests, so push only when you
-want to look; the feature gained a `buildFeet` toggle that push.py must pass on the next push).
+want to look).
 
-Placement knobs in `mount.py`: `FACE_Y` (gauge face behind the crossbar, -38), `EDGE_LIFT` (front-bottom edge above the bar
-top, 50), `PITCH` (face lean-back, 20), `X_C` (lateral centre, 262 = on the steering column), `ARM_CLAMP_Y` (-55).
+Nose knobs: `NOSE_Z0` (where the taper starts, 30), `NOSE_SCAN_ZMIN` (which part of the scan defines the rim outline, 36),
+`NOSE_CLR` (rim clearance, 2.5), `NOSE_RIM_T` (rim thickness, 4). Placement knobs in `mount.py`: `FACE_Y`, `EDGE_LIFT`,
+`PITCH`, `X_C`, `ARM_CLAMP_Y`.
 
-![Feet from below](../mechanical/output/renders/15_feet_below.png)
+![Driver view](../mechanical/output/renders/01_driver_iso.png)
 ![Foot lug L](../mechanical/output/renders/16c_foot_lug_L_rear.png)

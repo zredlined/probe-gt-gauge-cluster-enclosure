@@ -44,7 +44,7 @@ expl = [(parts["shell_l"].translate((-60, 0, 0), inplace=False), COL["shell_l"],
         (cluster, CLUSTER, 1.0)]
 shot(expl, R / "10_exploded.png", (0.5, -0.5, 1.0), zoom=0.9, dist=1100)
 # interior views: ear slot in the roof, feet in the shell (from below, shell ghosted)
-shot([(parts["shell_l"], COL["shell_l"], 1.0), (cluster, CLUSTER, 0.3)], R / "11_ear_slot_T1.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-170, -30, 35))
+shot([(parts["shell_l"], COL["shell_l"], 1.0), (cluster, CLUSTER, 0.3)], R / "11_ear_boss_T1.png", (0.6, 0.5, 1.0), zoom=3.5, focus=(-170, -30, 35))
 shot([(parts["shell_l"], COL["shell_l"], 0.35), (pv.read(str(OUT / "foot_lug_l.stl")), "#6f3fbf", 1.0), (cluster, CLUSTER, 1.0)], R / "12_foot_in_shell_L.png", (-0.6, 1.0, -0.5), up=(0, 0, -1), zoom=2.6, focus=(-142, 90, -10))
 shot([(parts["test_coupon"], COL["test_coupon"], 1.0)], R / "13_coupon.png", (0.5, -0.6, 1.0), zoom=1.0, focus=(265, 70, -50), dist=200)
 # v0.5 lug feet on the bare cluster (no shell): rear iso, from below, close-ups
@@ -57,8 +57,5 @@ shot([(FEET["foot_lug_l"], FOOT_COL, 1.0), (cluster, CLUSTER, 0.35)], R / "16_fo
 shot([(FEET["foot_lug_l"], FOOT_COL, 1.0)], R / "16b_foot_lug_L_alone.png", (0.6, -0.5, 1.0), zoom=3.2, focus=(-142, 86, -20))
 shot([(FEET["foot_lug_l"], FOOT_COL, 1.0)], R / "16c_foot_lug_L_rear.png", (-0.5, -0.4, -1.0), zoom=3.2, focus=(-142, 86, -20))
 for f in R.glob("17*foot_ear*"): f.unlink()
-for side, focus in (("l", (-168, -30, 28)), ("r", (156, -27, 24))):
-    eb = pv.read(str(OUT / f"ear_block_{side}.stl"))
-    shot([(eb, FOOT_COL, 1.0), (cluster, CLUSTER, 0.35)], R / f"17_ear_block_{side.upper()}.png", (-0.6 if side == "l" else 0.6, -0.5, -0.7), zoom=4.0, focus=focus)
-    shot([(eb, FOOT_COL, 1.0), (cluster, CLUSTER, 1.0)], R / f"17b_ear_block_{side.upper()}_solid.png", (-0.6 if side == "l" else 0.6, -0.6, 0.6), zoom=4.0, focus=focus)
+for f in list(R.glob("17*ear_block*")): f.unlink()
 print("rendered", len(list(R.glob("*.png"))), "images ->", R)

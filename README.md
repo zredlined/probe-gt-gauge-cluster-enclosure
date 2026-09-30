@@ -8,23 +8,18 @@ one purple accent, exposed aligned fasteners), mounted Ducati-Monster style off 
 
 Build guide (parts, hardware, print and assembly): [docs/BUILD.md](docs/BUILD.md).
 
-## Status: v0.5 chassis + body split (2026-09-27)
+## Status: v0.6 (2026-09-30)
 
-The first Shell L test print (12 h) fitted the cluster but exposed the wrong idea: the cluster was held by shape and foam
-with no fasteners, the stop pads were solid bosses and the lug plates were unreachable inside the shell. The design is
-now two layers:
+- **Chassis: two lug feet** bolted to the cluster through its OEM lug holes (four M4), each capturing two M4 nuts that
+  four bolts from under the shell run into. Bench-proven on the R side.
+- **Ears: bosses moulded into the shell roof**, each with a side-entry channel for a standard M4 nut; one M4 per ear from
+  the front through the notch in the lens. No inserts, no roof holes.
+- **Body: the shell has a nose**: from 30 mm behind the face the wall lofts inward to the scanned outline of the bezel's
+  front rim plus 2.5 mm. v0.5 followed the widest outline at the back of the shroud and left 17 to 29 mm of air.
+- **Fastener access is checked** (`mechanical/fastener_check.py`) for all 36 fasteners at the stage they are driven.
+- Hardware is all M4 except the M2.5 for the purple bars and the M6/M8 of the cage mount. Build guide: [docs/BUILD.md](docs/BUILD.md).
 
-- **Chassis: two lug feet** (`mechanical/output/print/print_foot_lug_*.stl`, 12 g, about an hour each). The cluster
-  bolts to them through its own OEM holes with four M4; each foot has a pad with two M2.5 inserts that the shell screws
-  into **from outside**, directly above the cage knuckles. These are the only parts that depend on the scan at the
-  millimetre level. Print and test these first (BUILD.md section 0).
-- **Body: the shell** is a cover (v0.5) with generous clearance, the front and lips 11.5 mm further forward (the scanner
-  missed the clear lens), the rear wall 3 mm further back, slots in the roof for the two ear tabs, and counterbored screw
-  holes over the feet. Nothing on it is scan-critical.
-- **Fastener access is checked** (`mechanical/fastener_check.py`): a driver is swept from every head at the stage where
-  it is driven; all 34 fasteners pass, and BUILD.md section 7 lists which are bench-only in the car.
-
-![Lug feet on the cluster](mechanical/output/renders/14_feet_rear_iso.png)
+![Front](mechanical/output/renders/03_front.png)
 
 ## Layout
 
@@ -121,7 +116,7 @@ costs no API allocation.
   above, 280 forward) the brow sits 25 mm below the line, as requested (gauges 1-2 in over the bar).
 - Only the crossbar, driver upright and the two steering-support arms are fitted tubes; the rest of the cage is scan mesh or absent.
 
-- Bolt-test the two lug feet (BUILD.md section 0), then Shell L v0.5. Ear tabs measured 19.5 mm wide and 10 mm tall;
-  the roof slots are 21.5 x 11 mm.
+- Print Shell L v0.6 and do check B (BUILD.md section 0); the L ear boss position is the one scan-dependent spot not yet
+  bench-proven.
 - Visor length/droop and skin end position are constants in generate.py; tune after the first look in the car.
 - Onshape has not seen v0.5 yet; the next push must pass the new `buildFeet` feature parameter.

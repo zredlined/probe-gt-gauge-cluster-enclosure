@@ -6,9 +6,10 @@ Frame = scan frame of onshape_reference_package (mm): X across the cluster, Y in
 Z toward the driver (front/glass +Z, rear/connectors -Z).  Keep it so the STL, DXF and hole CSV line up in Onshape.
 
 Parts (v0.5): two FEET bolted to the cluster through its OEM lug holes (chassis); Shell L / Shell R (split at X=0) as a
-cover that screws to the feet from outside through the bottom wall; Spine bar (top ridge) and Keel bar (rear+bottom seam)
-joining the halves; Test coupon.  The shell captures the two ear tips in roof slots and overlaps the bezel with a cosmetic
-lip and chin; it has no scan-critical features.  Rear-corner ports for the two ribbon plugs, vents, sun brow.
+cover bolted to the feet from below (M4 into nuts captured in the feet); Spine bar (top ridge) and Keel bar (rear+bottom
+seam) joining the halves; Test coupon.  v0.6: the front of the shell is a NOSE lofted to the scanned bezel rim, and each
+ear tab bolts from the front (M4 through the lens notch) into an ear BOSS moulded into the roof with a side-entry nut channel.
+Rear-corner ports for the two ribbon plugs, vents, sun brow.
 
 Usage: generate.py [--fs-only] [--no-mesh]
 """
@@ -31,6 +32,9 @@ SKIN = 2.0           # outer skin / visor thickness
 BAR_T = 3.0          # spine and keel bar thickness
 CORNER_R = 12.0      # minimum corner radius applied to the silhouette hull
 Z_FRONT = 64.0       # shell front edge: the clear LENS stands ~11 mm proud of the scanned rim (49.5), measured 2026-09-27
+# v0.6 NOSE: the bezel shroud tapers toward the face (top edge y -81.6 at the back, -70 at the rim), so from NOSE_Z0 the wall
+# lofts inward to the scanned FRONT-RIM outline (hull of scan vertices with z >= NOSE_SCAN_ZMIN) plus NOSE_CLR.
+NOSE_Z0, NOSE_SCAN_ZMIN, NOSE_CLR, NOSE_RIM_T = 30.0, 36.0, 2.5, 4.0
 Z_REAR_IN = -61.0    # rear wall inner face: the real cluster touched a wall at -58, so 3 mm more than the scan's -55.8 + 2
 Z_REAR_OUT = Z_REAR_IN - WALL_REAR
 VISOR_L = 70.0       # brow length forward of the shell front edge
@@ -38,21 +42,23 @@ VISOR_RISE_R = 200.0 # brow follows an arc tangent to the roof that curls UP (to
 VISOR_STATIONS = 6   # loft sections along the arc
 BEAD_D, BEAD_L = 5.0, 6.0   # rounded bead at the brow tip (no sharp edge to bump)
 Y_SKIN_END = 5.0     # double skin / visor exist only for Y <= this (arch + short cheeks)
-LIP_TOP_IN, LIP_TOP_Z0, LIP_TOP_YMAX = 4.0, 61.5, 30.0      # top lip: 4 mm over the silhouette, rear face ~1 mm in front of the lens
-CHIN_IN, CHIN_Z0, CHIN_YMIN = 9.0, 58.0, 62.0                # bottom "chin" over the bezel's lower rim (measured 10.2 proud of the old 47)
 # ear blocks (v0.5b): the ear tabs (19.5 wide, 7 thick, 10 tall, hole ~5 below the tip, lens notched around them) are bolted
 # M4 from the front into a nut captured in a small block behind each tab; the block carries two M2.5 inserts that the shell's
 # roof screws reach from outside through the double skin (printed tubes bridge the air gap).
+# v0.6: the ear block is MOULDED INTO THE SHELL ROOF (ear boss) with a side-entry channel for a standard M4 nut (7.0 AF x 3.2,
+# loaded from the inboard side, which faces up when the half lies on its outer side); M4 x 20 from the front through the lens notch.
 EAR_BLOCK_T, EAR_BLOCK_HALF_W, EAR_BLOCK_DOWN, EAR_BLOCK_UP = 10.0, 10.0, 4.0, 14.0
-EAR_NUT_POCKET = 4.0; EAR_INSERT_X = 7.5; EAR_TUBE_D = 7.0; ROOF_SCREW_CLR = 3.2
-FOOT_SLOT_HALF = 2.0                                   # fore-aft slot for the shell->foot screws (+-2 mm of adjustment)
+EAR_BOLT_CLR = 5.0                                     # a little slop: the boss is on the shell, the tab is positioned by the feet
+NUT_M4_SLOT_W, NUT_M4_SLOT_T, EAR_NUT_REAR_WALL = 7.1, 3.4, 1.0
+# feet: the pad captures two M4 nuts in rear-entry slots (no inserts); M4 x 10 from below through fore-aft slots in the shell
+FOOT_SLOT_HALF = 2.0; CLR_M4_SHELL = 4.5
 # ribbon-cable ports: the two vertical PCB slots (left x -179..-173, right x 161..168, y ~2..50, thumb lock outboard).
 # Each port opens the rear wall from 12 mm inboard of the slot out to the side wall, 12 mm above and below the slot.
 RIBBON_PORT_XIN = (-163.0, 149.0); RIBBON_PORT_Y = (-14.0, 68.0); PORT_R = 8.0   # plugs measured 51 / 59.8 x 9.6 + 4 mm lock
 VENT_X = (-105.0, 105.0, 7.0); VENT_ROWS = [(-48.0, -22.0), (-14.0, 12.0)]; VENT_W = 2.4   # two rows of vertical vent slots
 RIB_X = [-160.0, -115.0, -60.0, 60.0, 115.0, 160.0]; RIB_T = 1.6
 SPINE_RIB_X = [-6.0, 6.0]; SPINE_RIB_T = 8.0                    # thick ribs carrying the spine inserts, one per half
-SPINE_W = 30.0; SPINE_SCREW_Z = [-40.0, 0.0, 40.0]; SPINE_VISOR_SCREW = [20.0, 55.0]
+SPINE_W = 30.0; SPINE_SCREW_Z = [-40.0, -8.0, 22.0]; SPINE_VISOR_SCREW = [20.0, 55.0]   # straight screws end before the nose/brow at NOSE_Z0
 KEEL_W = 40.0; KEEL_Y0 = 48.0; KEEL_REAR_SCREWS_Y = [58.0, 84.0]; KEEL_BOT_SCREWS_Z = [-30.0, 0.0]; KEEL_SCREW_X = 12.0; KEEL_Z_END = 12.0   # bottom leg stops short of the lock knuckles (M6 nut access, fastener_check.py)
 PAD_H = 5.0
 INSERT_M25_D, INSERT_M25_DEPTH = 3.4, 6.5     # coupon-verified bore for the user's M2.5 x 4 x 3.5 OD inserts
@@ -64,7 +70,7 @@ CLR_M6, NUT_M6_AF, NUT_M6_H = 6.4, 10.0, 5.2
 KNUCKLE_X = [-155.0, 155.0]; KNUCKLE_W, KNUCKLE_D, KNUCKLE_H = 24.0, 40.0, 22.0   # X width, Z depth, protrusion below the bottom wall
 KNUCKLE_Z = 7.0; PIN_D = 8.4; KNUCKLE_R = 10.0     # pin lands directly above the crossbar at the chosen placement; body overlaps the ledge blocks
 # pitch-lock knuckles (M6) near the front-bottom edge, above the two steering-support arms (car x 203 / 325 -> scan x = X_C - x)
-LOCK_X = [59.0, -62.5]; LOCK_W, LOCK_D, LOCK_H, LOCK_R, LOCK_Z, LOCK_HOLE = 16.0, 14.0, 12.0, 6.0, 40.0, 6.4
+LOCK_X = [59.0, -62.5]; LOCK_W, LOCK_D, LOCK_H, LOCK_R, LOCK_Z, LOCK_HOLE = 16.0, 14.0, 12.0, 6.0, 18.0, 6.4   # LOCK_Z inside the straight wall (nose starts at 30)
 STOP_GAP = 1.0                                # rear stop pads stand off the scanned faces by this
 LUG_PAD_D = 8.0; FIN_T = 2.5; FIN_CLR = 0.8; LEDGE_CLR = 0.6
 EAR_PAD_D, EAR_SHIFT, EAR_PAD_L, EAR_WEB_W = 7.0, 2.0, 5.0, 7.0   # ear pad sits outward of the hole: the housing wall hugs the inner side
@@ -121,6 +127,27 @@ def smooth_ring(poly, step=0.75):
     return Polygon(cs(np.arange(0, t[-1], step))).buffer(0)
 
 MASTER = smooth_ring(HULL)
+
+_FRONT = None
+def front_outline():
+    """Smoothed convex hull of the scanned bezel front region (z >= NOSE_SCAN_ZMIN): the outline the nose hugs."""
+    global _FRONT
+    if _FRONT is None:
+        import trimesh
+        from shapely.geometry import MultiPoint
+        v = trimesh.load(REF / "cluster_onshape_reference_mm.stl").vertices
+        _FRONT = smooth_ring(MultiPoint(v[v[:, 2] >= NOSE_SCAN_ZMIN][:, :2]).convex_hull.buffer(0))
+    return _FRONT
+
+def front_offset(d):
+    return front_outline().buffer(d, join_style=1, resolution=48).simplify(0.02)
+
+def resample_ring(poly, n=240):
+    """n points at equal arc length around the ring, CCW, starting at the point nearest the top centre (loft correspondence)."""
+    from shapely.geometry.polygon import orient
+    ring = LineString(orient(poly, 1.0).exterior.coords); L = ring.length
+    d0 = ring.project(Point(0.0, -300.0))
+    return np.array([[q.x, q.y] for q in (ring.interpolate((d0 + L * k / n) % L) for k in range(n))])
 
 def offset(d):
     """Master silhouette offset by d (outward for d > 0, inward for d < 0)."""
@@ -196,7 +223,7 @@ def brow_dy(t):
     return -(VISOR_RISE_R - math.sqrt(max(VISOR_RISE_R ** 2 - t ** 2, 0.0)))
 
 def brow_stations(t0, t1, n):
-    return [(Z_FRONT + t, brow_dy(t)) for t in np.linspace(t0, t1, n)]
+    return [(NOSE_Z0 + t, brow_dy(t)) for t in np.linspace(t0, t1, n)]
 
 def tab_frame(h, across):
     """Right-handed local frame at OEM hole h: e3 = into the foot (rearward, -normal), e1 = unit projection of `across`
@@ -210,18 +237,6 @@ def tab_plane_z(h, x, y, along_n):
     """World z of the plane parallel to tab h, `along_n` from its CSV centre plane along the normal, at world (x, y)."""
     cx, cy, cz, n = HOLES[h]; n = unit(n)
     return cz + (along_n - n[0] * (x - cx) - n[1] * (y - cy)) / n[2]
-
-def ear_screw_points():
-    """The four roof screws that hold the ear blocks: (wall point q (x, y), outward wall normal u, world z), two per ear."""
-    out = []
-    for h in EARS:
-        cx, cy, cz, n = HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
-        o, e1, e2, e3 = tab_frame(h, (sgn_in, 0.0))
-        for dx in (-EAR_INSERT_X, EAR_INSERT_X):
-            pm = o + e1 * dx + e3 * (FOOT_STANDOFF + EAR_BLOCK_T / 2)
-            q = nearest_points(Point(pm[0], pm[1]), offset(GAP).exterior)[1]
-            out.append(((q.x, q.y), unit([q.x - pm[0], q.y - pm[1], 0.0]), float(pm[2])))
-    return out
 
 MARK_D, MARK_DEPTH, MARK_PITCH = 2.5, 0.8, 4.5
 
@@ -237,12 +252,11 @@ def tilt_bars(g, tilt, c, du, dv, dn):
     bars = [(du, L, dv, W)] + ([(dv, L, du, W)] if tilt > 0 else [])
     out = []
     for a, la, b, wb in bars:
-        # thin box along a, width along b, depth along -dn: built as a rotbox-free union of small cylinders for backend simplicity
         n = int(la / 1.0)
         out += [g.cyl(tuple(c + a * (-la / 2 + la * k / n) - dn * MARK_DEPTH), tuple(c + a * (-la / 2 + la * k / n) + dn * 1.0), wb) for k in range(n + 1)]
     return out
 
-def build_feet(g, tilt=0.0, want=("lugs", "ears")):
+def build_feet(g, tilt=0.0, want=("lugs",)):
     """Two lug feet: slab behind each bottom lug plate (M4 bolts through B2 B3 / B5 B6, nuts captured in hex pockets) with a pad
     down to the shell bottom wall carrying two M2.5 inserts for the shell screws (driven from outside, directly above the knuckle)."""
     parts = {}; y_pad = offset(GAP).bounds[3] - FOOT_WALL_CLR
@@ -265,30 +279,19 @@ def build_feet(g, tilt=0.0, want=("lugs", "ears")):
         xs = sorted([a[0], b[0]])
         pad = g.box(xs[0] - LUG_PAD_X_MARGIN, LUG_PAD_Y0, LUG_PAD_Z[0], xs[1] + LUG_PAD_X_MARGIN, y_pad, LUG_PAD_Z[1])
         foot = g.unite([slab, pad])
-        foot = g.cut(foot, [g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, y_pad - INSERT_M25_DEPTH, LUG_PAD_SCREW_Z), INSERT_M25_D) for x in xs])
+        # two M4 nuts in rear-entry slots at mid pad height; M4 x 10 comes up from under the shell
+        y_nut = (LUG_PAD_Y0 + y_pad) / 2; cuts = []
+        for x in xs:
+            cuts.append(g.box(x - NUT_M4_SLOT_W / 2, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_Z[0] - 1.0, x + NUT_M4_SLOT_W / 2, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z))
+            cuts.append(g.cyl((x, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z), (x, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z), NUT_M4_SLOT_W))
+            cuts.append(g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, LUG_PAD_Y0 - 1.0, LUG_PAD_SCREW_Z), BOLT_M4_CLR))
+        foot = g.cut(foot, cuts)
         # ID marks: side dots on the pad's rear face (faces the rear wall), tilt bars on the pad's outboard end face
         xc = (xs[0] + xs[1]) / 2; ym = (LUG_PAD_Y0 + y_pad) / 2
         foot = g.cut(foot, side_dots(g, side, (xc - MARK_PITCH / 2, ym, LUG_PAD_Z[0]), (1, 0, 0), (0, 0, -1)))
         x_end = xs[0] - LUG_PAD_X_MARGIN if side == "L" else xs[1] + LUG_PAD_X_MARGIN
         foot = g.cut(foot, tilt_bars(g, tilt, (x_end, ym, (LUG_PAD_Z[0] + LUG_PAD_Z[1]) / 2), (0, 0, 1), (0, 1, 0), (-1 if side == "L" else 1, 0, 0)))
         parts[f"Foot lug {side}{tag}"] = g.name(foot, f"Foot lug {side}{tag}", COL_BODY)
-    if "ears" in want:
-        pts = ear_screw_points()
-        for k, (side, h) in enumerate(zip(("L", "R"), EARS)):
-            cx, cy, cz, n = HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
-            o, e1, e2, e3 = tab_frame(h, (sgn_in, 0.0))            # +x inboard across the tab, +y up in the tab plane, +z rearward
-            z0 = FOOT_STANDOFF; z1 = z0 + EAR_BLOCK_T
-            blk = g.box(-EAR_BLOCK_HALF_W, -EAR_BLOCK_DOWN, z0, EAR_BLOCK_HALF_W, EAR_BLOCK_UP, z1)
-            blk = g.cut(blk, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), BOLT_M4_CLR), g.hexprism(0.0, 0.0, z1 - EAR_NUT_POCKET, z1 + 1.0, NUT_M4_AF)])
-            blk = g.cut(blk, side_dots(g, side, (-MARK_PITCH / 2, -EAR_BLOCK_DOWN + 2.0, z1), (1, 0, 0), (0, 0, 1)))   # dots on the rear face, below the nut pocket
-            blk = g.place(blk, o, e1, e2, e3)
-            # a fresh cavity prism per block: boolean tools are consumed in FeatureScript, so one body cannot serve two intersects
-            blk = g.intersect(blk, [g.prism(Region(offset(GAP - FOOT_WALL_CLR)), Z_REAR_IN, Z_FRONT)])   # top follows the cavity roof
-            bores = []
-            for (qx, qy), u, zq in pts[2 * k: 2 * k + 2]:
-                bores.append(g.cyl((qx + u[0] * 2.0, qy + u[1] * 2.0, zq), (qx - u[0] * (FOOT_WALL_CLR + INSERT_M25_DEPTH), qy - u[1] * (FOOT_WALL_CLR + INSERT_M25_DEPTH), zq), INSERT_M25_D))
-            blk = g.cut(blk, bores)
-            parts[f"Ear block {side}"] = g.name(blk, f"Ear block {side}", COL_BODY)
     return parts
 
 def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
@@ -301,9 +304,12 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
     y_ridge = offset(d_skin_out).bounds[1]          # outer skin at the ridge (X ~ 0)
     parts = {}
 
+    N_in, N_out = Region(front_offset(NOSE_CLR)), Region(front_offset(NOSE_CLR + NOSE_RIM_T))
     if "shell" in want:
-        shell = g.prism(R_out, Z_REAR_OUT, Z_FRONT)
-        shell = g.cut(shell, [g.prism(R_in, Z_REAR_IN, Z_FRONT + 1.0)])
+        # straight wall to NOSE_Z0, then the nose: wall lofted inward to the scanned front rim (+ clearance), rim NOSE_RIM_T thick
+        shell = g.prism(R_out, Z_REAR_OUT, NOSE_Z0)
+        shell = g.unite([shell, g.loft_regions(R_out, NOSE_Z0, N_out, Z_FRONT)])
+        shell = g.cut(shell, [g.prism(R_in, Z_REAR_IN, NOSE_Z0 + 1.0), g.loft_regions(R_in, NOSE_Z0, N_in, Z_FRONT), g.prism(N_in, Z_FRONT - 0.5, Z_FRONT + 2.0)])
         # ribbon-cable ports at the two rear corners (rounded inner corners) and the vent field
         def rrect(x0, y0, x1, y1, r):
             z0, z1 = Z_REAR_OUT - 1.0, Z_REAR_IN + 1.0
@@ -314,31 +320,33 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
         vents = [g.box(x - VENT_W / 2, vy0, Z_REAR_OUT - 1.0, x + VENT_W / 2, vy1, Z_REAR_IN + 1.0)
                  for x in np.arange(VENT_X[0], VENT_X[1] + 0.1, VENT_X[2]) for (vy0, vy1) in VENT_ROWS]
         shell = g.cut(shell, vents)
-        # front lips: top arch lip and bottom chin, both in front of the bezel rim
-        lip_top = g.prism(band(GAP + 0.3, -LIP_TOP_IN, y_max=LIP_TOP_YMAX), LIP_TOP_Z0, Z_FRONT)
-        chin = g.prism(band(GAP + 0.3, -CHIN_IN, y_min=CHIN_YMIN), CHIN_Z0, Z_FRONT)
-        # double skin over the arch, ribs in the air gap, arched brow with a rounded bead
-        skin = g.prism(band_skin, Z_REAR_OUT, Z_FRONT)
+        # double skin over the arch, ribs in the air gap, arched brow with a rounded bead (skin and brow spring from NOSE_Z0)
+        skin = g.prism(band_skin, Z_REAR_OUT, NOSE_Z0)
         # brow: the skin band lofted along an arc that leaves the roof tangentially and curls up; rounded bead at the tip
         visor = g.sweep_prism(band_skin, brow_stations(0.0, VISOR_L - BEAD_L + 0.5, VISOR_STATIONS))
         band_bead = band(d_skin_out + (BEAD_D - SKIN) / 2, d_skin_in - (BEAD_D - SKIN) / 2, y_max=Y_SKIN_END)
         vlip = g.sweep_prism(band_bead, brow_stations(VISOR_L - BEAD_L, VISOR_L, 2))
         vlip = g.fillet_try(vlip, (BEAD_D - SKIN) / 2 - 0.1)
-        airgap = g.prism(band_air, Z_REAR_OUT, Z_FRONT)
-        ribs = [g.box(x - RIB_T / 2, -200, Z_REAR_OUT, x + RIB_T / 2, Y_SKIN_END + 1, Z_FRONT) for x in RIB_X]
-        ribs += [g.box(x - SPINE_RIB_T / 2, -200, Z_REAR_OUT, x + SPINE_RIB_T / 2, Y_SKIN_END + 1, Z_FRONT) for x in SPINE_RIB_X]
-        ribs += [g.box(-300, Y_SKIN_END - 3.0, Z_REAR_OUT, 300, Y_SKIN_END + 1, Z_FRONT)]          # end closers
+        airgap = g.prism(band_air, Z_REAR_OUT, NOSE_Z0)
+        ribs = [g.box(x - RIB_T / 2, -200, Z_REAR_OUT, x + RIB_T / 2, Y_SKIN_END + 1, NOSE_Z0) for x in RIB_X]
+        ribs += [g.box(x - SPINE_RIB_T / 2, -200, Z_REAR_OUT, x + SPINE_RIB_T / 2, Y_SKIN_END + 1, NOSE_Z0) for x in SPINE_RIB_X]
+        ribs += [g.box(-300, Y_SKIN_END - 3.0, Z_REAR_OUT, 300, Y_SKIN_END + 1, NOSE_Z0)]          # end closers
         ribs = g.intersect(g.unite(ribs), [airgap])
-        shell = g.unite([shell, lip_top, chin, skin, visor, vlip, ribs])
-        # ear-block screws: tubes across the air gap, clearance holes through wall + skin, counterbores on the skin
-        d_out = GAP + WALL + AIR + SKIN
-        tubes, ear_holes = [], []
-        for (qx, qy), u, zq in ear_screw_points():
-            tubes.append(g.cyl((qx + u[0] * (WALL - 0.3), qy + u[1] * (WALL - 0.3), zq), (qx + u[0] * (WALL + AIR + 0.3), qy + u[1] * (WALL + AIR + 0.3), zq), EAR_TUBE_D))
-            ear_holes.append(g.cyl((qx - u[0] * 4.0, qy - u[1] * 4.0, zq), (qx + u[0] * (d_out - GAP + 1.0), qy + u[1] * (d_out - GAP + 1.0), zq), ROOF_SCREW_CLR))
-            ear_holes.append(g.cyl((qx + u[0] * (d_out - GAP - CBORE_M25_H), qy + u[1] * (d_out - GAP - CBORE_M25_H), zq), (qx + u[0] * (d_out - GAP + 1.0), qy + u[1] * (d_out - GAP + 1.0), zq), CBORE_M25_D))
-        shell = g.unite([shell] + tubes)
-        shell = g.cut(shell, ear_holes)
+        shell = g.unite([shell, skin, visor, vlip, ribs])
+        # ear bosses moulded into the roof: M4 through the OEM ear hole from the front into a nut in a side-entry channel
+        for h in EARS:
+            cx, cy, cz, n = HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
+            o, e1, e2, e3 = tab_frame(h, (sgn_in, 0.0))
+            xin = 1.0 if np.dot(e1, [sgn_in, 0.0, 0.0]) > 0 else -1.0        # local x sign that points inboard (toward x = 0)
+            z0 = FOOT_STANDOFF; z1 = z0 + EAR_BLOCK_T
+            boss = g.box(-EAR_BLOCK_HALF_W, -EAR_BLOCK_DOWN, z0, EAR_BLOCK_HALF_W, EAR_BLOCK_UP, z1)
+            zc0 = z1 - EAR_NUT_REAR_WALL - NUT_M4_SLOT_T
+            chan = g.box(min(0.0, xin * (EAR_BLOCK_HALF_W + 1.0)), -NUT_M4_SLOT_W / 2, zc0, max(0.0, xin * (EAR_BLOCK_HALF_W + 1.0)), NUT_M4_SLOT_W / 2, zc0 + NUT_M4_SLOT_T)
+            boss = g.cut(boss, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), EAR_BOLT_CLR), chan,
+                                g.cyl((0.0, 0.0, zc0 - 1.0), (0.0, 0.0, zc0 + NUT_M4_SLOT_T + 1.0), NUT_M4_SLOT_W)])   # round the channel end
+            boss = g.place(boss, o, e1, e2, e3)
+            boss = g.intersect(boss, [g.prism(Region(offset(GAP + WALL - 0.3)), Z_REAR_IN, Z_FRONT)])   # reaches 2.2 mm into the wall
+            shell = g.unite([shell, boss])
         # mount interface: pivot knuckles under the feet, pitch-lock knuckles near the front-bottom edge
         yb = y_bot_out
         for kx in KNUCKLE_X:
@@ -357,7 +365,7 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
             for z in SPINE_SCREW_Z:
                 bores.append(g.cyl((x, y_ridge - 1.0, z), (x, y_ridge + INSERT_M25_DEPTH, z), INSERT_M25_D))
             for s in SPINE_VISOR_SCREW:
-                zz = Z_FRONT + s; yy = y_ridge + brow_dy(s)
+                zz = NOSE_Z0 + s; yy = y_ridge + brow_dy(s)
                 bores.append(g.cyl((x, yy - 6.0, zz), (x, yy + 6.0, zz), 3.0))
         # keel: interior pads + insert bores through rear and bottom walls
         pads = []
@@ -374,9 +382,7 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
             return [g.box(x - d / 2, min(y0, y1), z - half, x + d / 2, max(y0, y1), z + half),
                     g.cyl((x, y0, z - half), (x, y1, z - half), d), g.cyl((x, y0, z + half), (x, y1, z + half), d)]
         for h in list(LUGS["L"]) + list(LUGS["R"]):
-            x = HOLES[h][0]
-            bores += yslot(x, LUG_PAD_SCREW_Z, y_bot_in - 1.0, y_bot_out + 1.0, CLR_M25, FOOT_SLOT_HALF)
-            bores += yslot(x, LUG_PAD_SCREW_Z, y_bot_out - CBORE_M25_H, y_bot_out + 1.0, CBORE_M25_D, FOOT_SLOT_HALF)
+            bores += yslot(HOLES[h][0], LUG_PAD_SCREW_Z, y_bot_in - 1.0, y_bot_out + 1.0, CLR_M4_SHELL, FOOT_SLOT_HALF)   # M4 from below, heads on the bottom face
         shell = g.unite([shell] + pads)
         shell = g.cut(shell, bores)
         # split into halves at X = 0
@@ -385,7 +391,7 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
         parts["Shell R"] = g.name(right, "Shell R", COL_BODY)
 
     if "spine" in want:
-        bar = g.unite([g.prism(band_bar, Z_REAR_OUT, Z_FRONT), g.sweep_prism(band_bar, brow_stations(0.0, VISOR_L - BEAD_L, VISOR_STATIONS))])
+        bar = g.unite([g.prism(band_bar, Z_REAR_OUT, NOSE_Z0), g.sweep_prism(band_bar, brow_stations(0.0, VISOR_L - BEAD_L, VISOR_STATIONS))])
         bar = g.intersect(bar, [g.box(-SPINE_W / 2, -300, -300, SPINE_W / 2, 300, 300)])
         holes = []
         for x in SPINE_RIB_X:
@@ -393,7 +399,7 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
                 holes.append(g.cyl((x, y_ridge - BAR_T - 2, z), (x, y_ridge + 1, z), CLR_M25))
                 holes.append(g.cyl((x, y_ridge - BAR_T - 2, z), (x, y_ridge - BAR_T + CBORE_M25_H, z), CBORE_M25_D))
             for s in SPINE_VISOR_SCREW:
-                zz = Z_FRONT + s; yy = y_ridge + brow_dy(s)
+                zz = NOSE_Z0 + s; yy = y_ridge + brow_dy(s)
                 holes.append(g.cyl((x, yy - BAR_T - 2, zz), (x, yy + 1, zz), CLR_M25))
                 holes.append(g.cyl((x, yy - BAR_T - 2, zz), (x, yy - BAR_T + CBORE_M25_H, zz), CBORE_M25_D))
         parts["Spine bar"] = g.name(g.cut(bar, holes), "Spine bar", COL_ACCENT)
@@ -443,6 +449,12 @@ class CQ:
         cq = self.cq
         wires = [self._ring_wire(region.poly, z).translate(cq.Vector(0, dy, 0)) for z, dy in stations]
         return cq.Solid.makeLoft(wires, ruled=len(wires) == 2)
+    def loft_regions(self, regA, zA, regB, zB, n=240):
+        """Ruled loft between two different rings (resampled to n matched points)."""
+        cq = self.cq
+        wires = [cq.Wire.makePolygon([cq.Vector(float(p[0]), float(p[1]), z) for p in pts] + [cq.Vector(float(pts[0][0]), float(pts[0][1]), z)])
+                 for pts, z in ((resample_ring(regA.poly, n), zA), (resample_ring(regB.poly, n), zB))]
+        return cq.Solid.makeLoft(wires, ruled=True)
     def fillet_try(self, body, r):
         try: return self.cq.Workplane(obj=body).edges(">Z").fillet(r).val()
         except Exception as e: print("  (fillet skipped:", str(e)[:50], ")"); return body
@@ -514,6 +526,11 @@ class FS:
         """Loft through copies of the region at (z, dy) stations (verified: opLoft with spline-band profiles)."""
         sks = [self._sketch(region, z, dy) for z, dy in stations]; lf = self.uid("lf"); v = self.var("b")
         self.w(f"opLoft(context, {lf}, {{ \"profileSubqueries\" : [{', '.join(f'qSketchRegion({k})' for k in sks)}] }});")
+        self.w(f"const {v} = qCreatedBy({lf}, EntityType.BODY);")
+        return v
+    def loft_regions(self, regA, zA, regB, zB):
+        skA, skB = self._sketch(regA, zA), self._sketch(regB, zB); lf = self.uid("lf"); v = self.var("b")
+        self.w(f"opLoft(context, {lf}, {{ \"profileSubqueries\" : [qSketchRegion({skA}), qSketchRegion({skB})] }});")
         self.w(f"const {v} = qCreatedBy({lf}, EntityType.BODY);")
         return v
     def fillet_try(self, body, r):
@@ -680,7 +697,7 @@ def main():
     if not a.no_mesh:
         import trimesh, collections
         v = mesh.vertices
-        for label in ("Shell L", "Shell R", "Foot lug L", "Foot lug R", "Ear block L", "Ear block R"):
+        for label in ("Shell L", "Shell R", "Foot lug L", "Foot lug R"):
             body = parts[label]
             sm = trimesh.load(OUT / (label.lower().replace(" ", "_") + ".stl"))
             sel = v[(v[:, 0] <= 2) if label.endswith("L") else (v[:, 0] >= -2)]
