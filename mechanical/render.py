@@ -57,4 +57,8 @@ shot([(FEET["foot_lug_l"], FOOT_COL, 1.0), (cluster, CLUSTER, 0.35)], R / "16_fo
 shot([(FEET["foot_lug_l"], FOOT_COL, 1.0)], R / "16b_foot_lug_L_alone.png", (0.6, -0.5, 1.0), zoom=3.2, focus=(-142, 86, -20))
 shot([(FEET["foot_lug_l"], FOOT_COL, 1.0)], R / "16c_foot_lug_L_rear.png", (-0.5, -0.4, -1.0), zoom=3.2, focus=(-142, 86, -20))
 for f in R.glob("17*foot_ear*"): f.unlink()
+for side, focus in (("l", (-168, -30, 28)), ("r", (156, -27, 24))):
+    eb = pv.read(str(OUT / f"ear_block_{side}.stl"))
+    shot([(eb, FOOT_COL, 1.0), (cluster, CLUSTER, 0.35)], R / f"17_ear_block_{side.upper()}.png", (-0.6 if side == "l" else 0.6, -0.5, -0.7), zoom=4.0, focus=focus)
+    shot([(eb, FOOT_COL, 1.0), (cluster, CLUSTER, 1.0)], R / f"17b_ear_block_{side.upper()}_solid.png", (-0.6 if side == "l" else 0.6, -0.6, 0.6), zoom=4.0, focus=focus)
 print("rendered", len(list(R.glob("*.png"))), "images ->", R)

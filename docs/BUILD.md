@@ -70,9 +70,15 @@ Each foot is an L: a slab parallel to the lug plate (0.8 mm off its rear face, t
 the back) and a pad that reaches down to the shell's bottom wall with two M2.5 heat-set inserts in its underside. The shell
 screws come up from outside the bottom wall into those inserts, in line with the M4 bolts above them.
 
-There are no ear feet. The scan shows the two top ear tabs boxed in: housing top about 1.5 mm below the hole axis directly
-behind the tab, cavity roof about 7.6 mm above it with the tab tip touching it, bezel in front. No nut, insert or bolt head
-fits there. The v0.5 shell captures each ear tip (measured 19.5 mm wide, 7 thick, standing 10 mm above the housing top) in a 21.5 x 11 mm roof slot with foam instead.
+| Ear block L / R | `mechanical/output/ear_block_l.stl`, `..._r.stl` | 1 each | charcoal ASA | 20 x 19 x 10 mm block behind each ear tab: M4 through the OEM hole from the front into a nut captured in the rear hex pocket; two M2.5 inserts in the top face for the roof screws |
+| Foot lug L / R tilt -3 / +3 | `mechanical/output/foot_lug_*_tilt*.stl` | as needed | any | angle variants: slab rotated about the bolt line, pad still flat; for the bench angle check only |
+
+**ID marks** (debossed, 0.8 mm deep): every bracket carries dots for its side, **1 dot = L, 2 dots = R**, on the rear face
+(feet: the pad face toward the rear wall; ear blocks: the nut-pocket face, below the pocket). Tilt variants also carry a
+bar on the pad's outboard end face: **"-" = tilt -3, "+" = tilt +3**, no bar = nominal.
+
+L and R follow the scan frame: **L is the face-right side** (round-hole lug plate, scan holes B2 B3 T1), **R is the
+face-left side** (slotted lug hole, scan holes B5 B6 T2).
 
 ### Body (scan frame STLs, v0.5)
 

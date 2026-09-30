@@ -203,6 +203,7 @@ def tab_frame(h, across):
     (a world XY direction) onto the tab plane, e2 = e3 x e1. Origin = CSV hole centre (tab mid-plane)."""
     cx, cy, cz, n = HOLES[h]; n = unit(n); e3 = -n
     a = np.array([across[0], across[1], 0.0]); e1 = unit(a - np.dot(a, e3) * e3); e2 = np.cross(e3, e1)
+    if e2[1] > 0: e1, e2 = -e1, -e2          # local +y must point UP in the car (-Y); flipping two axes keeps it right-handed
     return np.array([cx, cy, cz]), e1, e2, e3
 
 def tab_plane_z(h, x, y, along_n):
@@ -220,6 +221,25 @@ def ear_screw_points():
             pm = o + e1 * dx + e3 * (FOOT_STANDOFF + EAR_BLOCK_T / 2)
             q = nearest_points(Point(pm[0], pm[1]), offset(GAP).exterior)[1]
             out.append(((q.x, q.y), unit([q.x - pm[0], q.y - pm[1], 0.0]), float(pm[2])))
+    return out
+
+MARK_D, MARK_DEPTH, MARK_PITCH = 2.5, 0.8, 4.5
+
+def side_dots(g, side, p0, du, dn):
+    """1 (L) or 2 (R) debossed dots: p0 = first dot centre on the face, du = unit step along the face, dn = unit face normal (outward)."""
+    p0, du, dn = np.asarray(p0, float), unit(du), unit(dn)
+    return [g.cyl(tuple(p0 + du * MARK_PITCH * k - dn * MARK_DEPTH), tuple(p0 + du * MARK_PITCH * k + dn * 1.0), MARK_D) for k in range(1 if side == "L" else 2)]
+
+def tilt_bars(g, tilt, c, du, dv, dn):
+    """'-' (tilt < 0) or '+' (tilt > 0) debossed on a face centred at c; du/dv in-plane unit axes, dn outward normal."""
+    if not tilt: return []
+    c, du, dv, dn = (np.asarray(v, float) for v in (c, du, dv, dn)); L, W = 6.0, 1.4
+    bars = [(du, L, dv, W)] + ([(dv, L, du, W)] if tilt > 0 else [])
+    out = []
+    for a, la, b, wb in bars:
+        # thin box along a, width along b, depth along -dn: built as a rotbox-free union of small cylinders for backend simplicity
+        n = int(la / 1.0)
+        out += [g.cyl(tuple(c + a * (-la / 2 + la * k / n) - dn * MARK_DEPTH), tuple(c + a * (-la / 2 + la * k / n) + dn * 1.0), wb) for k in range(n + 1)]
     return out
 
 def build_feet(g, tilt=0.0, want=("lugs", "ears")):
@@ -247,6 +267,11 @@ def build_feet(g, tilt=0.0, want=("lugs", "ears")):
         pad = g.box(xs[0] - LUG_PAD_X_MARGIN, LUG_PAD_Y0, LUG_PAD_Z[0], xs[1] + LUG_PAD_X_MARGIN, y_pad, LUG_PAD_Z[1])
         foot = g.unite([slab, pad])
         foot = g.cut(foot, [g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, y_pad - INSERT_M25_DEPTH, LUG_PAD_SCREW_Z), INSERT_M25_D) for x in xs])
+        # ID marks: side dots on the pad's rear face (faces the rear wall), tilt bars on the pad's outboard end face
+        xc = (xs[0] + xs[1]) / 2; ym = (LUG_PAD_Y0 + y_pad) / 2
+        foot = g.cut(foot, side_dots(g, side, (xc - MARK_PITCH / 2, ym, LUG_PAD_Z[0]), (1, 0, 0), (0, 0, -1)))
+        x_end = xs[0] - LUG_PAD_X_MARGIN if side == "L" else xs[1] + LUG_PAD_X_MARGIN
+        foot = g.cut(foot, tilt_bars(g, tilt, (x_end, ym, (LUG_PAD_Z[0] + LUG_PAD_Z[1]) / 2), (0, 0, 1), (0, 1, 0), (-1 if side == "L" else 1, 0, 0)))
         parts[f"Foot lug {side}{tag}"] = g.name(foot, f"Foot lug {side}{tag}", COL_BODY)
     if "ears" in want:
         pts = ear_screw_points()
@@ -256,6 +281,7 @@ def build_feet(g, tilt=0.0, want=("lugs", "ears")):
             z0 = FOOT_STANDOFF; z1 = z0 + EAR_BLOCK_T
             blk = g.box(-EAR_BLOCK_HALF_W, -EAR_BLOCK_DOWN, z0, EAR_BLOCK_HALF_W, EAR_BLOCK_UP, z1)
             blk = g.cut(blk, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), BOLT_M4_CLR), g.hexprism(0.0, 0.0, z1 - EAR_NUT_POCKET, z1 + 1.0, NUT_M4_AF)])
+            blk = g.cut(blk, side_dots(g, side, (-MARK_PITCH / 2, -EAR_BLOCK_DOWN + 2.0, z1), (1, 0, 0), (0, 0, 1)))   # dots on the rear face, below the nut pocket
             blk = g.place(blk, o, e1, e2, e3)
             blk = g.intersect(blk, [cavity])                          # top follows the cavity roof
             bores = []

@@ -10,7 +10,7 @@
 | FEET | foot_lug_L | `output/print/print_foot_lug_L.stl` | 36.8 x 31.4 | 20.7 | 12 | yes | pad face (shell bottom wall side) on the bed; no supports |
 | FEET | foot_lug_R | `output/print/print_foot_lug_R.stl` | 37.3 x 28.6 | 22.0 | 12 | yes | same as lug L |
 | FEET | ear_block_L | `output/print/print_ear_block_L.stl` | 20.3 x 18.7 | 10.0 | 2 | yes | nut-pocket face (rear) on the bed; no supports |
-| FEET | ear_block_R | `output/print/print_ear_block_R.stl` | 20.7 x 18.8 | 10.0 | 3 | yes | nut-pocket face (rear) on the bed; no supports |
+| FEET | ear_block_R | `output/print/print_ear_block_R.stl` | 20.3 x 18.8 | 10.0 | 2 | yes | nut-pocket face (rear) on the bed; no supports |
 | FEET-VAR | foot_lug_L_tilt-3 | `output/print/print_foot_lug_L_tilt-3.stl` | 36.8 x 31.8 | 21.0 | 12 | yes | angle variant: slab -3 deg about the bolt line, pad flat |
 | FEET-VAR | foot_lug_R_tilt-3 | `output/print/print_foot_lug_R_tilt-3.stl` | 37.3 x 29.0 | 22.3 | 12 | yes | angle variant: slab -3 deg about the bolt line, pad flat |
 | FEET-VAR | foot_lug_L_tilt+3 | `output/print/print_foot_lug_L_tilt+3.stl` | 36.8 x 31.1 | 20.3 | 12 | yes | angle variant: slab +3 deg about the bolt line, pad flat |
@@ -30,7 +30,7 @@
 | D | arm_clamp_upper_center | `output/print/print_arm_clamp_upper_center.stl` | 94.3 x 61.0 | 68.5 | 51 | yes | split face down, strut + clevis up (small support under the strut lean) |
 | D | arm_clamp_lower_center | `output/print/print_arm_clamp_lower_center.stl` | 94.3 x 31.2 | 31.5 | 34 | yes | flipped: split face down |
 
-Total ASA about 1577 g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).
+Total ASA about 1576 g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).
 
 Plates: FEET = two lug feet + two ear blocks (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, FIT = the six fit-test sections (superseded), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.
 Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D.
