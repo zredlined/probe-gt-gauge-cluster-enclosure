@@ -4,14 +4,14 @@ Driver body 8.0 mm swept from each head along the fastener axis (scan frame). Ea
 
 | Fastener | Driven at | Free at that stage | In car | OK |
 |---|---|---|---|---|
-| shell->foot M4 @ B2 | close (bench) | 150 mm free, needs 60 | 31 mm (mount bar_clamp_upper_center) | yes |
+| shell->foot M4 @ B2 | close (bench) | 150 mm free, needs 60 | 30 mm (mount bar_clamp_upper_center) | yes |
 | shell->foot M4 @ B3 | close (bench) | 150 mm free, needs 60 | 104 mm (dash_surroundings) | yes |
 | shell->foot M4 @ B5 | close (bench) | 150 mm free, needs 60 | 109 mm (dash_surroundings) | yes |
 | shell->foot M4 @ B6 | close (bench) | 150 mm free, needs 60 | 31 mm (mount bar_clamp_upper_driver) | yes |
-| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 32 mm (Shell L) | yes |
-| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 29 mm (Shell L) | yes |
-| cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 36 mm (Shell R) | yes |
-| cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 39 mm (Shell R) | yes |
+| cluster->foot M4 @ B2 | feet (bench) | 150 mm free, needs 60 | 33 mm (Shell L) | yes |
+| cluster->foot M4 @ B3 | feet (bench) | 150 mm free, needs 60 | 28 mm (Shell L) | yes |
+| cluster->foot M4 @ B5 | feet (bench) | 150 mm free, needs 60 | 35 mm (Shell R) | yes |
+| cluster->foot M4 @ B6 | feet (bench) | 150 mm free, needs 60 | 40 mm (Shell R) | yes |
 | cluster->ear boss M4 @ T1 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | cluster->ear boss M4 @ T2 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |
 | spine M2.5 @ x-6 z-40 | close (bench) | 150 mm free, needs 60 | 150 mm | yes |

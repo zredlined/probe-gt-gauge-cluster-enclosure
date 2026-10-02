@@ -171,9 +171,11 @@ def build_mount(g, T, want=("bar", "arms")):
             tag = "driver" if pin[0] < X_C else "center"; c = (pin[0], 0.0, 0.0)
             upper, lower = split_clamp(g, c, (1, 0, 0), CLAMP_W, split_normal_local=(0, 0, 1), bolt_dir_local=(0, 0, 1), flange_dir_local=(1, 0, 0))
             # clamp built along local -Y then rotated onto +X: after rotation flanges lie fore/aft (Y), split is horizontal (Z)
-            strut = strut_to_clevis(g, (pin[0], 0.0, 0.0), pin, BLADE_X, BLADE_T, CLEVIS_R, CLEVIS_GAP, PIN_HOLE)
-            strut = g.intersect(strut, [g.box(pin[0] - 40, -80, CLAMP_GAP / 2, pin[0] + 40, 80, 200)])
+            # strut starts inside the ring wall (4 mm below its outer surface), NOT at the tube axis: the first print had the
+            # blade filling the half-bore. The bore is re-cut after the union as a guard.
+            strut = strut_to_clevis(g, (pin[0], 0.0, CLAMP_RO - 4.0), pin, BLADE_X, BLADE_T, CLEVIS_R, CLEVIS_GAP, PIN_HOLE)
             upper = g.unite([upper, strut])
+            upper = g.cut(upper, [g.cyl((pin[0] - CLAMP_W / 2 - 1, 0.0, 0.0), (pin[0] + CLAMP_W / 2 + 1, 0.0, 0.0), 2 * CLAMP_BORE)])
             parts[f"Bar clamp upper {tag}"] = g.name(upper, f"Bar clamp upper {tag}", COL["mount"])
             parts[f"Bar clamp lower {tag}"] = g.name(lower, f"Bar clamp lower {tag}", COL["mount"])
     if "arms" in want:
@@ -183,6 +185,7 @@ def build_mount(g, T, want=("bar", "arms")):
             base = c + np.array([0, 0, CLAMP_RO - 4.0])
             strut = strut_to_clevis(g, base, lockpin, LOCK_BLADE_X, LOCK_BLADE_T, LOCK_CLEVIS_R, LOCK_GAP, LOCK_HOLE, slot=LOCK_SLOT)
             upper = g.unite([upper, strut])
+            upper = g.cut(upper, [g.cyl(tuple(c - d * (CLAMP_W / 2 + 1)), tuple(c + d * (CLAMP_W / 2 + 1)), 2 * CLAMP_BORE)])   # bore guard
             tag = "driver" if name == "driver" else "center"
             parts[f"Arm clamp upper {tag}"] = g.name(upper, f"Arm clamp upper {tag}", COL["accent"])
             parts[f"Arm clamp lower {tag}"] = g.name(lower, f"Arm clamp lower {tag}", COL["mount"])
