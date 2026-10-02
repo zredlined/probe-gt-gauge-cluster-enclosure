@@ -3,7 +3,7 @@
 | Plate | Part | File | Footprint x*y mm | Height mm | ASA g | Fits | Orientation |
 |---|---|---|---|---|---|---|---|
 | A (alone) | shell_L | `output/print/print_shell_L.stl` | 213.1 x 231.3 | 164.0 | 396 | yes | rear wall on the bed, brow up; supports only under the two knuckles (the nose leans in at 20-35 deg and prints unsupported) |
-| B (alone) | shell_R | `output/print/print_shell_R.stl` | 204.3 x 232.2 | 164.0 | 378 | yes | same as Shell L |
+| B (alone) | shell_R | `output/print/print_shell_R.stl` | 204.3 x 232.2 | 164.0 | 379 | yes | same as Shell L |
 | C | spine_bar | `output/print/print_spine_bar.stl` | 30.0 x 158.0 | 15.7 | 15 | yes | inner (concave) face down; small support under the curled brow end |
 | C | keel_bar | `output/print/print_keel_bar.stl` | 40.0 x 53.7 | 79.0 | 16 | yes | rear leg flat on the bed, bottom leg standing |
 | C | test_coupon | `output/print/print_test_coupon.stl` | 50.0 x 20.0 | 8.0 | 8 | yes | as is |
@@ -24,7 +24,7 @@
 | D | arm_clamp_upper_center | `output/print/print_arm_clamp_upper_center.stl` | 94.3 x 59.3 | 59.9 | 44 | yes | split face down, strut + clevis up (small support under the strut lean) |
 | D | arm_clamp_lower_center | `output/print/print_arm_clamp_lower_center.stl` | 94.3 x 31.2 | 31.5 | 34 | yes | flipped: split face down |
 
-Total ASA about 1199 g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).
+Total ASA about 1200 g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).
 
 Plates: FEET = the two lug feet (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, COUPON = ear-boss coupons (15 min each), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.
 Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D.

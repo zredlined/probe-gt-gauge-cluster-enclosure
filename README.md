@@ -17,7 +17,7 @@ Build guide (parts, hardware, print and assembly): [docs/BUILD.md](docs/BUILD.md
 - **Body: the shell has a nose**: from 30 mm behind the face the wall lofts inward to the scanned outline of the bezel's
   front rim plus 2.5 mm. v0.5 followed the widest outline at the back of the shroud and left 17 to 29 mm of air.
 - **Fastener access is checked** (`mechanical/fastener_check.py`) for all 36 fasteners at the stage they are driven.
-- Hardware is all M4 except the M2.5 for the purple bars and the M6/M8 of the cage mount. Build guide: [docs/BUILD.md](docs/BUILD.md).
+- Hardware is all M4 except the M2.5 for the purple bars (self-tapped into printed pilots, no inserts) and the M6 cage mount bolts. Build guide: [docs/BUILD.md](docs/BUILD.md).
 
 ![Front](mechanical/output/renders/03_front.png)
 

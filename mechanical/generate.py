@@ -64,7 +64,8 @@ SPINE_W = 30.0; SPINE_SCREW_Z = [-40.0, -8.0, 22.0]; SPINE_VISOR_SCREW = [20.0, 
 KEEL_W = 40.0; KEEL_Y0 = 48.0; KEEL_REAR_SCREWS_Y = [58.0, 84.0]; KEEL_BOT_SCREWS_Z = [-30.0, 0.0]; KEEL_SCREW_X = 12.0; KEEL_Z_END = 12.0   # bottom leg stops short of the lock knuckles (M6 nut access, fastener_check.py)
 PAD_H = 5.0
 INSERT_M25_D, INSERT_M25_DEPTH = 3.4, 6.5     # coupon-verified bore for the user's M2.5 x 4 x 3.5 OD inserts
-PILOT_M25 = 2.4                               # coupon-verified self-tap pilot
+PILOT_M25, PILOT_DEPTH = 2.4, 7.5             # coupon-verified self-tap pilot; v0.7: the 14 bar screws self-tap into these (no inserts).
+                                              # Repair path: drill a stripped pilot to 3.4 and press an M2.5 x 4 insert.
 CLR_M25, CBORE_M25_D, CBORE_M25_H = 2.7, 5.0, 1.5
 CLR_M6, NUT_M6_AF, NUT_M6_H = 6.4, 10.0, 5.2
 # mount interface (v0.4): two pivot knuckles on the bottom wall under the lug blocks (M8 pin along X = pitch axis) and a
@@ -373,7 +374,7 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
         bores = []
         for x in SPINE_RIB_X:
             for z in SPINE_SCREW_Z:
-                bores.append(g.cyl((x, y_ridge - 1.0, z), (x, y_ridge + INSERT_M25_DEPTH, z), INSERT_M25_D))
+                bores.append(g.cyl((x, y_ridge - 1.0, z), (x, y_ridge + PILOT_DEPTH, z), PILOT_M25))
             for s in SPINE_VISOR_SCREW:
                 zz = NOSE_Z0 + s; yy = y_ridge + brow_dy(s)
                 bores.append(g.cyl((x, yy - 6.0, zz), (x, yy + 6.0, zz), 3.0))
@@ -382,11 +383,11 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
         for sy in KEEL_REAR_SCREWS_Y:
             for sx in (-KEEL_SCREW_X, KEEL_SCREW_X):
                 pads.append(g.cyl((sx, sy, Z_REAR_IN - 1), (sx, sy, Z_REAR_IN + PAD_H), 9.0))
-                bores.append(g.cyl((sx, sy, Z_REAR_OUT - 1), (sx, sy, Z_REAR_OUT + INSERT_M25_DEPTH), INSERT_M25_D))
+                bores.append(g.cyl((sx, sy, Z_REAR_OUT - 1), (sx, sy, Z_REAR_OUT + PILOT_DEPTH), PILOT_M25))
         for sz in KEEL_BOT_SCREWS_Z:
             for sx in (-KEEL_SCREW_X, KEEL_SCREW_X):
                 pads.append(g.cyl((sx, y_bot_in + 1, sz), (sx, y_bot_in - PAD_H, sz), 9.0))
-                bores.append(g.cyl((sx, y_bot_out + 1, sz), (sx, y_bot_out - INSERT_M25_DEPTH, sz), INSERT_M25_D))
+                bores.append(g.cyl((sx, y_bot_out + 1, sz), (sx, y_bot_out - PILOT_DEPTH, sz), PILOT_M25))
         # shell -> feet: fore-aft SLOTS (+-FOOT_SLOT_HALF) with slotted counterbores through the bottom wall, under the M4 bolts
         def yslot(x, z, y0, y1, d, half):
             return [g.box(x - d / 2, min(y0, y1), z - half, x + d / 2, max(y0, y1), z + half),

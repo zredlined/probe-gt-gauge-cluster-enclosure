@@ -14,7 +14,7 @@
   knuckles moved 22 mm rearward to stay on the straight part of the bottom wall; the mount STLs are regenerated.
 - **Fastener access is checked by the generator** (`mechanical/fastener_check.py`): all 36 fasteners have their reach at
   the stage where they are driven. Section 7 says what that means in the car.
-- **Hardware is all M4** except the M2.5 for the two purple bars and the cage-clamp bolts.
+- **Hardware is all M4** except the M2.5 for the two purple bars (self-tapped, no inserts) and the M6 cage-clamp bolts.
 
 ![Front](../mechanical/output/renders/03_front.png)
 
@@ -104,13 +104,14 @@ Nuts are standard M4, 7.0 mm across flats, 3.2 thick. Washers 9 mm OD or smaller
 | M4 x 16 button or socket head + nut + washer | 4 | cluster lug plates to the feet (plate 4.8 + gap 0.8 + slab 4.4 + nut 3.2 = 13.2) |
 | M4 x 20 button or socket head + nut + washer | 2 | cluster ear tabs to the shell's ear bosses, from the front through the lens notch (tab 7 + gap 0.8 + boss 5.6 + nut 3.2 = 16.6) |
 | M4 x 10 button head + nut | 4 | shell to feet, from below (wall 2.5 + gap 0.3 + pad 3.5 to the nut + nut 3.2 = 9.5; x 12 also fine) |
-| M2.5 x 4 heat-set inserts, 3.5 mm OD | 14 | 6 under the spine bar, 8 under the keel bar (all straight, into flat faces) |
-| M2.5 x 8 socket or button head | 18 | 6 spine bar, 8 keel bar, 4 through the brow with nuts |
+| M2.5 x 8 socket or button head | 18 | 6 spine bar and 8 keel bar **self-tapped into 2.4 mm printed pilots, 7.5 deep** (no inserts anywhere, v0.7); 4 through the brow with nuts |
 | M2.5 nuts + small washers | 4 | the two screw pairs on the brow (2 mm skin, no rib for an insert) |
 | M6 x 55 bolts, nyloc nuts, 2 washers each | 4 | the two pivot pins and the two pitch locks (v0.7, all four knuckles identical): two 10 mm clevis blades + 20 mm knuckle + 0.6 + washers 3 + 6 mm nyloc = 50 |
 | M6 x 40 bolts + nyloc nuts + washers | 8 | the four split clamps (2 each): two 14 mm flanges + nut + washer = 35.5, so 40 leaves 4.5 mm proud; 35 is flush |
 
-No M4 inserts anywhere. The only heat-set inserts are the 14 straight M2.5 for the bars.
+No heat-set inserts anywhere. The bar screws self-tap into 2.4 mm pilots (the coupon-verified value from the logger). Drive them
+with a hand driver, stop when the head seats. If a pilot ever strips, drill it to 3.4 mm and press an M2.5 x 4 insert into
+that one hole; pilot now, insert as a repair, never the other way round.
 
 ## 3. Print
 
@@ -118,9 +119,9 @@ Material: ASA. 0.2 mm layers, 4 walls; 60 percent infill for feet and clamps, 30
 100 percent for bars and coupon.
 
 1. **Feet first** (section 0): pad face down, no supports.
-2. **Shells**: rear face down, brow up, brim on, supports only under the two knuckles. About 11 hours each. Heat-set the
-   spine and keel inserts afterwards: 6 from the roof skin at x +-6, z -40 / -8 / +22; 4 in the rear wall pads at x +-12,
-   y 58 and 84; 4 in the bottom wall pads at x +-12, z -30 and 0.
+2. **Shells**: rear face down, brow up, brim on, supports only under the two knuckles. About 11 hours each. No inserts:
+   the 14 bar-screw pilots (roof skin at x +-6, z -40 / -8 / +22; rear wall pads at x +-12, y 58 and 84; bottom wall pads
+   at x +-12, z -30 and 0) are printed in.
 3. **Spine bar**: inner (concave) face down, small support under the curled brow end. **Keel bar**: rear leg flat.
 4. **Clamp-fit sample.** One *Bar clamp lower* half on the painted crossbar; the bore is 44.85 mm (`CLAMP_BORE` in
    `mechanical/mount.py`). Adjust and reprint before the other seven halves.
@@ -164,7 +165,8 @@ Body:
 4. Two M4 x 20 with washers from the **front**, through the notch in the lens and the ear hole, into the boss nuts.
 5. Four M4 x 10 from **underneath**, through the slotted holes in the bottom wall into the pad nuts. Slide the cluster
    fore-aft on the slots until the lens sits about 3 mm behind the nose rim, then tighten.
-6. Spine bar (six M2.5 into inserts, four brow screws with nuts), keel bar (eight M2.5).
+6. Spine bar over the ridge: six M2.5 x 8 self-tapped into the roof pilots, four brow screws with nuts and small washers.
+   Keel bar over the rear and bottom seam: eight M2.5 x 8 self-tapped into the pilots. Hand driver, stop at seat.
 7. Plug the two ribbon cables into the PCB slots through the rear-corner ports; thumb locks face outboard.
 
 Mount:
