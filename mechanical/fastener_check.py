@@ -91,6 +91,24 @@ def sweep(p, d, excl, max_stage):
         if m.any() and t[m].min() < best[0]: best = (float(t[m].min()), name)
     return best
 
+# ---- part-to-part interference (this is what the v0.6 clevis-in-the-wall miss needed): sample points of each mount part and
+# cage tube tested for containment in the shell solids, and shell points in the cage tubes
+def interference():
+    shells = [trimesh.load(OUT / f) for f in ("shell_l.stl", "shell_r.stl")]
+    out = []
+    rng = np.random.default_rng(0)
+    def sub(pts, n=4000): return pts if len(pts) <= n else pts[rng.choice(len(pts), n, replace=False)]
+    for name, pts in obstacles:
+        if not (name.startswith("mount") or name.startswith("cage")): continue
+        q = sub(pts, 3000 if name.startswith("mount") else 6000)
+        n = sum(int(sh.contains(q).sum()) for sh in shells)
+        out.append((f"{name} ({len(q)} pts)", n))
+    cage = [trimesh.load(REF / f) for f in ("cage_primary_tubes_mm.stl", "cage_steering_support_tubes_mm.stl") if (REF / f).exists()]
+    for sh_name, sh in zip(("Shell L", "Shell R"), shells):
+        p = sub(points(sh), 6000); p_car = (T[:3, :3] @ p.T).T + T[:3, 3]
+        out.append((f"{sh_name} in cage tubes (6000 pts)", sum(int(c.contains(p_car).sum()) for c in cage)))
+    return out
+
 rows = []; n_bad = 0
 for name, p, d, excl, stage, tool in fasteners():
     free, hit = sweep(p, d, excl, stage); need = NEED[tool]
@@ -105,5 +123,9 @@ lines = ["# Fastener access check", "", f"Driver body {TOOL_D} mm swept from eac
          f"(service access). Reach needed: {NEED['driver']:.0f} mm for a screwdriver, {NEED['nut']:.0f} mm for a socket or nut. "
          f"{len(rows)} fasteners, {n_bad} short of reach.", "", "| Fastener | Driven at | Free at that stage | In car | OK |", "|---|---|---|---|---|"]
 lines += [f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {'yes' if r[4] else 'NO'} |" for r in rows]
+inter = interference(); n_int = sum(1 for _, n in inter if n)
+lines += ["", "## Part interference (sample points of one part inside another)", "", "| Part | Points inside the shells / cage |", "|---|---|"]
+lines += [f"| {nm} | {n} |" for nm, n in inter]
+print("\ninterference:"); [print(f"  {'XX ' if n else 'ok '}{nm:<40} {n}") for nm, n in inter]
 (OUT / "fastener_check.md").write_text("\n".join(lines) + "\n")
-print(f"\n{len(rows)} fasteners, {n_bad} short of reach -> output/fastener_check.md")
+print(f"\n{len(rows)} fasteners, {n_bad} short of reach; {n_int} part interferences -> output/fastener_check.md")

@@ -69,10 +69,14 @@ CLR_M25, CBORE_M25_D, CBORE_M25_H = 2.7, 5.0, 1.5
 CLR_M6, NUT_M6_AF, NUT_M6_H = 6.4, 10.0, 5.2
 # mount interface (v0.4): two pivot knuckles on the bottom wall under the lug blocks (M8 pin along X = pitch axis) and a
 # stay boss on the left side wall (M6 along X). Car-frame placement and the mount parts live in mount.py.
-KNUCKLE_X = [-155.0, 155.0]; KNUCKLE_W, KNUCKLE_D, KNUCKLE_H = 24.0, 40.0, 22.0   # X width, Z depth, protrusion below the bottom wall
-KNUCKLE_Z = 7.0; PIN_D = 8.4; KNUCKLE_R = 10.0     # pin lands directly above the crossbar at the chosen placement; body overlaps the ledge blocks
+# v0.7 knuckles: all four identical, M6. The pin sits KNUCKLE_H - KNUCKLE_R = 16 mm below the wall so an 11-13 mm clevis
+# clears the shell (v0.6 had 17 mm clevises on a pin 12 mm down and 12 mm clevises on a pin 6 mm down: both buried in the wall).
+KNUCKLE_X = [-155.0, 155.0]; KNUCKLE_W, KNUCKLE_D, KNUCKLE_H = 20.0, 24.0, 24.0   # X width, Z depth, protrusion below the bottom wall
+KNUCKLE_Z = 7.0; PIN_D = 6.4; KNUCKLE_R = 8.0      # pin lands directly above the crossbar at the chosen placement
 # pitch-lock knuckles (M6) near the front-bottom edge, above the two steering-support arms (car x 203 / 325 -> scan x = X_C - x)
-LOCK_X = [59.0, -62.5]; LOCK_W, LOCK_D, LOCK_H, LOCK_R, LOCK_Z, LOCK_HOLE = 16.0, 14.0, 12.0, 6.0, 18.0, 6.4   # LOCK_Z inside the straight wall (nose starts at 30)
+LOCK_X = [59.0, -62.5]; LOCK_W, LOCK_D, LOCK_H, LOCK_R, LOCK_Z, LOCK_HOLE = 20.0, 24.0, 24.0, 8.0, 40.0, 6.4
+# LOCK_Z 40 keeps a 33 mm lever arm to the pivots; the knuckles there hang under the sloping nose, so their body is grown up
+# into the wall and trimmed by the cavity (never breaks into it)
 STOP_GAP = 1.0                                # rear stop pads stand off the scanned faces by this
 LUG_PAD_D = 8.0; FIN_T = 2.5; FIN_CLR = 0.8; LEDGE_CLR = 0.6
 EAR_PAD_D, EAR_SHIFT, EAR_PAD_L, EAR_WEB_W = 7.0, 2.0, 5.0, 7.0   # ear pad sits outward of the hole: the housing wall hugs the inner side
@@ -352,16 +356,19 @@ def build(g, info, plates, want=("shell", "spine", "keel", "coupon")):
             shell = g.unite([shell, boss])
         # mount interface: pivot knuckles under the feet, pitch-lock knuckles near the front-bottom edge
         yb = y_bot_out
+        def knuckle(kx, kz, w, d, h, r, hole):
+            # body from 8 mm above the straight wall's inner face down to the pin; trimmed by the cavity so it only ever adds
+            # material inside the wall and below it (needed under the sloping nose where the wall is higher than yb)
+            kn = g.unite([g.box(kx - w / 2, y_bot_in - 8.0, kz - d / 2, kx + w / 2, yb + h - r, kz + d / 2),
+                          g.cyl((kx - w / 2, yb + h - r, kz), (kx + w / 2, yb + h - r, kz), 2 * r)])
+            kn = g.cut(kn, [g.prism(R_in, Z_REAR_IN, NOSE_Z0 + 1.0), g.loft_regions(R_in, NOSE_Z0, N_in, Z_FRONT)])
+            return kn, g.cyl((kx - w / 2 - 1, yb + h - r, kz), (kx + w / 2 + 1, yb + h - r, kz), hole)
         for kx in KNUCKLE_X:
-            kn = g.unite([g.box(kx - KNUCKLE_W / 2, yb - 1.0, KNUCKLE_Z - KNUCKLE_D / 2, kx + KNUCKLE_W / 2, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z + KNUCKLE_D / 2),
-                          g.cyl((kx - KNUCKLE_W / 2, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), (kx + KNUCKLE_W / 2, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), 2 * KNUCKLE_R)])
-            shell = g.unite([shell, kn])
-            shell = g.cut(shell, [g.cyl((kx - KNUCKLE_W / 2 - 1, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), (kx + KNUCKLE_W / 2 + 1, yb + KNUCKLE_H - KNUCKLE_R, KNUCKLE_Z), PIN_D)])
+            kn, hole = knuckle(kx, KNUCKLE_Z, KNUCKLE_W, KNUCKLE_D, KNUCKLE_H, KNUCKLE_R, PIN_D)
+            shell = g.cut(g.unite([shell, kn]), [hole])
         for lx in LOCK_X:
-            lk = g.unite([g.box(lx - LOCK_W / 2, yb - 1.0, LOCK_Z - LOCK_D / 2, lx + LOCK_W / 2, yb + LOCK_H - LOCK_R, LOCK_Z + LOCK_D / 2),
-                          g.cyl((lx - LOCK_W / 2, yb + LOCK_H - LOCK_R, LOCK_Z), (lx + LOCK_W / 2, yb + LOCK_H - LOCK_R, LOCK_Z), 2 * LOCK_R)])
-            shell = g.unite([shell, lk])
-            shell = g.cut(shell, [g.cyl((lx - LOCK_W / 2 - 1, yb + LOCK_H - LOCK_R, LOCK_Z), (lx + LOCK_W / 2 + 1, yb + LOCK_H - LOCK_R, LOCK_Z), LOCK_HOLE)])
+            kn, hole = knuckle(lx, LOCK_Z, LOCK_W, LOCK_D, LOCK_H, LOCK_R, LOCK_HOLE)
+            shell = g.cut(g.unite([shell, kn]), [hole])
         # insert bores for the spine (from the skin surface into the thick ribs) and visor through-holes
         bores = []
         for x in SPINE_RIB_X:
