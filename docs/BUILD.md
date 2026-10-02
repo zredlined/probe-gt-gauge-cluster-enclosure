@@ -107,9 +107,8 @@ Nuts are standard M4, 7.0 mm across flats, 3.2 thick. Washers 9 mm OD or smaller
 | M2.5 x 4 heat-set inserts, 3.5 mm OD | 14 | 6 under the spine bar, 8 under the keel bar (all straight, into flat faces) |
 | M2.5 x 8 socket or button head | 18 | 6 spine bar, 8 keel bar, 4 through the brow with nuts |
 | M2.5 nuts + small washers | 4 | the two screw pairs on the brow (2 mm skin, no rib for an insert) |
-| M8 x 70 bolts, nyloc nuts, 2 nylon washers each | 2 | pivot pins: two 16 mm clevis blades + 24 mm knuckle + 0.6 gap + washers + 8 mm nyloc = 68 |
-| M6 x 50 bolts, nyloc nuts, washers | 2 | pitch locks: two 12 mm blades + 16 mm knuckle + 0.6 + washers + 6 mm nyloc = 49 |
-| M6 x 40 bolts + nyloc nuts + washers | 8 | the four split clamps (2 each): two 14 mm flanges + nut + washer = 35 |
+| M6 x 55 bolts, nyloc nuts, 2 washers each | 4 | the two pivot pins and the two pitch locks (v0.7, all four knuckles identical): two 10 mm clevis blades + 20 mm knuckle + 0.6 + washers 3 + 6 mm nyloc = 50 |
+| M6 x 40 bolts + nyloc nuts + washers | 8 | the four split clamps (2 each): two 14 mm flanges + nut + washer = 35.5, so 40 leaves 4.5 mm proud; 35 is flush |
 
 No M4 inserts anywhere. The only heat-set inserts are the 14 straight M2.5 for the bars.
 
@@ -131,12 +130,17 @@ Material: ASA. 0.2 mm layers, 4 walls; 60 percent infill for feet and clamps, 30
 
 The shell's bottom wall carries four knuckles, all moulded into the shell halves:
 
-- **Two pivot knuckles** (24 mm wide, 40 mm long, M8 bore across the car) directly under the two feet, at scan x +-155.
-  They land directly above the crossbar. Each drops into the clevis on a *Bar clamp upper*; an M8 bolt through clevis and
-  knuckle is the pitch axis.
-- **Two lock knuckles** (16 mm wide, M6 bore) at scan x +59 and -62.5, z 18, directly above the two steering-support
-  arms. Each drops into the slotted clevis on an *Arm clamp upper*; an M6 bolt through the slot and knuckle locks the
-  pitch. The 16 mm slot gives about +-5 degrees of trim around the modelled 20 degrees.
+All four knuckles are identical (v0.7): 20 mm wide, 24 mm deep, pin 16 mm below the wall, 6.4 mm bore, M6.
+
+- **Two pivot knuckles** directly under the two feet, at scan x +-155, land directly above the crossbar. Each drops into
+  the 12 mm clevis on a *Bar clamp upper*; the ring is notched under the knuckle so its round bottom clears. An M6 through
+  clevis and knuckle is the pitch axis.
+- **Two lock knuckles** at scan x +59 and -62.5, z 40 (33 mm forward of the pivots, under the nose), directly above the
+  two steering-support arms. Each drops into the slotted 13 mm clevis on an *Arm clamp upper*; an M6 through the slot
+  locks the pitch. The 12 mm slot gives about +-10 degrees of trim.
+
+The generator now checks the clamp bodies against the shell and the shell against the cage tubes
+(`fastener_check.py`, part interference table). The v0.6 clevises were 5 mm into the wall and this is what caught it.
 
 Load path: cluster -> M4 lug bolts -> feet -> M4 bolts through the bottom wall -> knuckles (about 15 mm away) ->
 clevises -> clamps -> crossbar and both arms. The ear bolts tie the top of the cluster to the roof so the lug plates
