@@ -1,122 +1,94 @@
-# 1993 Ford Probe GT gauge cluster enclosure
+# Probe GT gauge cluster enclosure
 
-![Driver view](mechanical/output/renders/01_driver_iso.png)
+A 3D-printed housing and roll-cage mount for the stock 1993 Ford Probe GT gauge cluster in our 24 Hours of Lemons car.
+The dash is gone; the cluster lives in a two-piece charcoal ASA shell with a sun brow, bolted through its own OEM
+mounting holes to two small printed feet and two bosses in the roof, and the shell hangs off the dash crossbar and the
+two steering-support tubes on four split clamps. Designed from a 3D scan of the cluster and of the cage.
 
-Roll-cage-mounted enclosure and sun brow for the OEM Probe GT gauge cluster, designed from a 3D scan of the cluster.
-Aesthetic brief: the same "Teenage Engineering designs for a race car" language as the 4OGS race logger (charcoal body,
-one purple accent, exposed aligned fasteners), mounted Ducati-Monster style off the exposed cage over time.
-
-Build guide (parts, hardware, print and assembly): [docs/BUILD.md](docs/BUILD.md).
-
-## Status: v0.6 (2026-09-30)
-
-- **Chassis: two lug feet** bolted to the cluster through its OEM lug holes (four M4), each capturing two M4 nuts that
-  four bolts from under the shell run into. Bench-proven on the R side.
-- **Ears: bosses moulded into the shell roof**, each with a side-entry channel for a standard M4 nut; one M4 per ear from
-  the front through the notch in the lens. No inserts, no roof holes.
-- **Body: the shell has a nose**: from 30 mm behind the face the wall lofts inward to the scanned outline of the bezel's
-  front rim plus 2.5 mm. v0.5 followed the widest outline at the back of the shroud and left 17 to 29 mm of air.
-- **Fastener access is checked** (`mechanical/fastener_check.py`) for all 36 fasteners at the stage they are driven.
-- Hardware is all M4 except the M2.5 for the purple bars (self-tapped into printed pilots, no inserts) and the M6 cage mount bolts. Build guide: [docs/BUILD.md](docs/BUILD.md).
-
-![Front](mechanical/output/renders/03_front.png)
-
-## Layout
-
-```
-onshape_reference_package/   scan deliverables (STL, colour PLY, DXF silhouettes, hole CSV, README_Onshape.md)
-mechanical/generate.py       single source of truth: constants -> CadQuery (local STLs + mesh clearance check) and FeatureScript
-mechanical/mount.py          car-frame placement of the enclosure and the four-clamp cage mount
-mechanical/print_prep.py     bed-oriented print STLs + print plan -> mechanical/output/print
-mechanical/fastener_check.py driver-access sweep for every screw and bolt -> mechanical/output/fastener_check.md
-mechanical/render.py         pyvista renders of the STLs with the scan mesh inside -> mechanical/output/renders
-mechanical/push.py           uploads the FeatureScript to the Onshape Feature Studio and (re)inserts the custom feature (spends API allocation)
-mechanical/output/           generated: *.stl, probe_cluster_enclosure.fs, seat_data.json, onshape_ids.json, renders/
-```
-
-Run (scratch env with cadquery, trimesh, shapely, scipy, ezdxf, pyvista, requests):
-
-```bash
-python mechanical/generate.py        # geometry + clearance report (~20 s)
-python mechanical/print_prep.py      # bed-oriented STLs + print plan
-python mechanical/render.py          # renders
-source ~/.zshrc && python mechanical/push.py   # ~30 Onshape API requests
-```
-
-## Coordinate frame
-
-Scan frame, millimetres: **X** across the cluster, **Y increases downward in the car**, **Z toward the driver**
-(bezel front at about +50, harness connectors at the rear down to -56). Everything (STL, DXF, hole CSV, FeatureScript)
-shares this frame so it lines up in Onshape without transforms.
-
-## Design (shell v0.4 + mount v0.3, 2026-09-26; shell retention superseded by the v0.5 feet)
-
-- **Shell L / Shell R**, split at X = 0 (a 405 mm part does not fit the P1S bed). The halves close around the cluster.
-  Cavity is the scan silhouette hull (corners rounded to R12) offset 4 mm.
-- **Cradle retention (v0.4, dropped)**: ledges, fins, tilted stop pads and front lips held the cluster by shape. Replaced
-  by the two bolted lug feet; the v0.5 shell keeps only cosmetic lips and ear slots.
-- **Closed back with two ribbon ports** (v0.3): the rear wall (inner face z -58) covers the PCB and both centre connector
-  housings. The ribbon cables plug into two vertical PCB slots (left x -179..-173, right x 161..168, y 2..50, thumb locks
-  facing outboard); each rear corner has a port from 12 mm inboard of its slot out to the side wall, 12 mm above and below
-  the slot, so a plug can be pushed in and its thumb lock worked from behind. Two rows of 2.4 mm vent slots (x +-105,
-  y -48..-22 and -14..12) cool the PCB. Four M6 nut-pocket pads (x = +-60, y = 26 and 48) are the cage-bracket interface.
-- **Double skin**: the sun-facing arch has a second 2 mm skin on a 6 mm ventilated air gap (ribs at x = +-60, +-115,
-  +-160 and two 8 mm ribs at x = +-6 that carry the spine inserts). The skin continues forward as a 70 mm brow that follows a
-  200 mm arc curling up toward the driver (lofted through 6 sections) and ends in a 5 mm rounded bead, so there is no
-  sharp edge to bump against (Brian's suggestion).
-- **Spine bar** (top ridge, purple) and **Keel bar** (rear + bottom seam, purple) join the halves: M2.5 x 8 socket screws
-  into the user's M2.5 x 4 heat-set inserts (3.4 mm bores), two visor screws with nuts underneath.
-- **Test coupon**: M2.5 insert bore, M2.5 self-tap pilot, M6 nut pocket + clearance, fin slot.
-
-Print: halves rear-face down (the front lips are the only overhangs, small support strips), ASA, charcoal; bars purple.
-
-## Cage mount (mechanical/mount.py, car frame)
-
-Car frame from `dash_cage_reference` rev 2 (mm): X along the dash crossbar driver -> passenger, Y forward to the cowl, Z up,
-origin at the crossbar centreline by the driver upright. Fitted tubes: crossbar, driver upright and the two 1.75 in
-steering-support arms (x ~203 and ~325, running toward the driver). Scan -> car placement is `car = (X_C - x, -z, -y)`
-then pitch about X, with the gauge face 16 mm behind the crossbar's driver-side surface (`FACE_Y` -38), the front-bottom
-edge 50 mm above the bar top (`EDGE_LIFT`), the face leaning back 20 deg (`PITCH`), centred on the steering column
-(`X_C` 262). `placement_checks.json` reports the sightline over the brow (eye and windshield base are guesses), gauge
-visibility over the wheel rim and clearances.
-
-Mount v0.3, four clamp points and no side-bar stay: two split **crossbar clamps** (x 107 and 417) whose upper halves carry
-clevises for the enclosure's two M8 pivot knuckles, directly above the bar; two split **arm clamps** (55 mm along each arm)
-whose upper halves carry short struts with slotted clevises for the enclosure's two M6 lock knuckles near the front-bottom
-edge. Pitch is set on the slots (+-5 deg) then locked. Load path: cluster -> cradle -> shell -> 4 knuckles -> 4 clevises ->
-4 clamps -> crossbar and both arms. Fitting steps in [docs/BUILD.md](docs/BUILD.md).
-
-## Onshape
-
-Document `probe-gt-gauge-cluster-enclosure`: did `937c54b34f0ccb974f37f949`, wid `275b479cd4996a16dce317f4`,
-Part Studio 1 `c10029ec19783bb5bae02ce9`, Feature Studio "Cluster enclosure FeatureScript" `4b35d3a06a0b574150eddd3c`.
-Custom feature "Probe cluster enclosure" with toggles for the four part groups. Mount Part Studio "Mount (car frame)"
-`b65a54a9ba95bae5db018db8` holds custom feature "Cluster cage mount" (same Feature Studio). Assemblies (rebuilt by push.py
-on every push, ids in onshape_ids.json): "Enclosure assembly" (dash + cluster scan, scan frame) and "Full system (car frame)"
-(mount, cage tubes, dash scan, enclosure and cluster placed by T). Imported meshes: cluster scan `177864c843a60c8c5b179426`,
-cage tubes rev 2 `e57c95bb4c9958368ddddebb`, dash surroundings `c059b218bc9efffc19272856`. push.py also rebuilds "Enclosure
-assembly" (id in onshape_ids.json) after every successful push because regenerated parts get new IDs; the scan mesh
-Part Studio `177864c843a60c8c5b179426` is inserted as PARTS and SURFACES. The feature carries step tracking: if an
-op fails it creates a body named `FAILED step N: ...` instead of an opaque error (push.py prints part names).
-FeatureScript notes learned on this project: intersections use SUBTRACT_COMPLEMENT (keeps the target's identity), the
-visor is a two-profile loft (a sheared prism), halves come from opSplitPart, and bodies that must merge overlap by 0.3 mm
-rather than sharing spline faces. Import
-`onshape_reference_package/cluster_onshape_reference_mm.stl` (millimetres) by drag-and-drop for a visual overlay; that
-costs no API allocation.
-
-## Renders
-
-| Rear (ribbon ports, vents) | Side (brow) | Exploded |
+| | | |
 |---|---|---|
-| ![](mechanical/output/renders/04_rear.png) | ![](mechanical/output/renders/05_side_right.png) | ![](mechanical/output/renders/10_exploded.png) |
+| ![](renders/driver_iso.png) | ![](renders/front.png) | ![](renders/rear.png) |
+| ![](renders/system_driver.png) | ![](renders/system_mount.png) | ![](renders/exploded.png) |
 
-## Open items
+## Print
 
-- Confirm the sightline in the car: with the assumed eye (580 above / 800 behind the bar axis) and windshield base (210
-  above, 280 forward) the brow sits 25 mm below the line, as requested (gauges 1-2 in over the bar).
-- Only the crossbar, driver upright and the two steering-support arms are fitted tubes; the rest of the cage is scan mesh or absent.
+All files in [`stl/`](stl/) are already oriented for the bed, Bambu P1S (256 mm). ASA, 0.2 mm layers, 4 walls.
 
-- Print Shell L v0.6 and do check B (BUILD.md section 0); the L ear boss position is the one scan-dependent spot not yet
-  bench-proven.
-- Visor length/droop and skin end position are constants in generate.py; tune after the first look in the car.
-- Onshape has not seen v0.5 yet; the next push must pass the new `buildFeet` feature parameter.
+| Part | File | Qty | Colour | g | Infill | Supports |
+|---|---|---|---|---|---|---|
+| Shell L | [shell_L.stl](stl/shell_L.stl) | 1 | charcoal | 396 | 30 % gyroid | tree, only under the two knuckles; brim |
+| Shell R | [shell_R.stl](stl/shell_R.stl) | 1 | charcoal | 379 | 30 % gyroid | same |
+| Spine bar | [spine_bar.stl](stl/spine_bar.stl) | 1 | purple | 18 | 100 % | small support under the brow tip |
+| Keel bar | [keel_bar.stl](stl/keel_bar.stl) | 1 | purple | 16 | 100 % | none |
+| Foot L, Foot R | [foot_L.stl](stl/foot_L.stl), [foot_R.stl](stl/foot_R.stl) | 1 each | charcoal | 11 | 60 % | none |
+| Bar clamp upper, driver and center | [driver](stl/bar_clamp_upper_driver.stl), [center](stl/bar_clamp_upper_center.stl) | 1 each | charcoal | 41 | 60 % | none |
+| Bar clamp lower, driver and center | [driver](stl/bar_clamp_lower_driver.stl), [center](stl/bar_clamp_lower_center.stl) | 1 each | charcoal | 34 | 60 % | none |
+| Arm clamp upper, driver and center | [driver](stl/arm_clamp_upper_driver.stl), [center](stl/arm_clamp_upper_center.stl) | 1 each | purple | 44 | 60 % | small support under the strut |
+| Arm clamp lower, driver and center | [driver](stl/arm_clamp_lower_driver.stl), [center](stl/arm_clamp_lower_center.stl) | 1 each | charcoal | 34 | 60 % | none |
+
+About 1.2 kg total. L is the face-right side of the cluster (round lug holes), R the face-left (slotted lug hole); every
+bracket is marked with 1 dot for L, 2 for R. `stl/test/` holds optional fit aids: ear-boss coupons and ±3° foot variants.
+
+Polymaker ASA on the P1S: nozzle 255 (260 first layer), bed 100 then 95, part fan 15 %, aux fan off, door closed, chamber
+preheated, dry the spool first.
+
+## Hardware
+
+Nuts are plain M4 (7.0 AF, 3.2 thick) unless marked nyloc. No heat-set inserts.
+
+| Item | Qty | Where |
+|---|---|---|
+| M4 x 16 + nut + washer (9 mm OD max) | 4 | lug plates to the feet |
+| M4 x 20 + nut + washer | 2 | ear tabs to the roof bosses, from the front through the notch in the lens |
+| M4 x 10 + nut | 4 | shell to feet, from below |
+| M2.5 x 8 | 18 | spine bar (6) and keel bar (8) self-tapped into printed pilots, brow (4) with M2.5 nuts and washers |
+| M6 x 55 + nyloc + 2 washers | 4 | pivot and lock pins through the clamp clevises |
+| M6 x 40 + nyloc + washer | 8 | the four split clamps |
+
+## Assembly
+
+1. Press M4 nuts into the hex pockets on the back of each foot slab and into the rear slots of each foot pad.
+2. Cluster face down. Foot L behind the face-right lug plate, Foot R behind the face-left plate. Four M4 x 16 from the front.
+3. Shell L on its outer side. Drop an M4 nut into the ear-boss channel (it opens upward in this position). Lower the
+   cluster with its feet in from the split plane: pads on the bottom wall over the slots, ear tab against the boss.
+4. Nut into Shell R's boss channel, then close Shell R over the cluster.
+5. Two M4 x 20 from the front through the lens notches into the ear bosses. Four M4 x 10 from below into the feet; slide
+   the cluster on the slots until the lens sits about 3 mm behind the nose rim, then tighten.
+6. Spine bar: six M2.5 into the roof pilots, four through the brow with nuts. Keel bar: eight M2.5. Hand driver, stop at seat.
+7. Ribbon cables in through the rear-corner ports, thumb locks outboard.
+8. In the car: bar clamps loose at 107 and 417 mm from the driver-upright weld, clevises up; arm clamps loose about 55 mm
+   forward along each steering-support tube, struts up and leaning back.
+9. Drop the pivot knuckles into the bar-clamp clevises and the lock knuckles into the arm-clamp slots; four M6 x 55,
+   heads outboard. Sit in the seat, set the pitch, tighten pivots, locks, arm clamps, bar clamps.
+
+To remove the cluster: four M6, lift off, two M4 from the front, four M4 from below, bars off, halves apart.
+
+## Design
+
+- The cluster is held only through its OEM holes: four M4 into nuts captured in the feet, two M4 into nuts in bosses
+  moulded into the roof. Nothing is glued or drilled.
+- The shell's front is a nose lofted to the scanned outline of the bezel rim with 2.5 mm clearance; the roof is a double
+  skin over a ventilated air gap that continues as a 70 mm brow. The back is closed with two rows of vents and a port at
+  each corner for the ribbon plugs.
+- Four identical M6 knuckles on the bottom wall: two pivots directly above the crossbar, two pitch locks 33 mm forward
+  above the steering-support tubes, locked on slots.
+- Every fastener is driven from outside or on the bench; a generator check sweeps a driver from each head and samples
+  every clamp against the shell.
+
+CAD: Onshape document [937c54b34f0ccb974f37f949](https://cad.onshape.com/documents/937c54b34f0ccb974f37f949) (assembly ids
+in `cad/output/onshape_ids.json`). Engineering details: [docs/engineering-notes.md](docs/engineering-notes.md).
+
+## Regenerate
+
+Everything is generated from constants in `cad/generate.py` (shell, feet; scan frame) and `cad/mount.py` (placement,
+clamps; car frame). `cad/build.sh` runs the pipeline: geometry, placement, fastener and interference checks, bed-oriented
+STLs into `stl/`, renders into `renders/`. `cad/push.py` uploads the FeatureScript to Onshape and rebuilds both
+assemblies (about 30 API requests).
+
+```
+cad/         generator, checks, print prep, renders, Onshape push; cad/output holds the generated FeatureScript
+stl/         printable files (bed-oriented); stl/test for fit aids
+renders/
+reference/   cluster_scan (mesh, silhouettes, hole CSV) and cage_scan (fitted tubes, surroundings)
+docs/        engineering notes
+```

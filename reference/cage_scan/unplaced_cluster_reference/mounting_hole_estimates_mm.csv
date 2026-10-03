@@ -1,0 +1,9 @@
+id,center_x_mm,center_y_mm,center_z_mm,normal_x,normal_y,normal_z,apparent_width_mm,apparent_length_mm,rim_fit_rms_mm,status
+T1,-167.245,-26.59,31.856,0.15045,0.456267,0.877032,6.8,6.8,0.255,SCAN ESTIMATE - verify physically
+T2,155.521,-23.871,27.814,-0.166308,0.445062,0.879921,6.75,6.75,0.247,SCAN ESTIMATE - verify physically
+B1,-131.729,75.468,-6.039,0.017216,0.248013,0.968604,5.29,5.29,0.108,SCAN ESTIMATE - verify physically
+B2,-152.735,84.128,-7.472,0.036754,0.220062,0.974793,5.94,6.51,0.147,SCAN ESTIMATE - verify physically
+B3,-132.892,84.014,-8.231,0.020389,0.257249,0.96613,6.15,6.15,0.194,SCAN ESTIMATE - verify physically
+B4,121.956,74.318,-8.442,0.007442,0.230129,0.973132,6.47,6.47,0.307,SCAN ESTIMATE - verify physically
+B5,117.602,82.877,-10.435,0.007615,0.236359,0.971636,6.16,6.16,0.134,SCAN ESTIMATE - verify physically
+B6,137.927,82.74,-10.347,0.005292,0.210568,0.977565,6.29,9.52,0.175,SCAN ESTIMATE - verify physically

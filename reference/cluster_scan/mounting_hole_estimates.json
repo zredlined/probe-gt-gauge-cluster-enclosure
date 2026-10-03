@@ -1,0 +1,354 @@
+[
+  {
+    "id": "T1",
+    "center_mm": [
+      -167.24539256271333,
+      -26.589835006431535,
+      31.85590672693306
+    ],
+    "face_normal_positive_z": [
+      0.1504504464599315,
+      0.4562669923749328,
+      0.877031980505352
+    ],
+    "shape_model": "circle approximation",
+    "apparent_opening_width_mm": 6.801016403921228,
+    "apparent_opening_length_mm": 6.801016403921228,
+    "boundary_fit_rms_mm": 0.25455512818270937,
+    "boundary_bootstrap_95_repeatability_mm": 0.2485314992004612,
+    "boundary_points": 25,
+    "plane_rms_mm": 0.12359184032256651,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9886175515132266,
+        0.0
+      ],
+      [
+        -0.06943592353045575,
+        0.887129688485627
+      ],
+      [
+        -0.13346905770052253,
+        -0.4615202225335248
+      ]
+    ],
+    "local_parameters": [
+      -0.24821789006044032,
+      -1.2479237920156676,
+      3.400508201960614,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "id": "T2",
+    "center_mm": [
+      155.5208324452281,
+      -23.87088424707359,
+      27.81396573399339
+    ],
+    "face_normal_positive_z": [
+      -0.1663081386312328,
+      0.4450620637086155,
+      0.8799212251516854
+    ],
+    "shape_model": "circle approximation",
+    "apparent_opening_width_mm": 6.7524655485086,
+    "apparent_opening_length_mm": 6.7524655485086,
+    "boundary_fit_rms_mm": 0.24733757808841933,
+    "boundary_bootstrap_95_repeatability_mm": 0.20399708182277734,
+    "boundary_points": 24,
+    "plane_rms_mm": 0.1561601215115263,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9860738324410675,
+        1.3877787807814457e-17
+      ],
+      [
+        0.0750627802458987,
+        0.8923482159276075
+      ],
+      [
+        0.14840477080182185,
+        -0.4513476060984657
+      ]
+    ],
+    "local_parameters": [
+      0.5281880809459912,
+      0.10026185459994753,
+      3.3762327742543,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "id": "B1",
+    "center_mm": [
+      -131.72903404087137,
+      75.4675302136124,
+      -6.038624489032762
+    ],
+    "face_normal_positive_z": [
+      0.017215918547800906,
+      0.24801294507325292,
+      0.9686037328157717
+    ],
+    "shape_model": "circle approximation",
+    "apparent_opening_width_mm": 5.290688512560752,
+    "apparent_opening_length_mm": 5.290688512560752,
+    "boundary_fit_rms_mm": 0.10816178012373541,
+    "boundary_bootstrap_95_repeatability_mm": 0.09473575844154841,
+    "boundary_points": 17,
+    "plane_rms_mm": 0.14613984304811334,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9998517950919305,
+        0.0
+      ],
+      [
+        -0.004270403555947772,
+        0.9687473059211886
+      ],
+      [
+        -0.016677874712140748,
+        -0.2480497072573137
+      ]
+    ],
+    "local_parameters": [
+      0.27100612356627285,
+      0.4838078168181243,
+      2.645344256280376,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "id": "B2",
+    "center_mm": [
+      -152.73454991494722,
+      84.12810813463967,
+      -7.472158450007674
+    ],
+    "face_normal_positive_z": [
+      0.036753778517530034,
+      0.22006208182668133,
+      0.974793229309063
+    ],
+    "shape_model": "capsule approximation",
+    "apparent_opening_width_mm": 5.9355292789968965,
+    "apparent_opening_length_mm": 6.5120351955840565,
+    "boundary_fit_rms_mm": 0.14669713104321305,
+    "boundary_bootstrap_95_repeatability_mm": 0.1941360645217153,
+    "boundary_points": 19,
+    "plane_rms_mm": 0.1184871539725717,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9993243516319836,
+        0.0
+      ],
+      [
+        -0.008093581430649444,
+        0.9754522920582701
+      ],
+      [
+        -0.03585155749672668,
+        -0.22021086693954853
+      ]
+    ],
+    "local_parameters": [
+      -0.2347084953590729,
+      0.3856759632254197,
+      2.9677646394984483,
+      0.2882529582935798,
+      0.10929040825725984
+    ]
+  },
+  {
+    "id": "B3",
+    "center_mm": [
+      -132.89192544741368,
+      84.01388280592887,
+      -8.231086519081266
+    ],
+    "face_normal_positive_z": [
+      0.020389280579782603,
+      0.2572494803390182,
+      0.9661298991868247
+    ],
+    "shape_model": "circle approximation",
+    "apparent_opening_width_mm": 6.145297854523798,
+    "apparent_opening_length_mm": 6.145297854523798,
+    "boundary_fit_rms_mm": 0.1936356184349089,
+    "boundary_bootstrap_95_repeatability_mm": 0.17311783613393691,
+    "boundary_points": 22,
+    "plane_rms_mm": 0.1431909791584445,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.999792117011051,
+        0.0
+      ],
+      [
+        -0.005246222434035789,
+        0.9663307829182913
+      ],
+      [
+        -0.019702789465802038,
+        -0.2573029692493312
+      ]
+    ],
+    "local_parameters": [
+      -0.8921109020944709,
+      0.2682338162899841,
+      3.072648927261899,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "id": "B4",
+    "center_mm": [
+      121.95623829347007,
+      74.31782409748863,
+      -8.441515008548246
+    ],
+    "face_normal_positive_z": [
+      0.007442346224540395,
+      0.23012872229834325,
+      0.9731317396200815
+    ],
+    "shape_model": "circle approximation",
+    "apparent_opening_width_mm": 6.468396577034794,
+    "apparent_opening_length_mm": 6.468396577034794,
+    "boundary_fit_rms_mm": 0.306664669874298,
+    "boundary_bootstrap_95_repeatability_mm": 0.37913470660426485,
+    "boundary_points": 22,
+    "plane_rms_mm": 0.14287543320711277,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9999723053578403,
+        0.0
+      ],
+      [
+        -0.0017127450614169662,
+        0.9731586909017904
+      ],
+      [
+        -0.007242583909111613,
+        -0.23013509580746996
+      ]
+    ],
+    "local_parameters": [
+      0.706257853028574,
+      0.327833209651395,
+      3.234198288517397,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "id": "B5",
+    "center_mm": [
+      117.60221994857086,
+      82.8774556287877,
+      -10.43463158105644
+    ],
+    "face_normal_positive_z": [
+      0.00761466970598399,
+      0.23635934300836925,
+      0.9716358771566233
+    ],
+    "shape_model": "circle approximation",
+    "apparent_opening_width_mm": 6.163617846643081,
+    "apparent_opening_length_mm": 6.163617846643081,
+    "boundary_fit_rms_mm": 0.13404171314942337,
+    "boundary_bootstrap_95_repeatability_mm": 0.11057198043626978,
+    "boundary_points": 23,
+    "plane_rms_mm": 0.13560730711539473,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9999710079823659,
+        2.168404344971009e-19
+      ],
+      [
+        -0.00179985051022984,
+        0.9716640476578275
+      ],
+      [
+        -0.007398900788093844,
+        -0.2363661957412843
+      ]
+    ],
+    "local_parameters": [
+      0.35223016043388283,
+      0.13182497667834517,
+      3.0818089233215407,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "id": "B6",
+    "center_mm": [
+      137.92694121971635,
+      82.73987437195562,
+      -10.346731800752158
+    ],
+    "face_normal_positive_z": [
+      0.005292193901007709,
+      0.2105675768710716,
+      0.9775649790445438
+    ],
+    "shape_model": "capsule approximation",
+    "apparent_opening_width_mm": 6.291673858265182,
+    "apparent_opening_length_mm": 9.518369725323861,
+    "boundary_fit_rms_mm": 0.17548194332054917,
+    "boundary_bootstrap_95_repeatability_mm": 0.14222323573919282,
+    "boundary_points": 29,
+    "plane_rms_mm": 0.12304942605600015,
+    "source": "rear scan only; original point cloud",
+    "method": "alpha boundary",
+    "physical_accuracy": "unverified; rim sampling and chamfers can bias size and center",
+    "basis": [
+      [
+        0.9999859962438046,
+        2.168404344971009e-19
+      ],
+      [
+        -0.0011143800515736085,
+        0.9775786688178839
+      ],
+      [
+        -0.00517353586887324,
+        -0.2105705256493748
+      ]
+    ],
+    "local_parameters": [
+      0.9269542005569851,
+      0.5021665947550374,
+      3.145836929132591,
+      1.61334793352934,
+      -0.0002654317975461371
+    ]
+  }
+]

@@ -1,6 +1,12 @@
 __pycache__/
 .DS_Store
-onshape_reference_package.zip
 .claude/
-dash_cage_onshape_reference.zip
-mechanical/.venv/
+cad/.venv/
+# regenerated intermediates (source-frame STLs, check reports, placement matrices); the printable files live in stl/
+cad/output/*.stl
+cad/output/*.md
+cad/output/*.npy
+cad/output/seat_data.json
+cad/output/placement_checks.json
+# input archives (contents are extracted under reference/)
+*.zip

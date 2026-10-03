@@ -1,0 +1,47 @@
+{
+  "dash_context_mm.stl": {
+    "comparison": "prepared scan points to exported mesh; not absolute measurement accuracy",
+    "sample_count": 438812,
+    "distance_mm_percentiles": {
+      "50": 0.0353165902197361,
+      "90": 0.1892688617110255,
+      "95": 0.31628167629241927,
+      "99": 1.1993290650844606
+    }
+  },
+  "cage_and_dash_reference_mm.stl": {
+    "comparison": "prepared scan points to exported mesh; not absolute measurement accuracy",
+    "sample_count": 438812,
+    "distance_mm_percentiles": {
+      "50": 0.0456621628254652,
+      "90": 0.2918561756610872,
+      "95": 0.5002088338136671,
+      "99": 1.3936277961731005
+    }
+  },
+  "cage_dash_crossbar_mm.stl": {
+    "watertight": true,
+    "orientable": true,
+    "self_intersecting": false,
+    "triangles": 384
+  },
+  "cage_driver_upright_mm.stl": {
+    "watertight": true,
+    "orientable": true,
+    "self_intersecting": false,
+    "triangles": 11904
+  },
+  "driver_side_steering_support_mm.stl": {
+    "watertight": true,
+    "orientable": true,
+    "self_intersecting": false,
+    "triangles": 384
+  },
+  "center_side_steering_support_mm.stl": {
+    "watertight": true,
+    "orientable": true,
+    "self_intersecting": false,
+    "triangles": 384
+  },
+  "topology_check_note": "Duplicate STL vertices welded before individual topology checks. All four individual capped tube envelopes are watertight, orientable and non-self-intersecting. Combined members overlap at joints; the complete scanned context is open geometry."
+}
