@@ -78,6 +78,21 @@ def fasteners():
         for sgn in (-1, 1):
             off = G.LOCK_W / 2 + 0.3 + M.LOCK_BLADE_T
             F.append((f"lock M6 @ x{lx:+.0f} side {'+' if sgn > 0 else '-'}x", (lx + sgn * off, yb + G.LOCK_H - G.LOCK_R, G.LOCK_Z), (sgn, 0, 0), {"mount"}, 2, "nut"))
+    # the eight M6 clamp bolts, head above the top flange and nut below the bottom flange (bolt axis = split normal)
+    zf = M.FLANGE_T / 2 + 4.0
+    for pin in M.knuckle_pins(T):
+        for sy in (-1, 1):
+            for sgn, tool in ((1, "nut"), (-1, "nut")):
+                p_car = np.array([pin[0], sy * M.FLANGE_Y, sgn * zf]); p_scan = (Tinv[:3, :3] @ p_car + Tinv[:3, 3])
+                d_scan = Tinv[:3, :3] @ np.array([0, 0, sgn])
+                F.append((f"bar clamp M6 @ x{pin[0]:.0f} y{sy * M.FLANGE_Y:+.0f} {'head' if sgn > 0 else 'nut'}", tuple(p_scan), tuple(d_scan), {"mount"}, 2, tool))
+    for nm in ("driver", "center"):
+        c = M.arm_point(nm, M.ARM_CLAMP_Y); _, d = M.arm_axis(nm); f = np.cross(d, [0, 0, 1.0]); f /= np.linalg.norm(f); up = np.cross(f, d); up /= np.linalg.norm(up)
+        if up[2] < 0: up = -up
+        for sx in (-1, 1):
+            for sgn in (1, -1):
+                p_car = c + f * sx * M.FLANGE_Y + up * sgn * zf; p_scan = Tinv[:3, :3] @ p_car + Tinv[:3, 3]; d_scan = Tinv[:3, :3] @ (up * sgn)
+                F.append((f"arm clamp M6 {nm} {'+' if sx > 0 else '-'}f {'head' if sgn > 0 else 'nut'}", tuple(p_scan), tuple(d_scan), {"mount"}, 2, "nut"))
     return F
 
 def sweep(p, d, excl, max_stage):
@@ -104,6 +119,9 @@ def interference():
         n = sum(int(sh.contains(q).sum()) for sh in shells)
         out.append((f"{name} ({len(q)} pts)", n))
     cage = [trimesh.load(REF / f) for f in ("cage_primary_tubes_mm.stl", "cage_steering_support_tubes_mm.stl") if (REF / f).exists()]
+    for f in sorted(OUT.glob("mount_*.stl")):      # mount parts vs the tubes they clamp (car frame)
+        m = trimesh.load(f); q = sub(points(m), 4000)
+        out.append((f"{f.stem.replace('mount_', 'mount ')} in cage tubes", sum(int(c.contains(q).sum()) for c in cage)))
     for sh_name, sh in zip(("Shell L", "Shell R"), shells):
         p = sub(points(sh), 6000); p_car = (T[:3, :3] @ p.T).T + T[:3, 3]
         out.append((f"{sh_name} in cage tubes (6000 pts)", sum(int(c.contains(p_car).sum()) for c in cage)))

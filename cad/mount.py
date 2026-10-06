@@ -187,7 +187,8 @@ def build_mount(g, T, want=("bar", "arms")):
             # the knuckle's round bottom reaches KNUCKLE_R below the pin, which is below the ring's top: notch the whole upper
             # (ring included) to knuckle_r + 2 under the pin, then re-cut the bore (5 mm of ring wall remains under the notch)
             upper = g.cut(upper, [g.box(pin[0] - CLEVIS_GAP / 2, pin[1] - 2 * BLADE_T, pin[2] - (G.KNUCKLE_R + 2.0), pin[0] + CLEVIS_GAP / 2, pin[1] + 2 * BLADE_T, pin[2] + 60)])
-            upper = g.cut(upper, [g.cyl((pin[0] - CLAMP_W / 2 - 1, 0.0, 0.0), (pin[0] + CLAMP_W / 2 + 1, 0.0, 0.0), 2 * CLAMP_BORE)])
+            half = max(CLAMP_W, BLADE_X) / 2 + 1   # the strut root is wider than the ring: clear the tube under all of it
+            upper = g.cut(upper, [g.cyl((pin[0] - half, 0.0, 0.0), (pin[0] + half, 0.0, 0.0), 2 * CLAMP_BORE)])
             parts[f"Bar clamp upper {tag}"] = g.name(upper, f"Bar clamp upper {tag}", COL["mount"])
             parts[f"Bar clamp lower {tag}"] = g.name(lower, f"Bar clamp lower {tag}", COL["mount"])
     if "arms" in want:
@@ -198,7 +199,8 @@ def build_mount(g, T, want=("bar", "arms")):
             strut = strut_to_clevis(g, base, lockpin, LOCK_BLADE_X, LOCK_BLADE_T, LOCK_CLEVIS_R, LOCK_GAP, LOCK_HOLE, slot=LOCK_SLOT, knuckle_r=G.LOCK_R)
             upper = g.unite([upper, strut])
             upper = g.cut(upper, [g.box(lockpin[0] - LOCK_GAP / 2, lockpin[1] - 2 * LOCK_BLADE_T, lockpin[2] - (G.LOCK_R + 2.0), lockpin[0] + LOCK_GAP / 2, lockpin[1] + 2 * LOCK_BLADE_T, lockpin[2] + 60)])
-            upper = g.cut(upper, [g.cyl(tuple(c - d * (CLAMP_W / 2 + 1)), tuple(c + d * (CLAMP_W / 2 + 1)), 2 * CLAMP_BORE)])   # bore guard
+            half = max(CLAMP_W, LOCK_BLADE_X) / 2 + 1
+            upper = g.cut(upper, [g.cyl(tuple(c - d * half), tuple(c + d * half), 2 * CLAMP_BORE)])   # bore guard, full root width
             tag = "driver" if name == "driver" else "center"
             parts[f"Arm clamp upper {tag}"] = g.name(upper, f"Arm clamp upper {tag}", COL["accent"])
             parts[f"Arm clamp lower {tag}"] = g.name(lower, f"Arm clamp lower {tag}", COL["mount"])

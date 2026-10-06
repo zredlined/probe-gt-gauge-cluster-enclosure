@@ -81,7 +81,7 @@ export const clusterCageMount = defineFeature(function(context is Context, id is
         step = "68";
         mkCut(context, id + "ct56", u52, [b54]);
         step = "70";
-        const b57 = mkCyl(context, id + "cy58", vector(401.000, 0.000, 0.000), vector(433.000, 0.000, 0.000), 44.850);
+        const b57 = mkCyl(context, id + "cy58", vector(396.000, 0.000, 0.000), vector(438.000, 0.000, 0.000), 44.850);
         step = "72";
         mkCut(context, id + "ct59", u52, [b57]);
         step = "74";
@@ -157,7 +157,7 @@ export const clusterCageMount = defineFeature(function(context is Context, id is
         step = "144";
         mkCut(context, id + "ct115", u111, [b113]);
         step = "146";
-        const b116 = mkCyl(context, id + "cy117", vector(91.000, 0.000, 0.000), vector(123.000, 0.000, 0.000), 44.850);
+        const b116 = mkCyl(context, id + "cy117", vector(86.000, 0.000, 0.000), vector(128.000, 0.000, 0.000), 44.850);
         step = "148";
         mkCut(context, id + "ct118", u111, [b116]);
         step = "150";
