@@ -149,12 +149,19 @@ def split_clamp(g, c, d, w, split_normal_local, bolt_dir_local, flange_dir_local
         A = g.rot_axis(A, c, rot[0], rot[1]); B = g.rot_axis(B, c, rot[0], rot[1])
     return A, B
 
+ROOT_PAD, ROOT_RISE = 6.0, 6.0   # shoulder around the strut root: +6 mm each side in thickness, 6 mm above the ring top
+
 def strut_to_clevis(g, base, pin, blade_x, blade_t, clevis_r, gap, hole, slot=0.0, knuckle_r=8.0):
-    """Blade from `base` (on the clamp) to `pin` (knuckle axis point), with a clevis around the knuckle. Axis of pin = X."""
+    """Blade from `base` (deep inside the clamp ring wall, just outside the bore) to `pin` (knuckle axis point), with a
+    clevis around the knuckle (pin axis = X) and a broad shoulder where the blade leaves the ring. The caller re-cuts the
+    bore, so the root may pass through the whole ring wall: the joint is then the full ring-wall section, not a sliver
+    (a friend's print snapped at the old tangent root)."""
     base, pin = np.array(base, float), np.array(pin, float); v = pin - base; L = np.linalg.norm(v)
     ang = math.degrees(math.atan2(-v[1], v[2]))                    # rotation about +X tilting +Z toward the strut direction
     blade = g.box(base[0] - blade_x / 2, base[1] - blade_t / 2, base[2], base[0] + blade_x / 2, base[1] + blade_t / 2, base[2] + L)
     blade = g.rot_axis(blade, base, (1, 0, 0), ang)
+    shoulder = g.box(base[0] - blade_x / 2, base[1] - blade_t / 2 - ROOT_PAD, base[2], base[0] + blade_x / 2, base[1] + blade_t / 2 + ROOT_PAD, CLAMP_RO + ROOT_RISE)
+    blade = g.unite([blade, shoulder])
     blade = g.unite([blade, g.cyl((pin[0] - blade_x / 2, pin[1], pin[2]), (pin[0] + blade_x / 2, pin[1], pin[2]), 2 * clevis_r)])
     # clevis slot floor sits knuckle_r + 2 below the pin so the round knuckle never bottoms on the blade (v0.7 interference check)
     tools = [g.box(pin[0] - gap / 2, pin[1] - 2 * blade_t, pin[2] - (knuckle_r + 2.0), pin[0] + gap / 2, pin[1] + 2 * blade_t, pin[2] + 60)]
@@ -175,7 +182,7 @@ def build_mount(g, T, want=("bar", "arms")):
             # clamp built along local -Y then rotated onto +X: after rotation flanges lie fore/aft (Y), split is horizontal (Z)
             # strut starts inside the ring wall (4 mm below its outer surface), NOT at the tube axis: the first print had the
             # blade filling the half-bore. The bore is re-cut after the union as a guard.
-            strut = strut_to_clevis(g, (pin[0], 0.0, CLAMP_RO - 4.0), pin, BLADE_X, BLADE_T, CLEVIS_R, CLEVIS_GAP, PIN_HOLE, knuckle_r=G.KNUCKLE_R)
+            strut = strut_to_clevis(g, (pin[0], 0.0, CLAMP_BORE + 0.5), pin, BLADE_X, BLADE_T, CLEVIS_R, CLEVIS_GAP, PIN_HOLE, knuckle_r=G.KNUCKLE_R)
             upper = g.unite([upper, strut])
             # the knuckle's round bottom reaches KNUCKLE_R below the pin, which is below the ring's top: notch the whole upper
             # (ring included) to knuckle_r + 2 under the pin, then re-cut the bore (5 mm of ring wall remains under the notch)
@@ -187,7 +194,7 @@ def build_mount(g, T, want=("bar", "arms")):
         for (name, lockpin) in zip(("driver", "center"), lock_pins(T)):
             p0, d = arm_axis(name); c = arm_point(name, ARM_CLAMP_Y)
             upper, lower = split_clamp(g, tuple(c), d, CLAMP_W, split_normal_local=(0, 0, 1), bolt_dir_local=(0, 0, 1), flange_dir_local=(1, 0, 0))
-            base = c + np.array([0, 0, CLAMP_RO - 4.0])
+            base = c + np.array([0, 0, CLAMP_BORE + 0.5])
             strut = strut_to_clevis(g, base, lockpin, LOCK_BLADE_X, LOCK_BLADE_T, LOCK_CLEVIS_R, LOCK_GAP, LOCK_HOLE, slot=LOCK_SLOT, knuckle_r=G.LOCK_R)
             upper = g.unite([upper, strut])
             upper = g.cut(upper, [g.box(lockpin[0] - LOCK_GAP / 2, lockpin[1] - 2 * LOCK_BLADE_T, lockpin[2] - (G.LOCK_R + 2.0), lockpin[0] + LOCK_GAP / 2, lockpin[1] + 2 * LOCK_BLADE_T, lockpin[2] + 60)])
