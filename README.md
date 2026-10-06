@@ -59,7 +59,9 @@ Nuts are plain M4 (7.0 AF, 3.2 thick) unless marked nyloc. No heat-set inserts.
 8. In the car: bar clamps loose at 107 and 417 mm from the driver-upright weld, clevises up; arm clamps loose about 55 mm
    forward along each steering-support tube, struts up and leaning back.
 9. Drop the pivot knuckles into the bar-clamp clevises and the lock knuckles into the arm-clamp slots; four M6 x 55,
-   heads outboard. Sit in the seat, set the pitch, tighten pivots, locks, arm clamps, bar clamps.
+   heads outboard. Sit in the seat, set the pitch, tighten pivots, locks, arm clamps, bar clamps. On the bar clamps put
+   the bolt heads underneath and the nylocs on top: the cowl-side nuts sit 33 mm under the shell, enough for an open-end
+   wrench but not a ratchet.
 
 To remove the cluster: four M6, lift off, two M4 from the front, four M4 from below, bars off, halves apart.
 

@@ -36,6 +36,9 @@ The non-obvious facts you need to change the design without re-learning them on 
   the shell and the shell against the cage tubes. Both checks exist because printed parts found the problems first.
 - **Knuckles**: four identical, M6, pin 16 mm below the wall so 12 to 13 mm clevises clear it; clamp rings are notched
   under the knuckles. Lock knuckles sit 33 mm forward of the pivots for a usable pitch-lock lever arm.
+- **Known tight spot**: the rear-bottom corner of Shell R passes 2.9 mm from the scanned dash remnant on the driver
+  side (car x 76, y 90, z 50). If it touches in the car, `FACE_Y` -38 -> -35 moves the whole enclosure 3 mm toward the
+  driver; everything else re-derives.
 - **Placement**: gauge face about 16 mm behind the crossbar's driver-side surface, front-bottom edge 50 mm above the bar
   top, face leaning back 20 deg, centred on the steering column. Eye point and windshield base in `mount.py` are guesses.
 
