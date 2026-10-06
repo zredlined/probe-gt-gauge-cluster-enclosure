@@ -12,7 +12,8 @@ two steering-support tubes on four split clamps. Designed from a 3D scan of the 
 
 ## Print
 
-All files in [`stl/`](stl/) are already oriented for the bed, Bambu P1S (256 mm). ASA, 0.2 mm layers, 4 walls.
+All files in [`stl/`](stl/) are already oriented for the bed (Bambu P1S, 256 mm). ASA, 0.2 mm layers, 4 walls. The shells
+take about 11 hours each; every other part is under 1.5 hours.
 
 | Part | File | Qty | Colour | g | Infill | Supports |
 |---|---|---|---|---|---|---|
@@ -26,8 +27,9 @@ All files in [`stl/`](stl/) are already oriented for the bed, Bambu P1S (256 mm)
 | Arm clamp upper, driver and center | [driver](stl/arm_clamp_upper_driver.stl), [center](stl/arm_clamp_upper_center.stl) | 1 each | purple | 44 | 60 % | small support under the strut |
 | Arm clamp lower, driver and center | [driver](stl/arm_clamp_lower_driver.stl), [center](stl/arm_clamp_lower_center.stl) | 1 each | charcoal | 34 | 60 % | none |
 
-About 1.2 kg total. L is the face-right side of the cluster (round lug holes), R the face-left (slotted lug hole); every
-bracket is marked with 1 dot for L, 2 for R. `stl/test/` holds optional fit aids: ear-boss coupons and ±3° foot variants.
+About 1.2 kg total. Looking at the gauges, L parts go on the right-hand side (the lug plate with round holes) and R
+parts on the left (the plate with the slotted hole); every bracket is marked with 1 dot for L, 2 for R. `stl/test/` holds
+optional fit aids: ear-boss coupons and ±3° foot variants.
 
 Polymaker ASA on the P1S: nozzle 255 (260 first layer), bed 100 then 95, part fan 15 %, aux fan off, door closed, chamber
 preheated, dry the spool first.
@@ -44,6 +46,8 @@ Nuts are plain M4 (7.0 AF, 3.2 thick) unless marked nyloc. No heat-set inserts.
 | M2.5 x 8 | 18 | spine bar (6) and keel bar (8) self-tapped into printed pilots, brow (4) with M2.5 nuts and washers |
 | M6 x 55 + nyloc + 2 washers | 4 | pivot and lock pins through the clamp clevises |
 | M6 x 40 + nyloc + washer | 8 | the four split clamps |
+
+Shopping list: 10 M4 nuts, 6 M4 washers, 4 M2.5 nuts and washers, 12 M6 nylocs, 16 M6 washers, plus the bolts above.
 
 ## Assembly
 
@@ -74,8 +78,9 @@ To remove the cluster: four M6, lift off, two M4 from the front, four M4 from be
   each corner for the ribbon plugs.
 - Four identical M6 knuckles on the bottom wall: two pivots directly above the crossbar, two pitch locks 33 mm forward
   above the steering-support tubes, locked on slots.
-- Every fastener is driven from outside or on the bench; a generator check sweeps a driver from each head and samples
-  every clamp against the shell.
+- Every fastener is driven from outside or on the bench. The generator checks driver reach for all 52 fasteners and
+  samples every part against every other part and the cage; the current state is in
+  [renders/inspection_sheet.png](renders/inspection_sheet.png).
 
 CAD: Onshape document [937c54b34f0ccb974f37f949](https://cad.onshape.com/documents/937c54b34f0ccb974f37f949) (assembly ids
 in `cad/output/onshape_ids.json`). Engineering details: [docs/engineering-notes.md](docs/engineering-notes.md).
@@ -85,7 +90,11 @@ in `cad/output/onshape_ids.json`). Engineering details: [docs/engineering-notes.
 Everything is generated from constants in `cad/generate.py` (shell, feet; scan frame) and `cad/mount.py` (placement,
 clamps; car frame). `cad/build.sh` runs the pipeline: geometry, placement, fastener and interference checks, bed-oriented
 STLs into `stl/`, renders into `renders/`. `cad/push.py` uploads the FeatureScript to Onshape and rebuilds both
-assemblies (about 30 API requests).
+assemblies (about 30 API requests). Environment, once:
+
+```bash
+uv venv cad/.venv && uv pip install --python cad/.venv/bin/python cadquery trimesh shapely scipy ezdxf pyvista requests rtree networkx
+```
 
 ```
 cad/         generator, checks, print prep, renders, Onshape push; cad/output holds the generated FeatureScript
