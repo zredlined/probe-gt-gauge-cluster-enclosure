@@ -46,6 +46,13 @@ def main():
     if FEATURE_TYPE not in names:
         raise SystemExit("FeatureScript did not compile:\n" + json.dumps(specs, indent=1)[:3000])
     print("compiled OK; feature types:", names)
+    if "--mount-only" in sys.argv:
+        # only the mount changed: leave the enclosure feature pinned to its current microversion (its parts and the
+        # enclosure assembly stay valid), re-insert the mount feature and rebuild just the full-system assembly (~20 requests)
+        mv = api("GET", f"/documents/d/{DID}/w/{WID}/currentmicroversion")["microversion"]
+        push_mount(state, fsid, mv)
+        if "--no-assembly" not in sys.argv and state.get("mount_ps") and state.get("cage_ps"): rebuild_full_assembly(state)
+        print(f"API requests this run: {CALLS}"); return
     feats = api("GET", f"/partstudios/d/{DID}/w/{WID}/e/{PS}/features")
     existing = [f for f in feats["features"] if f.get("featureType") == FEATURE_TYPE]
     mv = api("GET", f"/documents/d/{DID}/w/{WID}/currentmicroversion")["microversion"]
