@@ -24,7 +24,7 @@ SADDLE_W = M.CLAMP_W            # must match the printed lower halves
 WS_ANGLE = 25.0
 
 Z_SADDLE = G.Z_FRONT - CR_BAR_BEHIND_FACE        # scan z of the bar axis (19)
-ARM_Z1 = Z_SADDLE + SADDLE_W / 2 + 2.0           # forward bar ends just past the saddle
+ARM_Z1 = Z_SADDLE + SADDLE_W / 2                 # forward bar ends flush with the saddle's width
 # backplate: follows the front silhouette inset PL_INSET (hidden behind the bezel), PL_T thick, front face PL_Z1 behind the
 # rear housings; two halves lapped at x = 0; perimeter rib; two ribbon ports; ear ties straight back from the proven ear
 # blocks; a flange under each saddle foot's pad using the pad's two M4 nut slots.
@@ -59,7 +59,14 @@ def build(g, T):
         upper, lower = M.split_clamp(g, (x_car, 0.0, 0.0), (1, 0, 0), SADDLE_W, split_normal_local=(0, 0, 1), bolt_dir_local=(0, 0, 1), flange_dir_local=(1, 0, 0))
         g.delete_body(lower)                                                            # the printed lowers already exist
         saddle = g.place(upper, t, R[:, 0], R[:, 1], R[:, 2])                           # car -> scan
-        foot = g.unite([feet[f"Foot lug {side}"], arm, saddle])
+        # fill the wedge between the flat bar and the round ring: a block from the bar down past the ring top, then re-cut the
+        # bore and trim everything below the clamp's split plane so the printed lower half still mates
+        axis_scan = R @ np.array([x_car, 0.0, 0.0]) + t                                  # bar axis point in scan coords (axis runs along x)
+        fill = g.box(x0, ARM_Y0, Z_SADDLE - SADDLE_W / 2, x1, axis_scan[1] + 2.0, Z_SADDLE + SADDLE_W / 2)
+        foot = g.unite([feet[f"Foot lug {side}"], arm, fill, saddle])
+        foot = g.cut(foot, [g.cyl((x0 - 1.0, axis_scan[1], axis_scan[2]), (x1 + 1.0, axis_scan[1], axis_scan[2]), 2 * M.CLAMP_BORE)])
+        below_split = g.place(g.box(x_car - 200.0, -200.0, -400.0, x_car + 200.0, 200.0, M.CLAMP_GAP / 2), t, R[:, 0], R[:, 1], R[:, 2])
+        foot = g.cut(foot, [below_split])
         parts[f"Saddle foot {side}"] = g.name(foot, f"Saddle foot {side}", G.COL_ACCENT)
     return parts
 
