@@ -506,6 +506,7 @@ class CQ:
         ax = gp_Ax3(gp_Pnt(*map(float, origin)), gp_Dir(*map(float, e3)), gp_Dir(*map(float, e1)))
         tr = gp_Trsf(); tr.SetTransformation(ax, gp_Ax3())   # local (ax) -> world (verified numerically)
         return cq.Solid(BRepBuilderAPI_Transform(body.wrapped, tr, True).Shape())
+    def delete_body(self, body): return None
     def name(self, body, label, rgb): body.label = label; body.rgb = rgb; return body
 
 # ------------------------------------------------------------------ FeatureScript backend
@@ -581,6 +582,8 @@ class FS:
         self.w(f"const {z} = normalize(vector({e3[0]:.6f}, {e3[1]:.6f}, {e3[2]:.6f}));")
         self.w(f"const {x} = normalize(vector({e1[0]:.6f}, {e1[1]:.6f}, {e1[2]:.6f}) - dot(vector({e1[0]:.6f}, {e1[1]:.6f}, {e1[2]:.6f}), {z}) * {z});")
         self.w(f"opTransform(context, {self.uid('pl')}, {{ \"bodies\" : {body}, \"transform\" : toWorld(coordSystem(vector({origin[0]:.3f}, {origin[1]:.3f}, {origin[2]:.3f}) * millimeter, {x}, {z})) }});"); return body
+    def delete_body(self, body):
+        self.w(f"opDeleteBodies(context, {self.uid('dl')}, {{ \"entities\" : {body} }});")
     def name(self, body, label, rgb):
         self.w(f"nameBody(context, {body}, \"{label}\", color({rgb[0]:.3f}, {rgb[1]:.3f}, {rgb[2]:.3f}));"); return body
 

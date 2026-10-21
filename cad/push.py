@@ -31,7 +31,8 @@ def main():
     dry = "--dry" in sys.argv
     code = (HERE / "output" / "probe_cluster_enclosure.fs").read_text()
     mount_code = (HERE / "output" / "cluster_mount.fs").read_text() if (HERE / "output" / "cluster_mount.fs").exists() else ""
-    code = code + "\n" + mount_code
+    cradle_code = (HERE / "output" / "cluster_cradle.fs").read_text() if (HERE / "output" / "cluster_cradle.fs").exists() else ""
+    code = code + "\n" + mount_code + "\n" + cradle_code
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     if dry: print(f"would push {len(code)//1024} kB; state={state}"); return
     fsid = state.get("fsid")
@@ -46,6 +47,13 @@ def main():
     if FEATURE_TYPE not in names:
         raise SystemExit("FeatureScript did not compile:\n" + json.dumps(specs, indent=1)[:3000])
     print("compiled OK; feature types:", names)
+    if "--cradle" in sys.argv:
+        # cradle only: upload the FS (enclosure + mount features untouched, pinned), insert/replace the cradle feature in its own
+        # Part Studio and rebuild only the "Cradle system" assembly (~20 requests)
+        mv = api("GET", f"/documents/d/{DID}/w/{WID}/currentmicroversion")["microversion"]
+        push_cradle(state, fsid, mv)
+        if "--no-assembly" not in sys.argv: rebuild_cradle_assembly(state)
+        print(f"API requests this run: {CALLS}"); return
     if "--mount-only" in sys.argv:
         # only the mount changed: leave the enclosure feature pinned to its current microversion (its parts and the
         # enclosure assembly stay valid), re-insert the mount feature and rebuild just the full-system assembly (~20 requests)
@@ -117,6 +125,40 @@ def push_mount(state, fsid, mv):
         time.sleep(4)
     print("  mount feature:", stt)
     for p in api("GET", f"/parts/d/{DID}/w/{WID}/e/{ps}"): print(f"  mount part {p['name']}")
+
+CRADLE_TYPE, CRADLE_NAME = "clusterCradle", "Cluster cradle"
+
+def push_cradle(state, fsid, mv):
+    ps = state.get("cradle_ps")
+    if not ps:
+        ps = api("POST", f"/partstudios/d/{DID}/w/{WID}", {"name": "Cradle (scan frame)"})["id"]; state["cradle_ps"] = ps; STATE.write_text(json.dumps(state, indent=1)); print("created Cradle Part Studio", ps)
+    feats = api("GET", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features")
+    for f in feats["features"]:
+        if f.get("featureType") == CRADLE_TYPE: api("DELETE", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features/featureid/{f['featureId']}")
+    params = [{"btType": "BTMParameterBoolean-144", "parameterId": p, "value": True} for p in ("buildFeet", "buildPlate")]
+    api("POST", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features", {"feature": {"btType": "BTMFeature-134", "featureType": CRADLE_TYPE, "name": CRADLE_NAME, "namespace": f"e{fsid}::m{mv}", "parameters": params}})
+    for _ in range(20):
+        feats = api("GET", f"/partstudios/d/{DID}/w/{WID}/e/{ps}/features")
+        stt = {f["name"]: feats["featureStates"].get(f["featureId"], {}).get("featureStatus") for f in feats["features"]}
+        if all(v in ("OK", "WARNING", "ERROR") for v in stt.values()): break
+        time.sleep(4)
+    print("  cradle feature:", stt)
+    for p in api("GET", f"/parts/d/{DID}/w/{WID}/e/{ps}"): print(f"  cradle part {p['name']}")
+
+def rebuild_cradle_assembly(state):
+    """Cradle system: cage tubes + surroundings (car frame) and the cradle parts + cluster scan placed by placement_cradle_T."""
+    import numpy as np
+    T = np.load(HERE / "output" / "placement_cradle_T.npy")
+    old = state.get("cradle_asm")
+    if old: api("DELETE", f"/elements/d/{DID}/w/{WID}/e/{old}")
+    asm = api("POST", f"/assemblies/d/{DID}/w/{WID}", {"name": "Cradle system (car frame)"})["id"]; state["cradle_asm"] = asm; STATE.write_text(json.dumps(state, indent=1))
+    for eid, types in ((state["cage_ps"], ["PARTS"]), (state["surroundings_ps"], ["PARTS"]), (state["surroundings_ps"], ["SURFACES"]), (state["cradle_ps"], ["PARTS"]), (MESH_PS, ["PARTS"]), (MESH_PS, ["SURFACES"])):
+        api("POST", f"/assemblies/d/{DID}/w/{WID}/e/{asm}/instances", {"documentId": DID, "elementId": eid, "isWholePartStudio": True, "includePartTypes": types})
+    inst = api("GET", f"/assemblies/d/{DID}/w/{WID}/e/{asm}?includeNonSolids=true")["rootAssembly"]["instances"]
+    moved = [i["id"] for i in inst if i["elementId"] in (state["cradle_ps"], MESH_PS)]
+    M = T.copy(); M[:3, 3] /= 1000.0
+    api("POST", f"/assemblies/d/{DID}/w/{WID}/e/{asm}/occurrencetransforms", {"occurrences": [{"path": [i]} for i in moved], "transform": [float(x) for x in M.flatten()], "isRelative": False})
+    print(f"cradle assembly rebuilt: {asm} ({len(inst)} instances, {len(moved)} placed by T)")
 
 def rebuild_full_assembly(state):
     """Full system: mount + cage tubes + surroundings in the car frame; enclosure + cluster scan transformed by placement_T."""

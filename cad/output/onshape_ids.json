@@ -4,5 +4,7 @@
  "cage_ps": "e57c95bb4c9958368ddddebb",
  "surroundings_ps": "c059b218bc9efffc19272856",
  "mount_ps": "b65a54a9ba95bae5db018db8",
- "full_asm": "7e3e90f273036498768b634f"
+ "full_asm": "7e3e90f273036498768b634f",
+ "cradle_ps": "5a481c8f5d25129516d5c98c",
+ "cradle_asm": "f55122812e6734b83c7be341"
 }

@@ -52,7 +52,8 @@ def build(g, T):
         x0, x1 = xs[0] - G.LUG_PAD_X_MARGIN, xs[1] + G.LUG_PAD_X_MARGIN
         arm = g.box(x0, ARM_Y0, ARM_Z0 - 1.0, x1, ARM_Y1, ARM_Z1)                      # forward bar, overlaps the pad by 1
         x_car = (T[:3, :3] @ np.array([x_scan, 0.0, 0.0]))[0] + T[0, 3]
-        upper, _ = M.split_clamp(g, (x_car, 0.0, 0.0), (1, 0, 0), SADDLE_W, split_normal_local=(0, 0, 1), bolt_dir_local=(0, 0, 1), flange_dir_local=(1, 0, 0))
+        upper, lower = M.split_clamp(g, (x_car, 0.0, 0.0), (1, 0, 0), SADDLE_W, split_normal_local=(0, 0, 1), bolt_dir_local=(0, 0, 1), flange_dir_local=(1, 0, 0))
+        g.delete_body(lower)                                                            # the printed lowers already exist
         saddle = g.place(upper, t, R[:, 0], R[:, 1], R[:, 2])                           # car -> scan
         foot = g.unite([feet[f"Foot lug {side}"], arm, saddle])
         parts[f"Saddle foot {side}"] = g.name(foot, f"Saddle foot {side}", G.COL_ACCENT)
@@ -138,8 +139,8 @@ def build_plate(g):
     lap_cut_R = g.box(-PL_LAP, -300, PL_Z0 + PL_T / 2, 0.0, 300, PL_Z1 + 1)                # R loses the front half-thickness in the lap
     L = g.intersect(g.copy_body(plate), [g.box(-400, -300, -300, PL_LAP, 300, 300)]); L = g.cut(L, [lap_cut_L])
     R = g.intersect(plate, [g.box(-PL_LAP, -300, -300, 400, 300, 300)]); R = g.cut(R, [lap_cut_R])
-    holes = [g.cyl((PL_LAP / 2 * sx, yy, PL_Z0 - 1), (PL_LAP / 2 * sx, yy, PL_Z1 + 1), G.CLR_M4_SHELL) for yy in (-45.0, 45.0) for sx in (0,)]
-    L = g.cut(L, holes); R = g.cut(R, holes)
+    def lap_holes(): return [g.cyl((0.0, yy, PL_Z0 - 1), (0.0, yy, PL_Z1 + 1), G.CLR_M4_SHELL) for yy in (-45.0, 45.0)]
+    L = g.cut(L, lap_holes()); R = g.cut(R, lap_holes())          # fresh tool bodies per cut (FeatureScript consumes tools)
     out = {"Backplate L": g.name(L, "Backplate L", G.COL_BODY)}
     if hasattr(g, "prism_poly"):      # CadQuery only: logo recess in R's rear face + the matching inlay
         logo = logo_shape()
@@ -177,8 +178,38 @@ def checks(T, parts):
         _, d, _ = trimesh.proximity.closest_point(sm, sel)
         print(f"{label}: {sm.volume / 1000:.1f} cm3, bbox {np.round(sm.bounds[1] - sm.bounds[0]).astype(int).tolist()} mm, solids {len(body.Solids())}; points in cage tubes {in_tube}; cluster vertices inside {inside}; min cluster distance {d.min():.2f}")
 
+FS_HEADER = '''
+annotation { "Feature Type Name" : "Cluster cradle" }
+export const clusterCradle = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition
+    {
+        annotation { "Name" : "Saddle feet" } definition.buildFeet is boolean;
+        annotation { "Name" : "Backplate" } definition.buildPlate is boolean;
+    }
+    {
+        var step = "start";
+        try
+        {
+'''
+FS_FOOTER = '''        }
+        catch (e)
+        {
+            fCuboid(context, id + "errbox", { "corner1" : vector(300, -100, -55) * millimeter, "corner2" : vector(310, -90, -45) * millimeter });
+            setProperty(context, { "entities" : qCreatedBy(id + "errbox", EntityType.BODY), "propertyType" : PropertyType.NAME, "value" : "FAILED step " ~ step ~ ": " ~ toString(e) });
+        }
+    }, { buildFeet : true, buildPlate : true });
+'''
+
+def emit_fs(T):
+    """Third custom feature for the shared Feature Studio (scan frame, like the enclosure feature)."""
+    fs = G.FS()
+    fs.w("if (definition.buildFeet)"); fs.w("{"); build(fs, T); fs.w("}")
+    fs.w("if (definition.buildPlate)"); fs.w("{"); build_plate(fs); fs.w("}")
+    return FS_HEADER + "\n".join(fs.lines) + "\n" + FS_FOOTER
+
 def main():
     T = placement(); np.save(OUT / "placement_cradle_T.npy", T)
+    (OUT / "cluster_cradle.fs").write_text(emit_fs(T)); print("FeatureScript -> output/cluster_cradle.fs")
     g = G.CQ(); parts = build(g, T); parts.update(build_plate(g)); checks(T, parts)
     json.dump({"pitch_deg": CR_PITCH, "bar_behind_face_mm": CR_BAR_BEHIND_FACE, "windshield_assumption": {"through_v07_touch_point": True, "angle_deg": WS_ANGLE}, "T": T.tolist()}, open(OUT / "placement_cradle.json", "w"), indent=1)
 
