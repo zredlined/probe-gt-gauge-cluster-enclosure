@@ -10,6 +10,16 @@ two steering-support tubes on four split clamps. Designed from a 3D scan of the 
 | ![](renders/driver_iso.png) | ![](renders/front.png) | ![](renders/rear.png) |
 | ![](renders/system_driver.png) | ![](renders/system_mount.png) | ![](renders/exploded.png) |
 
+## Low-profile cradle (current direction, October 2026)
+
+In the car the full shell sat too high for a short driver and its rear touched the windshield, so the cluster now sits
+directly on the crossbar with no shell: two **saddle feet** ([saddle_foot_L.stl](stl/saddle_foot_L.stl),
+[saddle_foot_R.stl](stl/saddle_foot_R.stl), 54 g each, purple, 60 % infill, no supports) bolt through the OEM lug holes
+with 4 x M4 x 16 and carry a clamp saddle that the printed bar-clamp lowers close with 4 x M6 x 40. Face leans back 24°,
+bar axis 45 mm behind the face, bezel top 170 mm above the bar instead of 227. Put the M6 heads up (15 mm of room under
+the cluster) and the nylocs below. A rear heat plate and a purple top strip that bolt to the same feet are the next parts.
+Generator: `cad/cradle.py`. The shell version below remains available.
+
 ## Print
 
 All files in [`stl/`](stl/) are already oriented for the bed (Bambu P1S, 256 mm). ASA, 0.2 mm layers, 4 walls. The shells

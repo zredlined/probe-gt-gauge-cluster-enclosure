@@ -59,6 +59,12 @@ for t in ("-3", "+3"):
 # ear-boss coupons: the boss plus the roof above it, cut from each shell; print on the flat rear cut face
 rows.append(prep("ear_coupon_L.stl", "ear_coupon_L.stl", [0, 0, -1], "rear cut face on the bed, nut channel horizontal; no supports", "COUPON"))
 rows.append(prep("ear_coupon_R.stl", "ear_coupon_R.stl", [0, 0, -1], "same", "COUPON"))
+# low-profile cradle (cradle.py): saddle feet print on the clamp's split face (car-horizontal plane), like the clamp uppers
+Tc = np.load(OUT / "placement_cradle_T.npy") if (OUT / "placement_cradle_T.npy").exists() else None
+if Tc is not None:
+    down_scan = np.linalg.inv(Tc)[:3, :3] @ np.array([0.0, 0.0, -1.0])
+    for side in ("L", "R"):
+        rows.append(prep(f"saddle_foot_{side.lower()}.stl", f"saddle_foot_{side}.stl", list(down_scan), "clamp split face on the bed, slab leaning; no supports", "CRADLE"))
 # mount (car frame): bar clamps split horizontally at z = 0
 for side in ("driver", "center"):
     rows.append(prep(f"mount_bar_clamp_upper_{side}.stl", f"bar_clamp_upper_{side}.stl", [0, 0, -1], "split face down, clevis up, no supports", "D"))
@@ -72,6 +78,6 @@ for r in rows:
     lines.append(f"| {r['plate']} | {r['file'].replace('print_', '').replace('.stl', '')} | `stl/{r['file']}` | {r['x']} x {r['y']} | {r['z']} | {r['g']} | {'yes' if r['fits'] else 'NO'} | {r['note']} |")
 tot = sum(r['g'] for r in rows if not math.isnan(r['g']))
 lines += ["", f"Total ASA about {tot} g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).", "",
-          "Plates: FEET = the two lug feet (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, COUPON = ear-boss coupons (15 min each), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
+          "Plates: CRADLE = the two saddle feet of the low-profile cradle (no shell), FEET = the two lug feet of the shell version (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, COUPON = ear-boss coupons (15 min each), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
           "Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D."]
 print("\n".join(lines))
