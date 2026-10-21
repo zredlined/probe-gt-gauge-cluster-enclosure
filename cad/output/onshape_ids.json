@@ -6,5 +6,8 @@
  "mount_ps": "b65a54a9ba95bae5db018db8",
  "full_asm": "7e3e90f273036498768b634f",
  "cradle_ps": "5a481c8f5d25129516d5c98c",
- "cradle_asm": "d0a818514b711b9b84a32d67"
+ "cradle_asm": "d0a818514b711b9b84a32d67",
+ "sidemount_asm": "b8675d3e5c9e726cddb1c44a",
+ "sidemount_blob": "5dbb9c1e54435e661cf572ce",
+ "sidemount_ps": "049e0dbae8793189b8e7ad7b"
 }

@@ -6,7 +6,8 @@ import numpy as np, trimesh
 sys.path.insert(0, str(Path(__file__).parent))
 import mount as M
 
-HERE = Path(__file__).parent; OUT = HERE / "output"; P = HERE.parent / "stl"; (P / "test").mkdir(parents=True, exist_ok=True)
+HERE = Path(__file__).parent; OUT = HERE / "output"
+SHELL = HERE.parent / "shell-enclosure" / "stl"; SKEL = HERE.parent / "skeleton-mount" / "stl"; (SHELL / "test").mkdir(parents=True, exist_ok=True); SKEL.mkdir(parents=True, exist_ok=True)
 BED = 256.0; ASA_G_PER_CM3 = 1.07
 
 def rot_to(v, target):
@@ -21,7 +22,8 @@ def rot_to(v, target):
     K = np.array([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]]); return np.eye(3) + s * K + (1 - c) * K @ K
 
 def prep(src, dst, down, note, plate, spin_z=0.0):
-    """down = direction (in the source frame) that should point at the bed."""
+    """down = direction (in the source frame) that should point at the bed. Side-mount parts go to skeleton-mount/stl, the rest to shell-enclosure/stl."""
+    P = SKEL if plate == "SIDE" else SHELL
     m = trimesh.load(OUT / src)
     R = rot_to(down, [0, 0, -1])
     if spin_z:
@@ -29,9 +31,10 @@ def prep(src, dst, down, note, plate, spin_z=0.0):
     T = np.eye(4); T[:3, :3] = R; m.apply_transform(T)
     m.apply_translation(-m.bounds[0])
     m.export(P / ("test/" + dst if ("coupon" in dst or "tilt" in dst) else dst))
+    rel = ("skeleton-mount" if plate == "SIDE" else "shell-enclosure") + "/stl/" + dst
     ext = m.bounds[1] - m.bounds[0]; vol = abs(m.volume) / 1000.0 if m.is_volume else float("nan")
     fits = ext[0] <= BED and ext[1] <= BED and ext[2] <= BED
-    return dict(file=dst, x=round(ext[0], 1), y=round(ext[1], 1), z=round(ext[2], 1), cm3=round(vol, 1), g=round(vol * ASA_G_PER_CM3), fits=fits, note=note, plate=plate)
+    return dict(file=rel, x=round(ext[0], 1), y=round(ext[1], 1), z=round(ext[2], 1), cm3=round(vol, 1), g=round(vol * ASA_G_PER_CM3), fits=fits, note=note, plate=plate)
 
 def arm_split_normal(name):
     _, d = M.arm_axis(name)
@@ -59,16 +62,17 @@ for t in ("-3", "+3"):
 # ear-boss coupons: the boss plus the roof above it, cut from each shell; print on the flat rear cut face
 rows.append(prep("ear_coupon_L.stl", "ear_coupon_L.stl", [0, 0, -1], "rear cut face on the bed, nut channel horizontal; no supports", "COUPON"))
 rows.append(prep("ear_coupon_R.stl", "ear_coupon_R.stl", [0, 0, -1], "same", "COUPON"))
-# low-profile cradle (cradle.py): saddle feet print on the clamp's split face (car-horizontal plane), like the clamp uppers
-Tc = np.load(OUT / "placement_cradle_T.npy") if (OUT / "placement_cradle_T.npy").exists() else None
-if Tc is not None:
-    down_scan = np.linalg.inv(Tc)[:3, :3] @ np.array([0.0, 0.0, -1.0])
-    for side in ("L", "R"):
-        rows.append(prep(f"saddle_foot_{side.lower()}.stl", f"saddle_foot_{side}.stl", list(down_scan), "clamp split face on the bed, slab leaning; no supports", "CRADLE"))
-    for side in ("L", "R"):
-        rows.append(prep(f"backplate_{side.lower()}.stl", f"backplate_{side}.stl", [0, 0, -1], "rear face on the bed; ear tie and foot flange stand up, no supports", "CRADLE"))
-    rows.append(prep("backplate_spine.stl", "backplate_spine.stl", [0, 0, 1], "purple; flat inner face on the bed, counterbores up", "CRADLE"))
-    rows.append(prep("logo_inlay.stl", "logo_inlay.stl", [0, 0, -1], "purple; import into the same object as backplate_R in the slicer (same orientation, no re-positioning)", "CRADLE"))
+# side mount (sidemount.py, car-frame STLs): plates and ear adapters lie on their outboard faces, adapters on their rear
+# faces (nut channels open at the bed), clamp uppers on the split face like the other clamps
+if (OUT / "placement_sidemount_T.npy").exists():
+    Ts = np.load(OUT / "placement_sidemount_T.npy")
+    for side, outb in (("l", [1.0, 0, 0]), ("r", [-1.0, 0, 0])):
+        S = side.upper()
+        rows.append(prep(f"sidemount_side_plate_{side}.stl", f"side_plate_{S}.stl", outb, "flat on the outboard face (M5 heads side); nut pockets face up; no supports", "SIDE"))
+        rows.append(prep(f"sidemount_ear_adapter_{side}.stl", f"ear_adapter_{S}.stl", outb, "flat on the outboard face; the ear block stands up, nut channel opens at the bed; no supports", "SIDE"))
+        rows.append(prep(f"sidemount_lower_adapter_{side}.stl", f"lower_adapter_{S}.stl", list(Ts[:3, :3] @ np.array([0, 0, -1.0])), "rear face on the bed (hex nut channels open at the bed), slab face up; no supports", "SIDE"))
+        rows.append(prep(f"sidemount_clamp_upper_{side}.stl", f"clamp_upper_{S}.stl", [0, 0, -1.0], "split face down, bosses and nyloc pockets up; no supports", "SIDE"))
+        rows.append(prep(f"sidemount_clamp_lower_{side}.stl", f"clamp_lower_{S}.stl", [0, 0, 1.0], "flipped: split face down; identical to the shell version's bar_clamp_lower, reuse those if you have them", "SIDE"))
 # mount (car frame): bar clamps split horizontally at z = 0
 for side in ("driver", "center"):
     rows.append(prep(f"mount_bar_clamp_upper_{side}.stl", f"bar_clamp_upper_{side}.stl", [0, 0, -1], "split face down, clevis up, no supports", "D"))
@@ -79,9 +83,9 @@ for side in ("driver", "center"):
 
 lines = ["# Print plan (Bambu P1S, 256 x 256 x 256 mm, ASA)", "", "| Plate | Part | File | Footprint x*y mm | Height mm | ASA g | Fits | Orientation |", "|---|---|---|---|---|---|---|---|"]
 for r in rows:
-    lines.append(f"| {r['plate']} | {r['file'].replace('print_', '').replace('.stl', '')} | `stl/{r['file']}` | {r['x']} x {r['y']} | {r['z']} | {r['g']} | {'yes' if r['fits'] else 'NO'} | {r['note']} |")
+    lines.append(f"| {r['plate']} | {Path(r['file']).stem} | `{r['file']}` | {r['x']} x {r['y']} | {r['z']} | {r['g']} | {'yes' if r['fits'] else 'NO'} | {r['note']} |")
 tot = sum(r['g'] for r in rows if not math.isnan(r['g']))
 lines += ["", f"Total ASA about {tot} g (solid volume x 1.07 g/cm3; real usage depends on infill and supports).", "",
-          "Plates: CRADLE = the two saddle feet of the low-profile cradle (no shell), FEET = the two lug feet of the shell version (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, COUPON = ear-boss coupons (15 min each), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
+          "Plates: SIDE = the skeleton mount (sidemount.py; eight new parts + the two clamp lowers), FEET = the two lug feet of the shell version (print first, ~1 h each), FEET-VAR = +-3 deg lug-foot variants for the angle check, COUPON = ear-boss coupons (15 min each), A = Shell L alone, B = Shell R alone, C = spine bar + keel bar + coupon, D = all eight clamp halves.",
           "Print order: plate FEET (bolt the cluster to them) -> Shell L -> Shell R -> plate C -> one bar-clamp lower (tube fit) -> plate D."]
 print("\n".join(lines))

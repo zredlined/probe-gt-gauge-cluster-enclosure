@@ -2,7 +2,7 @@
 import json, numpy as np, pyvista as pv
 from pathlib import Path
 pv.OFF_SCREEN = True
-HERE = Path(__file__).parent; OUT = HERE / "output"; R = HERE.parent / "renders"; REF = HERE.parent / "reference" / "cage_scan"
+HERE = Path(__file__).parent; OUT = HERE / "output"; R = HERE.parent / "shell-enclosure" / "renders"; REF = HERE.parent / "reference" / "cage_scan"
 T = np.load(OUT / "placement_T.npy")
 def place(m): return m.transform(T, inplace=False)
 CH, PU, GOLD, GREY, BEIGE = "#2f3136", "#6f3fbf", "#b08d3a", "#9a9a96", "#b8b0a0"

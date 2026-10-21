@@ -1,0 +1,390 @@
+{
+  "design/README.md": {
+    "bytes": 12635,
+    "sha256": "f40313e11dcb720ab9ec15a1e58d59fa93131bfde4aa2f448f49c1d54a3355c3"
+  },
+  "design/requirements.txt": {
+    "bytes": 90,
+    "sha256": "4596d67b6a4ef083b34fd3c917d14951e28164d1984995400cbdffda9a4857b5"
+  },
+  "design/scripts/placement_figure.py": {
+    "bytes": 4872,
+    "sha256": "95ca2c1b665888902f5e25ec214b6716d1a63660ff342c95ebcc42178c766d99"
+  },
+  "design/scripts/render.py": {
+    "bytes": 4482,
+    "sha256": "816031c61a14e511d4241eb014a322af4a4117cd12308d216fc8db1ac9f93b15"
+  },
+  "design/scripts/package_prints.py": {
+    "bytes": 3633,
+    "sha256": "f56ed797a9eb254020be3ac82e8ae173ace8cf4b8da15a3579f828c2f41e3a9f"
+  },
+  "design/scripts/check_geometry.py": {
+    "bytes": 3941,
+    "sha256": "7d97656777fb0a085e471339108d64ed1243847cbee0ed1b4f5de2369246fb14"
+  },
+  "design/scripts/hardware.py": {
+    "bytes": 6407,
+    "sha256": "1b38751b0cfca49d2d87970647dba22c61be16d09d67f51a5b2c61e9090603ac"
+  },
+  "design/scripts/explore.py": {
+    "bytes": 2130,
+    "sha256": "7d3565616a31f9d019c650501f67ec89ae27b4f879a14b07ea785f2ec55bdcb6"
+  },
+  "design/scripts/slicer_check.py": {
+    "bytes": 2693,
+    "sha256": "c5758056fc5f6bba02272a42031cf8cb2e29bb2e24f6943c8a6f855525a9c16b"
+  },
+  "design/scripts/check_placement.py": {
+    "bytes": 1422,
+    "sha256": "8d3cb6b008690f71714b37d4196276fb2fa88b4020a3cf80aa0fea299e6a0a64"
+  },
+  "design/scripts/build_mount.py": {
+    "bytes": 8444,
+    "sha256": "a27a77938bf9b6ad16fe983e398430ca448d432d6a984bb119552cef4ddd6238"
+  },
+  "design/renders/07-ribbon-access.png": {
+    "bytes": 1660944,
+    "sha256": "6adb9cd1ba3baa1db28597d06e511ac0ffa297df7d8d4efda311743f72e5e2ee"
+  },
+  "design/renders/04-front.png": {
+    "bytes": 1734950,
+    "sha256": "0c6f11ea53bbfa51a5b18ed854df115678f87655c760cee500707085f48b8ded"
+  },
+  "design/renders/01-installed-oblique.png": {
+    "bytes": 2129872,
+    "sha256": "8d4876f58d2705c604024f96a2d24657bc375e9cafc03acbe150fe1317cee61b"
+  },
+  "design/renders/03-side.png": {
+    "bytes": 1967491,
+    "sha256": "39e7d4318f02f182af8ba001a4f2625f0c59150431e25637fd2b4efb0a4ba50c"
+  },
+  "design/renders/02-rear-open.png": {
+    "bytes": 1730770,
+    "sha256": "8bc5718870cd4ee1f25c6beb3ef4b60db755ae4eb2628b56a97025db74169282"
+  },
+  "design/renders/05-placement-comparison.png": {
+    "bytes": 238944,
+    "sha256": "c811e80be88aae0db1ce87410e9e3faf93bffb42e77a925558158fa57ba33e4a"
+  },
+  "design/renders/06-mount-only.png": {
+    "bytes": 1473161,
+    "sha256": "9c0a71e6adc192a431e30ece6724c58e6e5aef6e5a6a320f25399622b67e9edb"
+  },
+  "design/output/print/driver_side_plate.stl": {
+    "bytes": 279484,
+    "sha256": "7dc8a5b50a4a84ac9c57822f1761cca6dd92771ec8ab8616027bdfa6e60ea3f2"
+  },
+  "design/output/print/driver_clamp_body.stl": {
+    "bytes": 152484,
+    "sha256": "8890c8a1a8ba04bf7f08231938c4fe26e4472710c6d570940ab277f6cff6f7a5"
+  },
+  "design/output/print/driver_lower_tab_adapter.stl": {
+    "bytes": 213584,
+    "sha256": "50057890cf216011d52c60bade31dc16400774a27c1b25dd3def6eb8fb081bef"
+  },
+  "design/output/print/driver_upper_ear_adapter.stl": {
+    "bytes": 241784,
+    "sha256": "52313a579f35e0ddf410f92e137d44315cbaecfc37849cb168c71fc37ed8b828"
+  },
+  "design/output/print/passenger_clamp_body.stl": {
+    "bytes": 152484,
+    "sha256": "656328400e5261790b89bf309786301b11dfd6f76cf766a9e4c582b76de30f53"
+  },
+  "design/output/print/passenger_side_plate.stl": {
+    "bytes": 279484,
+    "sha256": "8a5b9bb032f0aaa3056282c484fecd3d92d9998af7e781070e937eed793d81a1"
+  },
+  "design/output/print/passenger_bridge_spacer_2.stl": {
+    "bytes": 50484,
+    "sha256": "64aa8fbc5faef4d4fe3bad3760a3d62a18d0cd610b5cda1d163df7e8ffd832a9"
+  },
+  "design/output/print/passenger_clamp_cap.stl": {
+    "bytes": 75284,
+    "sha256": "b4c0a1af5cb76da0f9b7dfde33e4aec470ed12770d0111aed8a7fe7b37228fe1"
+  },
+  "design/output/print/passenger_upper_ear_adapter.stl": {
+    "bytes": 244084,
+    "sha256": "05177d19a4b5e06e579f42a3e7b5ffeb46f238f3aca688f109ce97625d2191a0"
+  },
+  "design/output/print/passenger_lower_tab_adapter.stl": {
+    "bytes": 188584,
+    "sha256": "3f22a782b233dbd659f79820883404aed93d5fea76052106e1c205e512b494a0"
+  },
+  "design/output/print/passenger_bridge_spacer_1.stl": {
+    "bytes": 50484,
+    "sha256": "64aa8fbc5faef4d4fe3bad3760a3d62a18d0cd610b5cda1d163df7e8ffd832a9"
+  },
+  "design/output/print/driver_clamp_cap.stl": {
+    "bytes": 75284,
+    "sha256": "6de67a1868ecdc70fe020f13bb7581768d9669f5f8666d73f08ade0d630fd526"
+  },
+  "design/output/fit_samples/fit_45p25_upper.stl": {
+    "bytes": 152484,
+    "sha256": "acaa886fd56705f2726df78c0bd5bdc7d461a871578f43335fd68d05be3a18cf"
+  },
+  "design/output/fit_samples/fit_45p25_lower.stl": {
+    "bytes": 75284,
+    "sha256": "1b5c059083f2bf2b500dc198a9aaf237129d790d82b9d5ccad976cc15e964d37"
+  },
+  "design/output/plates/01_side_plates.3mf": {
+    "bytes": 116950,
+    "sha256": "13ffd200bc5c1c4af2d03504b6b8b2b567c2918eca37a1152badb7f243e39a67"
+  },
+  "design/output/plates/03_tab_adapters.3mf": {
+    "bytes": 215946,
+    "sha256": "a1ff96db9c653bcde1c3eb9a0d20465989e2b16e6eb265c74e1f3e62ca3a8752"
+  },
+  "design/output/plates/00_fit_check.3mf": {
+    "bytes": 256842,
+    "sha256": "a6d33957a9f7d4ca8fbe2cb10ba998f2c2789480d6008df8c6190a16df3ccdf4"
+  },
+  "design/output/plates/02_cage_clamps.3mf": {
+    "bytes": 106160,
+    "sha256": "601a03536004826a9dc191384b569c98493e3f8b14519abc9e96a96e14ca19bf"
+  },
+  "design/output/step/fit_45p25_lower.step": {
+    "bytes": 47201,
+    "sha256": "ee7cd4243c4c0ca94b62004a9935271a9cd01d610a7bd7da66cbd024db107dcc"
+  },
+  "design/output/step/driver_lower_tab_adapter.step": {
+    "bytes": 104860,
+    "sha256": "a4834256ee9f26d6a85e2a2aa072b792fa936bb4a0e40ae2247a0e0691d5446f"
+  },
+  "design/output/step/passenger_lower_tab_adapter.step": {
+    "bytes": 96033,
+    "sha256": "71bfa87a59699a357f2ccc6857e29874b5a9fc4fef745e3e18cc5a27b26b255a"
+  },
+  "design/output/step/passenger_bridge_spacer_2.step": {
+    "bytes": 9267,
+    "sha256": "a2a1558831c682e94540a53f31736aea4e0a5882e9d5589e3ab378b0967cddfd"
+  },
+  "design/output/step/passenger_clamp_cap.step": {
+    "bytes": 44276,
+    "sha256": "b4f639e893542caf289016ba40245c821dbc0044f0e8c3c89167f14ef3fbcb8b"
+  },
+  "design/output/step/passenger_upper_ear_adapter.step": {
+    "bytes": 224369,
+    "sha256": "5d23dbf9816a5267e5893f21eedb60127b618a7f87e2a89848bb80c4cf5a344d"
+  },
+  "design/output/step/driver_clamp_cap.step": {
+    "bytes": 44348,
+    "sha256": "aa0725e0ba9dcb4b4a6d0e0ebf8a597917098fdbddc8514c68e26e2e210b57f3"
+  },
+  "design/output/step/driver_upper_ear_adapter.step": {
+    "bytes": 202194,
+    "sha256": "2c7001d01fa29cb80d941ab3cbd72cc86667ba104d8c9957732cb6438eae9f74"
+  },
+  "design/output/step/passenger_side_plate.step": {
+    "bytes": 129209,
+    "sha256": "d779ebff7ad147b5d630c99db54de960f61f9b13b24002f6f76b022291b8fd5f"
+  },
+  "design/output/step/driver_side_plate.step": {
+    "bytes": 130481,
+    "sha256": "ad79af8c3ec0ea1030647986f9d198242f5ed6725bcd4aebf9abc20038c1c280"
+  },
+  "design/output/step/passenger_clamp_body.step": {
+    "bytes": 69505,
+    "sha256": "3900119e6183e1d670b8a2db04484d43ea7db5fee3230ef996a5c64f70fbcdfb"
+  },
+  "design/output/step/driver_clamp_body.step": {
+    "bytes": 69613,
+    "sha256": "1b8486fa40718ab6c9a9d2ed9488ec44e64fcea777aa991cd08bc04e36e1ad6e"
+  },
+  "design/output/step/passenger_bridge_spacer_1.step": {
+    "bytes": 9281,
+    "sha256": "7326db36381391c9a3fd125f318294499a42cfcf2daecd0ee99f40412b6ff099"
+  },
+  "design/output/step/fit_45p25_upper.step": {
+    "bytes": 71497,
+    "sha256": "55de8cd8248e8fe6fe9638c0eb8db659b23449af2ab519df22519b86597e560b"
+  },
+  "design/output/assembly/driver_side_plate.stl": {
+    "bytes": 234284,
+    "sha256": "dcc47e06ff3a34f844c8c35aaa82ca0adbb14ce1829dd8c7bcb803724ab0ddba"
+  },
+  "design/output/assembly/driver_clamp_body.stl": {
+    "bytes": 127484,
+    "sha256": "ec4497b41a1a75312e9a48632a5f1ee7bbef3e3191b613f86b493bdc79b60116"
+  },
+  "design/output/assembly/driver_lower_tab_adapter.stl": {
+    "bytes": 176484,
+    "sha256": "0f9f1f31f745e8aa270330806555668573aadbf7a397319ed9117aab8bdd4025"
+  },
+  "design/output/assembly/driver_upper_ear_adapter.stl": {
+    "bytes": 203584,
+    "sha256": "fbe1fc5b3e1bf08b6ed6835ebd731640baaa5774971ca2646a9adcff9bae44fa"
+  },
+  "design/output/assembly/passenger_clamp_body.stl": {
+    "bytes": 127484,
+    "sha256": "c536b7d60a6cac8d88ad25c8ec07d3ac92bca09092029fab11b64dc93f63f7ed"
+  },
+  "design/output/assembly/passenger_side_plate.stl": {
+    "bytes": 234084,
+    "sha256": "41588a7c09d87b03a70403c8ce5e97be59c3733d8e0488ae2eed09aba7b1b07c"
+  },
+  "design/output/assembly/passenger_bridge_spacer_2.stl": {
+    "bytes": 42084,
+    "sha256": "d0411b11905353dc62eac0d3b1439a7e9b013cbafad382ddb1ffc34382fdef71"
+  },
+  "design/output/assembly/passenger_clamp_cap.stl": {
+    "bytes": 63084,
+    "sha256": "5e70c4eeba3d7d5de04e1bac9280c040dac51c5ae5fa1be9fa4cc9efcde63b7f"
+  },
+  "design/output/assembly/passenger_upper_ear_adapter.stl": {
+    "bytes": 205584,
+    "sha256": "9cacd75b15475c795e63a261f103a36f459142ab4586f012640633591e5c8bbe"
+  },
+  "design/output/assembly/passenger_lower_tab_adapter.stl": {
+    "bytes": 158884,
+    "sha256": "c5dd0c2a3f8b7d5dfc6af0e482836a21442652ca5139eca5c7055eefb2fe9eaa"
+  },
+  "design/output/assembly/passenger_bridge_spacer_1.stl": {
+    "bytes": 42084,
+    "sha256": "d8805d9512b2d0f03012755b9d679c9242b7687ec2bff9a0c26e65255c8e3ce4"
+  },
+  "design/output/assembly/driver_clamp_cap.stl": {
+    "bytes": 63084,
+    "sha256": "a4f4cf34ee0b129dfc27316817151849641d1f90f6ee1565580e0a84c7003d0a"
+  },
+  "design/output/hardware/passenger_upper_cross_2.stl": {
+    "bytes": 134284,
+    "sha256": "9369e65d95c2152b7702debdf1300c21dd1d8308dffe94b0c42428fcfcf85969"
+  },
+  "design/output/hardware/passenger_upper_cross_1.stl": {
+    "bytes": 134284,
+    "sha256": "ef6218c63860941f6ee62d08e8698f6489b87d1ac4026235fcd047c8abd1e31c"
+  },
+  "design/output/hardware/passenger_lower_cross_1.stl": {
+    "bytes": 134284,
+    "sha256": "44dfa031dca89c174e7f66051438139a499917f0ade15843106b30a5b49408bf"
+  },
+  "design/output/hardware/passenger_cage_1.stl": {
+    "bytes": 134284,
+    "sha256": "4c35e8237eec81df785c8380dc521e30250b040a02e7b0bd3b89d5eb81e51429"
+  },
+  "design/output/hardware/driver_cage_2.stl": {
+    "bytes": 134284,
+    "sha256": "076ee1554d24654567620c58c18788a6dd56fd0cc53944695715743b1b7fa600"
+  },
+  "design/output/hardware/driver_plate_1.stl": {
+    "bytes": 104884,
+    "sha256": "888014efd4769c114f8bb9db71d9816032e37ea25fdeb5c384c5395820edf8c6"
+  },
+  "design/output/hardware/passenger_lower_cross_2.stl": {
+    "bytes": 134284,
+    "sha256": "2222545e48583b98fb7d2214fe82ac4434981d033cf72b068736daeaddc386ae"
+  },
+  "design/output/hardware/passenger_cage_2.stl": {
+    "bytes": 134284,
+    "sha256": "aa74f34c068c086db4c38b545c4e9575fd4faab4f019d20628193648f9592397"
+  },
+  "design/output/hardware/driver_cage_1.stl": {
+    "bytes": 134284,
+    "sha256": "db798ea2d6260775e3a9b22ed41ae0ad989937fcd361a1a4711b6a4e6c97ae66"
+  },
+  "design/output/hardware/driver_plate_2.stl": {
+    "bytes": 104884,
+    "sha256": "909a3d2aff2d310187080c75d78855ba4b940f06af9c8c485f0fb458d2ad52d8"
+  },
+  "design/output/hardware/B3_oem.stl": {
+    "bytes": 134284,
+    "sha256": "65e3fc4f005f6a0e79a644d424c7577b96032808ac3ec3bec562d977076b844a"
+  },
+  "design/output/hardware/B2_oem.stl": {
+    "bytes": 134284,
+    "sha256": "d4ca5252672203859979b6b5d60ba94bfe41fa5f88550c0de903cbace44ec945"
+  },
+  "design/output/hardware/driver_lower_cross_1.stl": {
+    "bytes": 134284,
+    "sha256": "2be13dc906f5cc056641b2e6987c4a4441c363bed106834e7ad71005bc952281"
+  },
+  "design/output/hardware/driver_lower_cross_2.stl": {
+    "bytes": 134284,
+    "sha256": "57749886c5dcb7abaf2217fe55cf8ab4d1be2a10f93678ae026c7ba1ea3d1db0"
+  },
+  "design/output/hardware/driver_upper_cross_2.stl": {
+    "bytes": 134284,
+    "sha256": "27d7c88f08cb2aa7780a4c70553ded7228640cf5d7f619e0a4c239fae92a47ab"
+  },
+  "design/output/hardware/passenger_plate_1.stl": {
+    "bytes": 104884,
+    "sha256": "3e2e0fd3fe434b0b0201e568971f6c069476692ea49f2c8a3bf078549c88044a"
+  },
+  "design/output/hardware/B6_oem.stl": {
+    "bytes": 134284,
+    "sha256": "8db4f8086fb319044bf1768bfad9d9b53ca9ae7afec4dcd3b9d3fb92637cc028"
+  },
+  "design/output/hardware/T1_oem.stl": {
+    "bytes": 134284,
+    "sha256": "635335b9298c67e603f1a8935e61e844ca9e0392a4522076e1a49ca7b79308af"
+  },
+  "design/output/hardware/driver_upper_cross_1.stl": {
+    "bytes": 134284,
+    "sha256": "b057a50be59019479bfd51cd1935cf1ed5ffbebe42f44464b2775d4c8e7bb322"
+  },
+  "design/output/hardware/passenger_plate_2.stl": {
+    "bytes": 104884,
+    "sha256": "d41731e4ca7b5f1fd404ca1a077426174697b919ca2475c13012211c6193c2d6"
+  },
+  "design/output/hardware/T2_oem.stl": {
+    "bytes": 134284,
+    "sha256": "615499730a129227d3b273774f652ea410420d9c12da8656ce9d694d9c30d9ee"
+  },
+  "design/output/hardware/B5_oem.stl": {
+    "bytes": 134284,
+    "sha256": "e1dc50e4e28a055bf73966affd03f7500c7d3c60b48fee12133d829865720fc5"
+  },
+  "design/output/open28_assembly.step": {
+    "bytes": 1215000,
+    "sha256": "cbc93ee7e9f1905583aec88cc125da1e6c6617cc612f5e8bc977362bda6efb97"
+  },
+  "design/output/review.blend": {
+    "bytes": 12840157,
+    "sha256": "9a71a8676119d1f7a0b2f12a23c486633f866a274dded87e89840cce0ec75328"
+  },
+  "design/output/placement.json": {
+    "bytes": 514,
+    "sha256": "8dd6b4685ef7fda91f4da197c2d1dbc7476cd83fa079c1c10606590bb2f27f1d"
+  },
+  "design/output/placement_summary.json": {
+    "bytes": 335,
+    "sha256": "54277585d3866bd9c135233dfc5590499b83ddb6745a6dfe4e98b79acec088c5"
+  },
+  "design/output/parts_manifest.json": {
+    "bytes": 3350,
+    "sha256": "d05db656319926e56ac7f9c53ac8b0ef60e0f2a3c7bb64bb867a57e3c27fcf6b"
+  },
+  "design/output/geometry_check.json": {
+    "bytes": 4705,
+    "sha256": "eeabf9d49564e915f44480913f46717cf3400af23379837749a64d27f2a84ebc"
+  },
+  "design/output/hardware_check.json": {
+    "bytes": 3485,
+    "sha256": "8e4c422c0b998ef02bba3b558fc4b006a9b8705368337fc0cc838239b58832e8"
+  },
+  "design/output/cluster_placement_check.json": {
+    "bytes": 367,
+    "sha256": "bb44ad29a26fff2e0ff0461167e19236f7707d27d1a3752d2d892b1058b87c26"
+  },
+  "design/output/slicer_verification.json": {
+    "bytes": 6423,
+    "sha256": "aec9a0fdd9bc447f632317818a6c1c7147352c914311a5ccb0beff61f27a6b48"
+  },
+  "design/output/plate_layouts.json": {
+    "bytes": 3200,
+    "sha256": "5f9c62a1a99185707612767a76f1bb4e66cf830aec906fe5c3bc54957122d9c4"
+  },
+  "design/output/lens_allowance.stl": {
+    "bytes": 12084,
+    "sha256": "253957ad9ed2608e807228ba3e81e44ed4fc5d6d2a35ede2c78ba36bb5bb7f6f"
+  },
+  "design/output/driver_ribbon_keepout.stl": {
+    "bytes": 684,
+    "sha256": "aed9b1ebb88287142fe804adbefe83b4d687cd3cc8479839f93d71401cf6c3e8"
+  },
+  "design/output/passenger_ribbon_keepout.stl": {
+    "bytes": 684,
+    "sha256": "cfeebe4e080c1c23df83cf55acca0f70b34689e732efac829eddc9e0d5a9e1c6"
+  }
+}

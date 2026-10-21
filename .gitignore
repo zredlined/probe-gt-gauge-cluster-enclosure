@@ -10,3 +10,5 @@ cad/output/seat_data.json
 cad/output/placement_checks.json
 # input archives (contents are extracted under reference/)
 *.zip
+# large regenerable exports
+cad/output/*.step

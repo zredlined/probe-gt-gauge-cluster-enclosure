@@ -2,7 +2,7 @@
 import numpy as np, pyvista as pv
 from pathlib import Path
 pv.OFF_SCREEN = True
-HERE = Path(__file__).parent; OUT = HERE / "output"; R = HERE.parent / "renders"; R.mkdir(exist_ok=True)
+HERE = Path(__file__).parent; OUT = HERE / "output"; R = HERE.parent / "shell-enclosure" / "renders"; R.mkdir(exist_ok=True)
 REF = HERE.parent / "reference" / "cluster_scan"
 COL = {"shell_l": "#2f3136", "shell_r": "#2f3136", "spine_bar": "#6f3fbf", "keel_bar": "#6f3fbf", "test_coupon": "#9a9da3"}
 CLUSTER = "#b8b0a0"
