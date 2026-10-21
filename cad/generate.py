@@ -263,7 +263,7 @@ def tilt_bars(g, tilt, c, du, dv, dn):
         out += [g.cyl(tuple(c + a * (-la / 2 + la * k / n) - dn * MARK_DEPTH), tuple(c + a * (-la / 2 + la * k / n) + dn * 1.0), wb) for k in range(n + 1)]
     return out
 
-def build_feet(g, tilt=0.0, want=("lugs",)):
+def build_feet(g, tilt=0.0, want=("lugs",), pad_nuts=True):
     """Two lug feet: slab behind each bottom lug plate (M4 bolts through B2 B3 / B5 B6, nuts captured in hex pockets) with a pad
     down to the shell bottom wall carrying two M2.5 inserts for the shell screws (driven from outside, directly above the knuckle)."""
     parts = {}; y_pad = offset(GAP).bounds[3] - FOOT_WALL_CLR
@@ -286,12 +286,13 @@ def build_feet(g, tilt=0.0, want=("lugs",)):
         xs = sorted([a[0], b[0]])
         pad = g.box(xs[0] - LUG_PAD_X_MARGIN, LUG_PAD_Y0, LUG_PAD_Z[0], xs[1] + LUG_PAD_X_MARGIN, y_pad, LUG_PAD_Z[1])
         foot = g.unite([slab, pad])
-        # two M4 nuts in rear-entry slots at mid pad height; M4 x 10 comes up from under the shell
+        # shell version: two M4 nuts in rear-entry slots at mid pad height; M4 x 10 comes up from under the shell
         y_nut = (LUG_PAD_Y0 + y_pad) / 2; cuts = []
-        for x in xs:
-            cuts.append(g.box(x - NUT_M4_SLOT_W / 2, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_Z[0] - 1.0, x + NUT_M4_SLOT_W / 2, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z + NUT_M4_AC / 2 + 0.1))
-            cuts.append(g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, LUG_PAD_Y0 - 1.0, LUG_PAD_SCREW_Z), BOLT_M4_CLR))
-        foot = g.cut(foot, cuts)
+        if pad_nuts:
+            for x in xs:
+                cuts.append(g.box(x - NUT_M4_SLOT_W / 2, y_nut - NUT_M4_SLOT_T / 2, LUG_PAD_Z[0] - 1.0, x + NUT_M4_SLOT_W / 2, y_nut + NUT_M4_SLOT_T / 2, LUG_PAD_SCREW_Z + NUT_M4_AC / 2 + 0.1))
+                cuts.append(g.cyl((x, y_pad + 1.0, LUG_PAD_SCREW_Z), (x, LUG_PAD_Y0 - 1.0, LUG_PAD_SCREW_Z), BOLT_M4_CLR))
+            foot = g.cut(foot, cuts)
         # ID marks: side dots on the pad's rear face (faces the rear wall), tilt bars on the pad's outboard end face
         xc = (xs[0] + xs[1]) / 2; ym = (LUG_PAD_Y0 + y_pad) / 2
         foot = g.cut(foot, side_dots(g, side, (xc - MARK_PITCH / 2, ym, LUG_PAD_Z[0]), (1, 0, 0), (0, 0, -1)))

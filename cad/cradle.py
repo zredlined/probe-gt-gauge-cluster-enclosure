@@ -33,11 +33,17 @@ PL_Z0 = PL_Z1 - PL_T
 PL_LAP = 8.0                                             # no rear rib: the plate prints flat on its rear face with the ties standing up
 EAR_BAR_Y0, EAR_BAR_Y1 = -41.0, -31.0                   # ear tie: 10 mm tall, bottom 2 mm above the housing top behind the ears
 EAR_BAR_HALF_W = G.EAR_BLOCK_HALF_W
-FLANGE_Y0, FLANGE_Y1, FLANGE_Z1 = 96.2, 100.2, -16.0    # flange under the pad (pad bottom 95.9), ends before the forward bar
+BOSS_Y0, BOSS_Y1, BOSS_Z1 = 86.0, 96.0, G.LUG_PAD_Z[0] - 0.3   # plate boss from the plate forward to 0.3 off the pad's rear face
+PAD_NUT_Y = 91.0; PAD_NUT_DEPTH = 3.6                           # M4 nut pockets (axis z) in the pad's rear face; M4 x 30 from behind the plate
+DRIVER_GROOVE_D = 9.5                                           # clearance along each lug-bolt axis through the foot's bar (driver from the front)
 # louvres: vertical slots on an 8 mm pitch whose tops follow the arch (outline + VENT_TOP_INSET), bottoms at VENT_Y1; the band
 # around the centre spine and the logo panel (and its mirror) stay solid
 VENT_X_PL = (-150.0, 150.0, 8.0); VENT_W_PL = 2.6; VENT_TOP_INSET = 24.0; VENT_Y1 = 44.0; VENT_X_CLEAR = 22.0; LOGO_PANEL_Y = -14.0
 SPINE_W, SPINE_T, SPINE_CBORE_D, SPINE_CBORE_H = 30.0, 3.0, 8.0, 2.5    # purple centre spine over the lap, carries the two lap screws
+LAP_Y = (-45.0, 45.0); LAP_BOSS = 4.0                                 # lap screws; L carries a nut-pocket boss on its front face (30 mm of room there)
+NUT_M6_AF, NUT_M6_POCKET = 10.3, 6.5                                  # M6 nyloc captured in the saddle flange tops: bolt from below, no tool on top
+WIN_XC = (48.0, 83.0, 118.0); WIN_W, WIN_Y0, WIN_Y1, WIN_SLANT = 20.0, -6.0, 40.0, 18.0   # slanted windows at the logo's italic angle
+SHOULDER_R = 16.0; GUSSET_T = 3.0
 FIN_Y_TOP, FIN_Y_BOT_PLATE, FIN_Z_TAPER_END = -41.0, -20.0, -24.0     # ear fin: top edge, root depth at the plate, where the taper reaches the 10 mm bar (housing top is at y -29 from z -15 forward)
 # 4OGS logo: 1.2 mm recess in the rear face of Backplate R with a matching inlay part (print both as one multi-colour object)
 LOGO_SVG = HERE.parent / "reference" / "4ogs_logo_3in.svg"; LOGO_W, LOGO_CX, LOGO_CY, LOGO_DEPTH = 70.0, 58.0, -38.0, 1.2
@@ -50,7 +56,7 @@ def placement():
 
 def build(g, T):
     Tinv = np.linalg.inv(T); R, t = Tinv[:3, :3], Tinv[:3, 3]
-    feet = G.build_feet(g); parts = {}
+    feet = G.build_feet(g, pad_nuts=False); parts = {}
     for side, ids in G.LUGS.items():
         xs = sorted(G.HOLES[i][0] for i in ids); x_scan = (xs[0] + xs[1]) / 2
         x0, x1 = xs[0] - G.LUG_PAD_X_MARGIN, xs[1] + G.LUG_PAD_X_MARGIN
@@ -58,6 +64,8 @@ def build(g, T):
         x_car = (T[:3, :3] @ np.array([x_scan, 0.0, 0.0]))[0] + T[0, 3]
         upper, lower = M.split_clamp(g, (x_car, 0.0, 0.0), (1, 0, 0), SADDLE_W, split_normal_local=(0, 0, 1), bolt_dir_local=(0, 0, 1), flange_dir_local=(1, 0, 0))
         g.delete_body(lower)                                                            # the printed lowers already exist
+        z_top = M.FLANGE_T / 2 + 4.0
+        upper = g.cut(upper, [g.hexprism(x_car, sy * M.FLANGE_Y, z_top - NUT_M6_POCKET, z_top + 1.0, NUT_M6_AF) for sy in (-1, 1)])   # captured M6 nylocs
         saddle = g.place(upper, t, R[:, 0], R[:, 1], R[:, 2])                           # car -> scan
         # fill the wedge between the flat bar and the round ring: a block from the bar down past the ring top, then re-cut the
         # bore and trim everything below the clamp's split plane so the printed lower half still mates
@@ -67,6 +75,12 @@ def build(g, T):
         foot = g.cut(foot, [g.cyl((x0 - 1.0, axis_scan[1], axis_scan[2]), (x1 + 1.0, axis_scan[1], axis_scan[2]), 2 * M.CLAMP_BORE)])
         below_split = g.place(g.box(x_car - 200.0, -200.0, -400.0, x_car + 200.0, 200.0, M.CLAMP_GAP / 2), t, R[:, 0], R[:, 1], R[:, 2])
         foot = g.cut(foot, [below_split])
+        # rear-face nut pockets for the backplate bolts (axis z), and driver clearance grooves along the lug-bolt axes
+        foot = g.cut(foot, [g.hexprism(x, PAD_NUT_Y, G.LUG_PAD_Z[0] - 1.0, G.LUG_PAD_Z[0] + PAD_NUT_DEPTH, G.NUT_M4_AF) for x in xs] +
+                           [g.cyl((x, PAD_NUT_Y, G.LUG_PAD_Z[0] - 1.0), (x, PAD_NUT_Y, G.LUG_PAD_Z[0] + 12.0), G.BOLT_M4_CLR) for x in xs])
+        for h in ids:
+            cx, cy, cz, n = G.HOLES[h]; n = G.unit(n); c = np.array([cx, cy, cz])
+            foot = g.cut(foot, [g.cyl(tuple(c + n * (G.LUG_PLATE_T + 1.0)), tuple(c + n * 70.0), DRIVER_GROOVE_D)])
         parts[f"Saddle foot {side}"] = g.name(foot, f"Saddle foot {side}", G.COL_ACCENT)
     return parts
 
@@ -122,17 +136,14 @@ def build_plate(g):
                        [g.cyl((cx, cy, z0), (cx, cy, z1), 2 * r) for cx in (x0 + r, x1 - r) for cy in (y0 + r, y1 - r)])
     y0, y1 = G.RIBBON_PORT_Y
     plate = g.cut(plate, [rrect(-400.0, y0, G.RIBBON_PORT_XIN[0], y1, 12.0), rrect(G.RIBBON_PORT_XIN[1], y0, 400.0, y1, 12.0)])
-    from shapely.geometry import LineString as _LS
-    def top_at(x):
-        hit = _LS([(x, -300), (x, 300)]).intersection(G.offset(-PL_INSET).exterior)
-        ys = [q.y for q in (hit.geoms if hasattr(hit, "geoms") else [hit])]; return min(ys)
-    louvres = []
-    for x in np.arange(VENT_X_PL[0], VENT_X_PL[1] + 0.1, VENT_X_PL[2]):
-        if abs(x) < VENT_X_CLEAR: continue
-        y0 = top_at(x) + VENT_TOP_INSET
-        if LOGO_CX - LOGO_W / 2 - 6 <= abs(x) <= LOGO_CX + LOGO_W / 2 + 6: y0 = max(y0, LOGO_PANEL_Y)   # logo panel and its mirror stay solid
-        if VENT_Y1 - y0 > 12: louvres.append(g.box(x - VENT_W_PL / 2, y0, PL_Z0 - 1.0, x + VENT_W_PL / 2, VENT_Y1, PL_Z1 + 1.0))
-    plate = g.cut(plate, louvres)
+    from shapely.geometry import Polygon as _Poly
+    sh = (WIN_Y1 - WIN_Y0) * math.tan(math.radians(WIN_SLANT))          # top edge shifted +x (the 4OGS frame leans the same way)
+    wins = []
+    for xc in WIN_XC:
+        for sgn in (-1, 1):
+            x = sgn * xc
+            wins.append(g.prism(G.Region(_Poly([(x - WIN_W / 2, WIN_Y1), (x + WIN_W / 2, WIN_Y1), (x + WIN_W / 2 + sh, WIN_Y0), (x - WIN_W / 2 + sh, WIN_Y0)])), PL_Z0 - 1.0, PL_Z1 + 1.0))
+    plate = g.cut(plate, wins)
     # ear ties: proven ear block at the tab + a 20 x 10 bar straight back to the plate, plus a corner bump on the plate to meet it
     for h in G.EARS:
         cx, cy, cz, n = G.HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
@@ -151,24 +162,26 @@ def build_plate(g):
         fin = g.loft_regions(sec_plate, PL_Z0 + 0.5, sec_ear, FIN_Z_TAPER_END)                                     # taper over the first 36 mm
         bar = g.box(cx - EAR_BAR_HALF_W, FIN_Y_TOP, FIN_Z_TAPER_END - 0.5, cx + EAR_BAR_HALF_W, EAR_BAR_Y1, cz - 6.0)   # then the 10 mm bar to the block
         root = g.box(cx - EAR_BAR_HALF_W, FIN_Y_TOP, PL_Z0, cx + EAR_BAR_HALF_W, FIN_Y_BOT_PLATE, PL_Z1)          # fin root through the plate thickness
-        plate = g.unite([plate, root, fin, bar, blk])
-    # foot flanges: under each saddle-foot pad, two M4 holes in line with the pad's nut slots, web up to the plate
+        shoulder = g.unite([g.cyl((cx, FIN_Y_TOP + SHOULDER_R, PL_Z0), (cx, FIN_Y_TOP + SHOULDER_R, PL_Z1), 2 * SHOULDER_R),
+                            g.box(cx - SHOULDER_R, FIN_Y_TOP + SHOULDER_R, PL_Z0, cx + SHOULDER_R, FIN_Y_BOT_PLATE + 12.0, PL_Z1)])   # rounded hump the edge flows into
+        plate = g.unite([plate, shoulder, root, fin, bar, blk])
+    # foot bosses: from the plate forward to each pad's rear face; two M4 x 30 from behind the plate into nut pockets in the pad
     for side, ids in G.LUGS.items():
         xs = sorted(G.HOLES[i][0] for i in ids); x0, x1 = xs[0] - G.LUG_PAD_X_MARGIN, xs[1] + G.LUG_PAD_X_MARGIN
-        flange = g.box(x0, FLANGE_Y0, PL_Z0, x1, FLANGE_Y1, FLANGE_Z1)
-        web = g.box(x0, 86.0, PL_Z0, x1, FLANGE_Y1, PL_Z1 - 0.3)
-        plate = g.unite([plate, flange, web])
-        plate = g.cut(plate, [g.cyl((x, FLANGE_Y0 - 1.0, G.LUG_PAD_SCREW_Z), (x, FLANGE_Y1 + 1.0, G.LUG_PAD_SCREW_Z), G.BOLT_M4_CLR) for x in xs])
+        plate = g.unite([plate, g.box(x0, BOSS_Y0, PL_Z0 + 0.5, x1, BOSS_Y1, BOSS_Z1)])
+        plate = g.cut(plate, [g.cyl((x, PAD_NUT_Y, PL_Z0 - 1.0), (x, PAD_NUT_Y, BOSS_Z1 + 1.0), G.BOLT_M4_CLR) for x in xs])
     # split into lapped halves: L keeps the front half of the plate thickness in the lap, R the rear half; two M4 through the lap
     lap_cut_L = g.box(0.0, -300, PL_Z0 - 1, PL_LAP, 300, PL_Z0 + PL_T / 2)      # L loses the rear half-thickness in the lap
-    lap_cut_R = g.box(-PL_LAP, -300, PL_Z0 + PL_T / 2, 0.0, 300, PL_Z1 + 1)                # R loses the front half-thickness in the lap
+    lap_cut_R = g.box(0.0, -300, PL_Z0 + PL_T / 2, PL_LAP, 300, PL_Z1 + 1)                 # R loses the front half-thickness in the lap
     L = g.intersect(g.copy_body(plate), [g.box(-400, -300, -300, PL_LAP, 300, 300)]); L = g.cut(L, [lap_cut_L])
-    R = g.intersect(plate, [g.box(-PL_LAP, -300, -300, 400, 300, 300)]); R = g.cut(R, [lap_cut_R])
-    def lap_holes(): return [g.cyl((0.0, yy, PL_Z0 - 1), (0.0, yy, PL_Z1 + 1), G.CLR_M4_SHELL) for yy in (-45.0, 45.0)]
+    R = g.intersect(plate, [g.box(0.0, -300, -300, 400, 300, 300)]); R = g.cut(R, [lap_cut_R])
+    L = g.unite([L] + [g.box(-4.0, yy - 6.5, PL_Z1 - 0.3, PL_LAP, yy + 6.5, PL_Z1 + LAP_BOSS) for yy in LAP_Y])        # nut bosses on L's front face
+    L = g.cut(L, [g.hexprism(PL_LAP / 2, yy, PL_Z1 + LAP_BOSS - G.NUT_M4_SLOT_T, PL_Z1 + LAP_BOSS + 1.0, G.NUT_M4_AF) for yy in LAP_Y])
+    def lap_holes(): return [g.cyl((PL_LAP / 2, yy, PL_Z0 - 1), (PL_LAP / 2, yy, PL_Z1 + LAP_BOSS + 1), G.CLR_M4_SHELL) for yy in LAP_Y]
     L = g.cut(L, lap_holes()); R = g.cut(R, lap_holes())          # fresh tool bodies per cut (FeatureScript consumes tools)
     spine = g.intersect(g.box(-SPINE_W / 2, -300, PL_Z0 - SPINE_T, SPINE_W / 2, 300, PL_Z0), [g.prism(G.Region(G.offset(-PL_INSET)), PL_Z0 - SPINE_T - 1, PL_Z0 + 1)])
-    spine = g.cut(spine, [g.cyl((0.0, yy, PL_Z0 - SPINE_T - 1), (0.0, yy, PL_Z0 + 1), G.CLR_M4_SHELL) for yy in (-45.0, 45.0)] +
-                         [g.cyl((0.0, yy, PL_Z0 - SPINE_T - 1), (0.0, yy, PL_Z0 - SPINE_T + SPINE_CBORE_H), SPINE_CBORE_D) for yy in (-45.0, 45.0)])
+    spine = g.cut(spine, [g.cyl((PL_LAP / 2, yy, PL_Z0 - SPINE_T - 1), (PL_LAP / 2, yy, PL_Z0 + 1), G.CLR_M4_SHELL) for yy in LAP_Y] +
+                         [g.cyl((PL_LAP / 2, yy, PL_Z0 - SPINE_T - 1), (PL_LAP / 2, yy, PL_Z0 - SPINE_T + SPINE_CBORE_H), SPINE_CBORE_D) for yy in LAP_Y])
     out = {"Backplate L": g.name(L, "Backplate L", G.COL_BODY), "Backplate spine": g.name(spine, "Backplate spine", G.COL_ACCENT)}
     if hasattr(g, "prism_poly"):      # CadQuery only: logo recess in R's rear face + the matching inlay
         logo = logo_shape()
