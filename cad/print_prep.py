@@ -67,6 +67,7 @@ if Tc is not None:
         rows.append(prep(f"saddle_foot_{side.lower()}.stl", f"saddle_foot_{side}.stl", list(down_scan), "clamp split face on the bed, slab leaning; no supports", "CRADLE"))
     for side in ("L", "R"):
         rows.append(prep(f"backplate_{side.lower()}.stl", f"backplate_{side}.stl", [0, 0, -1], "rear face on the bed; ear tie and foot flange stand up, no supports", "CRADLE"))
+    rows.append(prep("backplate_spine.stl", "backplate_spine.stl", [0, 0, 1], "purple; flat inner face on the bed, counterbores up", "CRADLE"))
     rows.append(prep("logo_inlay.stl", "logo_inlay.stl", [0, 0, -1], "purple; import into the same object as backplate_R in the slicer (same orientation, no re-positioning)", "CRADLE"))
 # mount (car frame): bar clamps split horizontally at z = 0
 for side in ("driver", "center"):

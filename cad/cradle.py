@@ -34,7 +34,11 @@ PL_LAP = 8.0                                             # no rear rib: the plat
 EAR_BAR_Y0, EAR_BAR_Y1 = -41.0, -31.0                   # ear tie: 10 mm tall, bottom 2 mm above the housing top behind the ears
 EAR_BAR_HALF_W = G.EAR_BLOCK_HALF_W
 FLANGE_Y0, FLANGE_Y1, FLANGE_Z1 = 96.2, 100.2, -16.0    # flange under the pad (pad bottom 95.9), ends before the forward bar
-VENT_ROWS_PL = [(-8.0, 14.0), (22.0, 44.0)]; VENT_X_PL = (-110.0, 110.0, 8.0); VENT_W_PL = 2.6
+# louvres: vertical slots on an 8 mm pitch whose tops follow the arch (outline + VENT_TOP_INSET), bottoms at VENT_Y1; the band
+# around the centre spine and the logo panel (and its mirror) stay solid
+VENT_X_PL = (-150.0, 150.0, 8.0); VENT_W_PL = 2.6; VENT_TOP_INSET = 24.0; VENT_Y1 = 44.0; VENT_X_CLEAR = 22.0; LOGO_PANEL_Y = -14.0
+SPINE_W, SPINE_T, SPINE_CBORE_D, SPINE_CBORE_H = 30.0, 3.0, 8.0, 2.5    # purple centre spine over the lap, carries the two lap screws
+FIN_Y_TOP, FIN_Y_BOT_PLATE, FIN_Z_TAPER_END = -41.0, -20.0, -24.0     # ear fin: top edge, root depth at the plate, where the taper reaches the 10 mm bar (housing top is at y -29 from z -15 forward)
 # 4OGS logo: 1.2 mm recess in the rear face of Backplate R with a matching inlay part (print both as one multi-colour object)
 LOGO_SVG = HERE.parent / "reference" / "4ogs_logo_3in.svg"; LOGO_W, LOGO_CX, LOGO_CY, LOGO_DEPTH = 70.0, 58.0, -38.0, 1.2
 
@@ -110,9 +114,18 @@ def build_plate(g):
         return g.unite([g.box(x0 + r, y0, z0, x1 - r, y1, z1), g.box(x0, y0 + r, z0, x1, y1 - r, z1)] +
                        [g.cyl((cx, cy, z0), (cx, cy, z1), 2 * r) for cx in (x0 + r, x1 - r) for cy in (y0 + r, y1 - r)])
     y0, y1 = G.RIBBON_PORT_Y
-    plate = g.cut(plate, [rrect(-400.0, y0, G.RIBBON_PORT_XIN[0], y1, G.PORT_R), rrect(G.RIBBON_PORT_XIN[1], y0, 400.0, y1, G.PORT_R)])
-    plate = g.cut(plate, [g.box(x - VENT_W_PL / 2, vy0, PL_Z0 - 1.0, x + VENT_W_PL / 2, vy1, PL_Z1 + 1.0)
-                          for x in np.arange(VENT_X_PL[0], VENT_X_PL[1] + 0.1, VENT_X_PL[2]) for (vy0, vy1) in VENT_ROWS_PL])
+    plate = g.cut(plate, [rrect(-400.0, y0, G.RIBBON_PORT_XIN[0], y1, 12.0), rrect(G.RIBBON_PORT_XIN[1], y0, 400.0, y1, 12.0)])
+    from shapely.geometry import LineString as _LS
+    def top_at(x):
+        hit = _LS([(x, -300), (x, 300)]).intersection(G.offset(-PL_INSET).exterior)
+        ys = [q.y for q in (hit.geoms if hasattr(hit, "geoms") else [hit])]; return min(ys)
+    louvres = []
+    for x in np.arange(VENT_X_PL[0], VENT_X_PL[1] + 0.1, VENT_X_PL[2]):
+        if abs(x) < VENT_X_CLEAR: continue
+        y0 = top_at(x) + VENT_TOP_INSET
+        if LOGO_CX - LOGO_W / 2 - 6 <= abs(x) <= LOGO_CX + LOGO_W / 2 + 6: y0 = max(y0, LOGO_PANEL_Y)   # logo panel and its mirror stay solid
+        if VENT_Y1 - y0 > 12: louvres.append(g.box(x - VENT_W_PL / 2, y0, PL_Z0 - 1.0, x + VENT_W_PL / 2, VENT_Y1, PL_Z1 + 1.0))
+    plate = g.cut(plate, louvres)
     # ear ties: proven ear block at the tab + a 20 x 10 bar straight back to the plate, plus a corner bump on the plate to meet it
     for h in G.EARS:
         cx, cy, cz, n = G.HOLES[h]; sgn_in = -1.0 if cx > 0 else 1.0
@@ -124,9 +137,14 @@ def build_plate(g):
         chan = g.prism(G.Region(Polygon([(x_end, -G.NUT_M4_SLOT_W / 2), (x_end, G.NUT_M4_SLOT_W / 2), (x_mouth, G.EAR_CHAN_MOUTH_W / 2), (x_mouth, -G.EAR_CHAN_MOUTH_W / 2)])), zc0, zc0 + G.NUT_M4_SLOT_T)
         blk = g.cut(blk, [g.cyl((0.0, 0.0, z0 - 2.0), (0.0, 0.0, z1 + 2.0), G.EAR_BOLT_CLR), chan])
         blk = g.place(blk, o, e1, e2, e3)
-        bar = g.box(cx - EAR_BAR_HALF_W, EAR_BAR_Y0, PL_Z0 + 1.0, cx + EAR_BAR_HALF_W, EAR_BAR_Y1, cz - 6.0)   # overlaps the block's rear
-        bump = g.box(cx - EAR_BAR_HALF_W - 3.0, EAR_BAR_Y0 - 2.0, PL_Z0, cx + EAR_BAR_HALF_W + 3.0, -10.0, PL_Z1 + 3.0)   # corner bump, on the front face (nothing is there at the top corners)
-        plate = g.unite([plate, bump, bar, blk])
+        # tapered fin: a tall section where it leaves the plate, lofted to the block's 10 mm section behind the ear
+        from shapely.geometry import box as sbox
+        sec_plate = G.Region(sbox(cx - EAR_BAR_HALF_W, FIN_Y_TOP, cx + EAR_BAR_HALF_W, FIN_Y_BOT_PLATE))
+        sec_ear = G.Region(sbox(cx - EAR_BAR_HALF_W, FIN_Y_TOP, cx + EAR_BAR_HALF_W, EAR_BAR_Y1))
+        fin = g.loft_regions(sec_plate, PL_Z0 + 0.5, sec_ear, FIN_Z_TAPER_END)                                     # taper over the first 36 mm
+        bar = g.box(cx - EAR_BAR_HALF_W, FIN_Y_TOP, FIN_Z_TAPER_END - 0.5, cx + EAR_BAR_HALF_W, EAR_BAR_Y1, cz - 6.0)   # then the 10 mm bar to the block
+        root = g.box(cx - EAR_BAR_HALF_W, FIN_Y_TOP, PL_Z0, cx + EAR_BAR_HALF_W, FIN_Y_BOT_PLATE, PL_Z1)          # fin root through the plate thickness
+        plate = g.unite([plate, root, fin, bar, blk])
     # foot flanges: under each saddle-foot pad, two M4 holes in line with the pad's nut slots, web up to the plate
     for side, ids in G.LUGS.items():
         xs = sorted(G.HOLES[i][0] for i in ids); x0, x1 = xs[0] - G.LUG_PAD_X_MARGIN, xs[1] + G.LUG_PAD_X_MARGIN
@@ -141,7 +159,10 @@ def build_plate(g):
     R = g.intersect(plate, [g.box(-PL_LAP, -300, -300, 400, 300, 300)]); R = g.cut(R, [lap_cut_R])
     def lap_holes(): return [g.cyl((0.0, yy, PL_Z0 - 1), (0.0, yy, PL_Z1 + 1), G.CLR_M4_SHELL) for yy in (-45.0, 45.0)]
     L = g.cut(L, lap_holes()); R = g.cut(R, lap_holes())          # fresh tool bodies per cut (FeatureScript consumes tools)
-    out = {"Backplate L": g.name(L, "Backplate L", G.COL_BODY)}
+    spine = g.intersect(g.box(-SPINE_W / 2, -300, PL_Z0 - SPINE_T, SPINE_W / 2, 300, PL_Z0), [g.prism(G.Region(G.offset(-PL_INSET)), PL_Z0 - SPINE_T - 1, PL_Z0 + 1)])
+    spine = g.cut(spine, [g.cyl((0.0, yy, PL_Z0 - SPINE_T - 1), (0.0, yy, PL_Z0 + 1), G.CLR_M4_SHELL) for yy in (-45.0, 45.0)] +
+                         [g.cyl((0.0, yy, PL_Z0 - SPINE_T - 1), (0.0, yy, PL_Z0 - SPINE_T + SPINE_CBORE_H), SPINE_CBORE_D) for yy in (-45.0, 45.0)])
+    out = {"Backplate L": g.name(L, "Backplate L", G.COL_BODY), "Backplate spine": g.name(spine, "Backplate spine", G.COL_ACCENT)}
     if hasattr(g, "prism_poly"):      # CadQuery only: logo recess in R's rear face + the matching inlay
         logo = logo_shape()
         pocket = g.prism_poly(logo, PL_Z0 - 1.0, PL_Z0 + LOGO_DEPTH)
