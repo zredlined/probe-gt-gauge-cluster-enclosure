@@ -9,7 +9,7 @@ anything is printed.
 
 | [Skeleton mount](skeleton-mount/README.md) | [Shell enclosure](shell-enclosure/README.md) |
 |---|---|
-| ![](skeleton-mount/renders/onshape_iso.png) | ![](shell-enclosure/renders/system_driver.png) |
+| ![](skeleton-mount/renders/hero.png) | ![](shell-enclosure/renders/system_driver.png) |
 | Bare cluster on two flat side plates and two clamps. Low, light, 10 flat parts, no supports, about 290 g. Four bolts to take it in or out of the car. | Two-piece shell with a sun brow, adjustable pitch, four clamps. Fully enclosed, 16 parts, about 1.2 kg, two 11-hour prints. |
 | Geometry-checked, not yet printed. | Printed and fitted; sat high for a short driver. |
 

@@ -29,4 +29,5 @@ shot([cage, arms, sur, cluster] + parts + lowers, R / "driver_iso.png", (-450, -
 shot([cage, arms, cluster] + parts + lowers, R / "rear.png", (300, 900, 500), f, zoom=1.6)
 shot([cage, arms, sur, cluster] + parts + lowers, R / "side.png", (-900, -60, 120), f, zoom=1.7)
 shot([cage, arms] + parts + lowers, R / "mount_only.png", (-350, -900, 600), f, zoom=1.6)
+shot([cage, arms, cluster] + parts + lowers, R / "hero.png", (560, 620, 430), (266, -20, 70), zoom=1.25)   # rear three-quarter: plates, clamps, adapters in full view (front page)
 print("sidemount renders done")

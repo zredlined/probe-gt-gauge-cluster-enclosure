@@ -7,7 +7,7 @@ assembled on the bench; in the car the only fasteners are four M6 from below.
 
 | From the seat | In the car | The mount alone |
 |---|---|---|
-| ![](renders/onshape_driver_view.png) | ![](renders/onshape_iso.png) | ![](renders/mount_only.png) |
+| ![](renders/onshape_driver_view.png) | ![](renders/onshape_iso.png) | ![](renders/hero.png) |
 | ![](renders/side.png) | ![](renders/onshape_iso_rear.png) | ![](renders/parts.png) |
 
 The Onshape views are straight from the assembly
