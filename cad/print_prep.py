@@ -65,6 +65,9 @@ if Tc is not None:
     down_scan = np.linalg.inv(Tc)[:3, :3] @ np.array([0.0, 0.0, -1.0])
     for side in ("L", "R"):
         rows.append(prep(f"saddle_foot_{side.lower()}.stl", f"saddle_foot_{side}.stl", list(down_scan), "clamp split face on the bed, slab leaning; no supports", "CRADLE"))
+    for side in ("L", "R"):
+        rows.append(prep(f"backplate_{side.lower()}.stl", f"backplate_{side}.stl", [0, 0, -1], "rear face on the bed; ear tie and foot flange stand up, no supports", "CRADLE"))
+    rows.append(prep("logo_inlay.stl", "logo_inlay.stl", [0, 0, -1], "purple; import into the same object as backplate_R in the slicer (same orientation, no re-positioning)", "CRADLE"))
 # mount (car frame): bar clamps split horizontally at z = 0
 for side in ("driver", "center"):
     rows.append(prep(f"mount_bar_clamp_upper_{side}.stl", f"bar_clamp_upper_{side}.stl", [0, 0, -1], "split face down, clevis up, no supports", "D"))
