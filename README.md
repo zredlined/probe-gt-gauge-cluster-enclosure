@@ -1,51 +1,48 @@
 # Probe GT gauge cluster mounts
 
-3D-printed mounts for the stock 1993 Ford Probe GT gauge cluster in our 24 Hours of Lemons car. The dash is gone; the
-cluster bolts through its own OEM mounting holes to printed parts that clamp to the roll cage's dash crossbar. Everything
-is designed from a 3D scan of the cluster and of the cage, generated from code, and checked for fit, fastener access and
-assembly before it is printed. Charcoal ASA with one purple accent, exposed aligned screws, no heat-set inserts.
+3D-printed mounts that put the stock 1993 Ford Probe GT gauge cluster on the roll cage of our 24 Hours of Lemons car.
+No dash: the cluster bolts through its own factory holes into printed brackets that clamp to the dash crossbar.
+Designed from a 3D scan of the cluster and the cage, generated from code, and checked for fit and wrench access before
+anything is printed.
 
-There are two ways to build it. Each has its own folder with print files, renders, bill of materials, print settings and
-assembly steps. Pick one and go there.
+## Pick a build
 
-| | [Skeleton mount](skeleton-mount/README.md) | [Shell enclosure](shell-enclosure/README.md) |
-|---|---|---|
-| | ![](skeleton-mount/renders/onshape_iso.png) | ![](shell-enclosure/renders/system_driver.png) |
-| What | Two flat side plates on two crossbar clamps, bare cluster | Two-piece shell with a sun brow, four clamps with pivots |
-| Height | bezel top 154 mm above the bar | bezel top 201 mm above the bar |
-| Position | face 28° back, cluster in front of the bar | face 20° back, cluster over the bar, pitch adjustable |
-| Printing | 10 flat parts, no supports, about 290 g, every part under 2 h | 16 parts, about 1.2 kg, two 11-hour shells |
-| Hardware | 22 bolts, all captured nuts; four M6 is all you touch in the car | 40 fasteners, M2.5 self-tappers for the bars |
-| Status | geometry-checked, not yet printed or fitted | printed and fitted in the car; sat high for a short driver |
+| [Skeleton mount](skeleton-mount/README.md) | [Shell enclosure](shell-enclosure/README.md) |
+|---|---|
+| ![](skeleton-mount/renders/onshape_iso.png) | ![](shell-enclosure/renders/system_driver.png) |
+| Bare cluster on two flat side plates and two clamps. Low, light, 10 flat parts, no supports, about 290 g. Four bolts to take it in or out of the car. | Two-piece shell with a sun brow, adjustable pitch, four clamps. Fully enclosed, 16 parts, about 1.2 kg, two 11-hour prints. |
+| Geometry-checked, not yet printed. | Printed and fitted; sat high for a short driver. |
 
-A third option, a minimal shell, is in the works and will get its own folder the same way.
+Each folder has everything you need: renders, the printable files already oriented for the bed, a bill of materials,
+print settings and step-by-step assembly. A third option, a minimal shell, is coming and will get its own folder.
 
-## Repository
+## What's where
 
 ```
-skeleton-mount/   option 1: README (BOM, print, assembly), stl/, renders/ (incl. shaded views from Onshape)
-shell-enclosure/  option 2: README, stl/ (+ stl/test fit aids), renders/
-cad/              the generators and checks for both options, print prep, renders, Onshape push
-reference/        cluster_scan (mesh, silhouettes, hole CSV), cage_scan (fitted tubes, dash remnants), open28 (the
-                  prototype the skeleton mount came from)
-docs/             engineering notes: frames, what the scan got wrong, design decisions and why
+skeleton-mount/   build option 1: README, stl/, renders/
+shell-enclosure/  build option 2: README, stl/, renders/
+cad/              the Python that generates both (CadQuery), the fit checks, print prep, renders, Onshape push
+reference/        the scans everything is built from, and the prototype the skeleton mount came from
+docs/             engineering notes: coordinate frames, what the scan got wrong, why things are the way they are
 ```
 
-Both options share the frames and the scans. Scan frame: X across the cluster, Y down, Z toward the driver; L parts are
-the face-right (passenger) side, R parts the face-left (driver) side, marked with 1 and 2 dots. Car frame: X along the
-crossbar from the driver upright, Y toward the cowl, Z up.
+## Good to know
 
-CAD: Onshape document [937c54b34f0ccb974f37f949](https://cad.onshape.com/documents/937c54b34f0ccb974f37f949): "Side mount
-system (car frame)" for the skeleton mount, "Full system (car frame)" and "Enclosure assembly" for the shell (element ids
-in `cad/output/onshape_ids.json`). Onshape is a viewer; the generators are the source of truth.
+- **Left and right.** Parts named L go on the passenger side (your right when you look at the gauges), R on the
+  driver side. Every part is marked: 1 dot for L, 2 dots for R.
+- **Material.** ASA on a Bambu P1S, charcoal with one purple accent. Settings are in each option's README.
+- **No inserts, no tapping.** Every nut sits in a printed pocket or slot; every screw is driven from the outside or
+  on the bench.
+- **CAD.** Everything is also in Onshape for viewing:
+  [document 937c54b34f0ccb974f37f949](https://cad.onshape.com/documents/937c54b34f0ccb974f37f949). The code in `cad/`
+  is the source of truth; Onshape is a viewer.
 
-## Regenerate
-
-Everything is generated from constants: `cad/sidemount.py` (skeleton mount), `cad/generate.py` and `cad/mount.py`
-(shell, feet, clamps). `cad/build.sh` runs geometry, the fastener and interference checks, bed-oriented STLs into each
-option's `stl/` and renders into each option's `renders/`. `cad/push.py` updates Onshape (`--sidemount` about 15 API
-requests, the shell about 30); `cad/onshape_views.py` pulls shaded views (one request each). Environment, once:
+## Change something
 
 ```bash
 uv venv cad/.venv && uv pip install --python cad/.venv/bin/python cadquery trimesh shapely scipy ezdxf pyvista requests rtree networkx
+cad/build.sh    # regenerate geometry, run the checks, write stl/ and renders/ for both options
 ```
+
+Skeleton mount: `cad/sidemount.py` (the placement is `PITCH` and `ORIGIN` at the top). Shell: `cad/generate.py` and
+`cad/mount.py`. Onshape: `cad/push.py --sidemount` or `cad/push.py` (each push spends API requests, see the notes).
